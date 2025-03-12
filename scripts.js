@@ -40,6 +40,12 @@ document.addEventListener('DOMContentLoaded', function() {
         anchor.addEventListener('click', function(e) {
             e.preventDefault();
             
+            // Close mobile menu if open
+            if (navLinks.classList.contains('active')) {
+                navLinks.classList.remove('active');
+                hamburger.classList.remove('active');
+            }
+            
             const targetId = this.getAttribute('href');
             const targetElement = document.querySelector(targetId);
             
@@ -55,27 +61,56 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Form submission handling
-    const contactForm = document.getElementById('contactForm');
+    // Contact form functionality using EmailJS
+    // Initialize EmailJS with your user ID
+    // You'll need to sign up at https://www.emailjs.com/ and get your user ID
+    emailjs.init("YOUR_USER_ID");
+    
+    const contactForm = document.getElementById("contactForm");
+    
     if (contactForm) {
-        contactForm.addEventListener('submit', function(e) {
-            e.preventDefault();
+        contactForm.addEventListener("submit", function(event) {
+            event.preventDefault();
             
-            // Basic form validation
-            const name = document.getElementById('name').value;
-            const email = document.getElementById('email').value;
-            const subject = document.getElementById('subject').value;
-            const message = document.getElementById('message').value;
+            // Display loading state
+            const submitBtn = contactForm.querySelector("button[type='submit']");
+            const originalBtnText = submitBtn.textContent;
+            submitBtn.textContent = "Sending...";
+            submitBtn.disabled = true;
             
-            if (!name || !email || !subject || !message) {
-                alert('Please fill in all fields');
-                return;
-            }
+            // Prepare template parameters
+            const templateParams = {
+                name: document.getElementById("name").value,
+                email: document.getElementById("email").value,
+                subject: document.getElementById("subject").value,
+                message: document.getElementById("message").value
+            };
             
-            // Here you would typically send the form data to a server
-            // This is a placeholder for demonstration purposes
-            alert('Thank you for your message! I will get back to you soon.');
-            contactForm.reset();
+            // Send email using EmailJS
+            // Replace 'YOUR_SERVICE_ID' and 'YOUR_TEMPLATE_ID' with your actual IDs from EmailJS
+            emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', templateParams)
+                .then(function(response) {
+                    console.log('SUCCESS!', response.status, response.text);
+                    
+                    // Reset form
+                    contactForm.reset();
+                    
+                    // Show success message
+                    alert("Message sent successfully! I'll get back to you soon.");
+                    
+                    // Reset button
+                    submitBtn.textContent = originalBtnText;
+                    submitBtn.disabled = false;
+                }, function(error) {
+                    console.log('FAILED...', error);
+                    
+                    // Show error message
+                    alert("Failed to send message. Please try again later.");
+                    
+                    // Reset button
+                    submitBtn.textContent = originalBtnText;
+                    submitBtn.disabled = false;
+                });
         });
     }
 
@@ -106,4 +141,5 @@ document.addEventListener('DOMContentLoaded', function() {
     // Run once on page load to animate elements already in view
     window.addEventListener('load', animateOnScroll);
 });
+
 
