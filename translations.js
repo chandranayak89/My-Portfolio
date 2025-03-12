@@ -1,0 +1,182 @@
+const translations = {
+    en: {
+        // Navigation
+        "nav-home": "Home",
+        "nav-about": "About",
+        "nav-experience": "Experience",
+        "nav-skills": "Skills",
+        "nav-projects": "Projects",
+        "nav-contact": "Contact",
+        
+        // Hero section
+        "hero-title": "Software Development, Software Testing & IT Security Specialist",
+        "hero-description": "Merging cybersecurity expertise with advanced testing methodologies for robust, secure software solutions.",
+        "hero-contact": "Contact Me",
+        "hero-work": "View My Work",
+        
+        // About section
+        "about-title": "About Me",
+        "about-description": "I am a dedicated IT Security and Software Testing professional with expertise spanning from penetration testing to quality assurance. With a background in mechanical engineering and a specialization in informatics and robotics, I bring a unique perspective to software security and testing challenges.",
+        "about-education": "Education",
+        "about-ms-title": "Master of Science in Mechanical Engineering",
+        "about-ms-details": "Karlsruhe, Germany | 2022 - 2026 (expected)",
+        "about-ms-specialization": "Specialization: Informatics and Robotics",
+        "about-bs-title": "Bachelor of Engineering in Mechanical Engineering",
+        "about-bs-details": "India | 2013 - 2017",
+        "about-certifications": "Certifications",
+        "about-cert-1": "Google Cybersecurity Certificate",
+        "about-cert-2": "Google Data Science Certificate",
+        "about-languages": "Languages",
+        "about-lang-1": "German: Business Fluent",
+        "about-lang-2": "English: Business Fluent",
+        
+        // Experience section
+        "exp-title": "Professional Experience",
+        "exp-1-title": "Werkstudent – Software Testing & IT-Security",
+        "exp-1-company": "Atlas Copco | Bretten",
+        "exp-1-date": "April 2024 – March 2025",
+        "exp-1-detail-1": "Development of test automation solutions to ensure software quality",
+        "exp-1-detail-2": "Implementation of CI/CD processes with Jenkins, Docker, and Kubernetes",
+        "exp-1-detail-3": "Security analysis and implementation of protection measures according to IT security standards",
+        "exp-1-detail-4": "Conducting software and integration tests for safety-critical railway applications",
+        "exp-1-detail-5": "Cyber Security function testing (e.g., Central Logging)",
+        
+        "exp-2-title": "Research Assistant – Software Development & Testing",
+        "exp-2-company": "Karlsruher Institut für Technologie (KIT) | Karlsruhe",
+        "exp-2-date": "July 2022 – June 2023",
+        
+        "exp-3-title": "Information Security Analyst, Penetration Testing & Software Testing",
+        "exp-3-company": "Prosaic Technologies Pvt Ltd | Bangalore, India",
+        "exp-3-date": "July 2017 – March 2020",
+        
+        // Skills section
+        "skills-title": "Technical Skills",
+        "skills-cat-1": "IT Security & Data Protection",
+        "skills-cat-2": "Software Testing",
+        "skills-cat-3": "Programming & Development",
+        "skills-cat-4": "Web & Data",
+        "skills-cat-5": "Methodologies",
+        
+        // Projects section
+        "projects-title": "Featured Projects",
+        "projects-subtitle": "A selection of my professional work and academic projects",
+        "project-1-title": "Your Project Title",
+        "project-1-description": "Detailed description of your project and your role.",
+        "project-2-title": "ML-Based Test Automation",
+        "project-2-description": "Implemented machine learning algorithms to predict test case failures and optimize test execution sequences.",
+        "project-3-title": "CI/CD Pipeline for Security Testing",
+        "project-3-description": "Designed and implemented a continuous integration pipeline that incorporates security testing into the development workflow.",
+        "project-4-title": "Intrusion Detection System",
+        "project-4-description": "Developed and optimized an IDS solution for railway applications, focusing on real-time threat detection.",
+        "projects-cta": "Discuss Your Project",
+        
+        // Contact section
+        "contact-title": "Get In Touch",
+        "contact-subtitle": "Have a project in mind or interested in my services? Let's connect!",
+        "contact-location": "Location",
+        "contact-email": "Email",
+        "contact-phone": "Phone",
+        "contact-linkedin": "LinkedIn",
+        "contact-form-name": "Name",
+        "contact-form-email": "Email",
+        "contact-form-subject": "Subject",
+        "contact-form-message": "Message",
+        "contact-form-submit": "Send Message",
+        "contact-success-title": "Thank you for your message!",
+        "contact-success-message": "I will get back to you as soon as possible.",
+        
+        // Footer
+        "footer-title": "Software Testing & IT Security Professional",
+        "footer-copyright": "© 2024 Chandrashekhar Nayak. All Rights Reserved."
+    },
+    de: {
+        // Navigation
+        "nav-home": "Startseite",
+        "nav-about": "Über mich",
+        "nav-experience": "Erfahrung",
+        "nav-skills": "Fähigkeiten",
+        "nav-projects": "Projekte",
+        "nav-contact": "Kontakt",
+        
+        // Hero section
+        "hero-title": "Spezialist für Softwareentwicklung, Softwaretests & IT-Sicherheit",
+        "hero-description": "Verbindung von Cybersecurity-Expertise mit fortschrittlichen Testmethoden für robuste, sichere Softwarelösungen.",
+        "hero-contact": "Kontaktieren Sie mich",
+        "hero-work": "Meine Arbeit ansehen",
+        
+        // About section
+        "about-title": "Über mich",
+        "about-description": "Ich bin ein engagierter IT-Sicherheits- und Softwaretest-Profi mit Expertise von Penetrationstests bis Qualitätssicherung. Mit einem Hintergrund im Maschinenbau und einer Spezialisierung in Informatik und Robotik bringe ich eine einzigartige Perspektive für Software-Sicherheits- und Testherausforderungen mit.",
+        "about-education": "Ausbildung",
+        "about-ms-title": "Master of Science in Maschinenbau",
+        "about-ms-details": "Karlsruhe, Deutschland | 2022 - 2026 (erwartet)",
+        "about-ms-specialization": "Spezialisierung: Informatik und Robotik",
+        "about-bs-title": "Bachelor of Engineering in Maschinenbau",
+        "about-bs-details": "Indien | 2013 - 2017",
+        "about-certifications": "Zertifizierungen",
+        "about-cert-1": "Google Cybersecurity Zertifikat",
+        "about-cert-2": "Google Data Science Zertifikat",
+        "about-languages": "Sprachen",
+        "about-lang-1": "Deutsch: Verhandlungssicher",
+        "about-lang-2": "Englisch: Verhandlungssicher",
+        
+        // Experience section
+        "exp-title": "Berufserfahrung",
+        "exp-1-title": "Werkstudent – Software Testing & IT-Security",
+        "exp-1-company": "Atlas Copco | Bretten",
+        "exp-1-date": "April 2024 – März 2025",
+        "exp-1-detail-1": "Entwicklung von Testautomatisierungslösungen zur Sicherstellung der Softwarequalität",
+        "exp-1-detail-2": "Implementierung von CI/CD-Prozessen mit Jenkins, Docker und Kubernetes",
+        "exp-1-detail-3": "Sicherheitsanalyse und Implementierung von Schutzmaßnahmen gemäß IT-Sicherheitsstandards",
+        "exp-1-detail-4": "Durchführung von Software- und Integrationstests für sicherheitskritische Bahnanwendungen",
+        "exp-1-detail-5": "Cyber Security-Funktionstests (z.B. Central Logging)",
+        
+        "exp-2-title": "Wissenschaftliche Hilfskraft – Softwareentwicklung & Testing",
+        "exp-2-company": "Karlsruher Institut für Technologie (KIT) | Karlsruhe",
+        "exp-2-date": "Juli 2022 – Juni 2023",
+        
+        "exp-3-title": "Information Security Analyst, Penetration Testing & Softwaretests",
+        "exp-3-company": "Prosaic Technologies Pvt Ltd | Bangalore, Indien",
+        "exp-3-date": "Juli 2017 – März 2020",
+        
+        // Skills section
+        "skills-title": "Technische Fähigkeiten",
+        "skills-cat-1": "IT-Sicherheit & Datenschutz",
+        "skills-cat-2": "Softwaretests",
+        "skills-cat-3": "Programmierung & Entwicklung",
+        "skills-cat-4": "Web & Daten",
+        "skills-cat-5": "Methoden",
+        
+        // Projects section
+        "projects-title": "Ausgewählte Projekte",
+        "projects-subtitle": "Eine Auswahl meiner beruflichen und akademischen Projekte",
+        "project-1-title": "Ihr Projekttitel",
+        "project-1-description": "Detaillierte Beschreibung Ihres Projekts und Ihrer Rolle.",
+        "project-2-title": "ML-basierte Testautomatisierung",
+        "project-2-description": "Implementierung von Machine-Learning-Algorithmen zur Vorhersage von Testfallfehlern und Optimierung von Testausführungssequenzen.",
+        "project-3-title": "CI/CD-Pipeline für Sicherheitstests",
+        "project-3-description": "Entwurf und Implementierung einer Continuous-Integration-Pipeline, die Sicherheitstests in den Entwicklungsworkflow integriert.",
+        "project-4-title": "Einbruchserkennungssystem",
+        "project-4-description": "Entwicklung und Optimierung einer IDS-Lösung für Bahnanwendungen mit Fokus auf Echtzeit-Bedrohungserkennung.",
+        "projects-cta": "Ihr Projekt besprechen",
+        
+        // Contact section
+        "contact-title": "Kontakt",
+        "contact-subtitle": "Haben Sie ein Projekt im Sinn oder Interesse an meinen Dienstleistungen? Lassen Sie uns in Kontakt treten!",
+        "contact-location": "Standort",
+        "contact-email": "E-Mail",
+        "contact-phone": "Telefon",
+        "contact-linkedin": "LinkedIn",
+        "contact-form-name": "Name",
+        "contact-form-email": "E-Mail",
+        "contact-form-subject": "Betreff",
+        "contact-form-message": "Nachricht",
+        "contact-form-submit": "Nachricht senden",
+        "contact-success-title": "Vielen Dank für Ihre Nachricht!",
+        "contact-success-message": "Ich werde mich so schnell wie möglich bei Ihnen melden.",
+        
+        // Footer
+        "footer-title": "Fachmann für Softwaretests & IT-Sicherheit",
+        "footer-copyright": "© 2024 Chandrashekhar Nayak. Alle Rechte vorbehalten."
+    }
+}; 
