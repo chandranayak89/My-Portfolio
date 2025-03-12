@@ -750,3 +750,11 @@ footer {
         opacity: 1;
     }
 }
+
+/* Add this to your styles.css file */
+.profile-image {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+}
