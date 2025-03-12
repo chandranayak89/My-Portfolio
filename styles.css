@@ -715,3 +715,38 @@ footer {
         justify-content: center;
     }
 }
+
+/* Add this at the end of your CSS file */
+.success-message {
+    text-align: center;
+    background-color: var(--light-color);
+    padding: 30px;
+    border-radius: 5px;
+    box-shadow: var(--shadow);
+    animation: fadeIn 0.5s ease;
+}
+
+.success-message i {
+    font-size: 3rem;
+    color: var(--success-color);
+    margin-bottom: 15px;
+}
+
+.success-message h3 {
+    color: var(--dark-color);
+    margin-bottom: 10px;
+    font-size: 1.5rem;
+}
+
+.success-message p {
+    color: var(--text-color);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
