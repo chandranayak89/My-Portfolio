@@ -758,3 +758,38 @@ footer {
     border-radius: 10px;
     box-shadow: var(--shadow);
 }
+
+/* Language Selector */
+.language-selector {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.language-dropdown {
+    position: absolute;
+    background-color: white;
+    box-shadow: var(--shadow);
+    border-radius: 5px;
+    display: none;
+    flex-direction: column;
+    min-width: 120px;
+    z-index: 1000;
+}
+
+.dropdown:hover .language-dropdown {
+    display: flex;
+}
+
+.lang-option {
+    padding: 10px 15px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.lang-option:last-child {
+    border-bottom: none;
+}
+
+.lang-option:hover {
+    background-color: var(--light-color);
+}
