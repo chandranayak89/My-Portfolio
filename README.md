@@ -131,6 +131,6 @@ If you have any questions or feedback about this template, please contact:
 
 Chandrashekhar Nayak  
 Email: chandrathod88@gmail.com  
-LinkedIn: [linkedin.com/in/chandrashekhar-nayak](https://bit.ly/4g3pLcL)
+LinkedIn: [linkedin.com/in/chandrashekhar-nayak]
 
 ---
