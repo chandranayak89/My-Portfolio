@@ -16,12 +16,21 @@
                     <a href="#home">CN</a>
                 </div>
                 <ul class="nav-links">
-                    <li><a href="#home">Home</a></li>
-                    <li><a href="#about">About</a></li>
-                    <li><a href="#experience">Experience</a></li>
-                    <li><a href="#skills">Skills</a></li>
-                    <li><a href="#projects">Projects</a></li>
-                    <li><a href="#contact">Contact</a></li>
+                    <li><a href="#home" data-i18n="nav-home">Home</a></li>
+                    <li><a href="#about" data-i18n="nav-about">About</a></li>
+                    <li><a href="#experience" data-i18n="nav-experience">Experience</a></li>
+                    <li><a href="#skills" data-i18n="nav-skills">Skills</a></li>
+                    <li><a href="#projects" data-i18n="nav-projects">Projects</a></li>
+                    <li><a href="#contact" data-i18n="nav-contact">Contact</a></li>
+                    <li class="nav-item dropdown">
+                        <a href="#" class="language-selector">
+                            <i class="fas fa-globe"></i> <span class="current-lang">EN</span>
+                        </a>
+                        <div class="language-dropdown">
+                            <a href="#" data-lang="en" class="lang-option">English</a>
+                            <a href="#" data-lang="de" class="lang-option">Deutsch</a>
+                        </div>
+                    </li>
                 </ul>
                 <div class="hamburger">
                     <span class="bar"></span>
@@ -216,10 +225,10 @@
             <p class="section-subtitle">A selection of my professional work and academic projects</p>
             
             <div class="projects-grid">
-                <!-- Project 1 - You should replace these with your actual projects -->
+                <!-- Project 1 -->
                 <div class="project-card">
                     <div class="project-image">
-                        <img src="path/to/project-image.jpg" alt="Project Name">
+                        <img src="image.jpeg" alt="Project Image">
                     </div>
                     <div class="project-content">
                         <h3>Your Project Title</h3>
@@ -399,6 +408,7 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script src="translations.js"></script>
     <script src="scripts.js"></script>
 </body>
 </html>
