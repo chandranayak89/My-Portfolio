@@ -63,10 +63,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Contact form functionality using EmailJS
     // Initialize EmailJS with your user ID
-    // You'll need to sign up at https://www.emailjs.com/ and get your user ID
-    emailjs.init("YOUR_USER_ID");
+    emailjs.init("swZlx1amPELR9W8yB");
     
     const contactForm = document.getElementById("contactForm");
+    const successMessage = document.getElementById("successMessage");
     
     if (contactForm) {
         contactForm.addEventListener("submit", function(event) {
@@ -80,27 +80,24 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Prepare template parameters
             const templateParams = {
-                name: document.getElementById("name").value,
-                email: document.getElementById("email").value,
+                to_name: "Chandrashekhar",
+                from_name: document.getElementById("name").value,
+                from_email: document.getElementById("email").value,
                 subject: document.getElementById("subject").value,
                 message: document.getElementById("message").value
             };
             
-            // Send email using EmailJS
-            // Replace 'YOUR_SERVICE_ID' and 'YOUR_TEMPLATE_ID' with your actual IDs from EmailJS
-            emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', templateParams)
+            // Send email using EmailJS with your actual service and template IDs
+            emailjs.send('service_igp5ffv', 'template_q2r65kj', templateParams)
                 .then(function(response) {
                     console.log('SUCCESS!', response.status, response.text);
                     
-                    // Reset form
+                    // Hide the form and show success message
+                    contactForm.style.display = 'none';
+                    successMessage.style.display = 'block';
+                    
+                    // Reset form for if they come back later
                     contactForm.reset();
-                    
-                    // Show success message
-                    alert("Message sent successfully! I'll get back to you soon.");
-                    
-                    // Reset button
-                    submitBtn.textContent = originalBtnText;
-                    submitBtn.disabled = false;
                 }, function(error) {
                     console.log('FAILED...', error);
                     
@@ -141,5 +138,4 @@ document.addEventListener('DOMContentLoaded', function() {
     // Run once on page load to animate elements already in view
     window.addEventListener('load', animateOnScroll);
 });
-
 
