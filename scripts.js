@@ -38,6 +38,10 @@ document.addEventListener('DOMContentLoaded', function() {
     // Smooth scrolling for anchor links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function(e) {
+            if (this.classList.contains('lang-option')) {
+                return; // Skip smooth scrolling for language options
+            }
+            
             e.preventDefault();
             
             // Close mobile menu if open
@@ -138,14 +142,14 @@ document.addEventListener('DOMContentLoaded', function() {
     // Run once on page load to animate elements already in view
     window.addEventListener('load', animateOnScroll);
 
-    // Language switcher functionality
+    // Language switcher functionality - FIXED
     let currentLanguage = localStorage.getItem('language') || 'en';
 
     // Function to update all text elements with translations
     function updateLanguage(lang) {
         document.querySelectorAll('[data-i18n]').forEach(element => {
             const key = element.getAttribute('data-i18n');
-            if (translations[lang][key]) {
+            if (translations[lang] && translations[lang][key]) {
                 element.textContent = translations[lang][key];
             }
         });
@@ -153,7 +157,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Update input placeholders
         document.querySelectorAll('input[data-i18n-placeholder], textarea[data-i18n-placeholder]').forEach(element => {
             const key = element.getAttribute('data-i18n-placeholder');
-            if (translations[lang][key]) {
+            if (translations[lang] && translations[lang][key]) {
                 element.placeholder = translations[lang][key];
             }
         });
@@ -164,20 +168,20 @@ document.addEventListener('DOMContentLoaded', function() {
         // Save language preference
         localStorage.setItem('language', lang);
         currentLanguage = lang;
+        
+        console.log('Language updated to:', lang);
     }
 
-    // Add event listeners to language options
-    document.addEventListener('DOMContentLoaded', function() {
-        // Initial language setup
-        updateLanguage(currentLanguage);
-        
-        // Language switcher functionality
-        document.querySelectorAll('.lang-option').forEach(option => {
-            option.addEventListener('click', function(e) {
-                e.preventDefault();
-                const lang = this.getAttribute('data-lang');
-                updateLanguage(lang);
-            });
+    // Initial language setup
+    updateLanguage(currentLanguage);
+    
+    // Language switcher functionality
+    document.querySelectorAll('.lang-option').forEach(option => {
+        option.addEventListener('click', function(e) {
+            e.preventDefault();
+            const lang = this.getAttribute('data-lang');
+            console.log('Language selected:', lang);
+            updateLanguage(lang);
         });
     });
 });
