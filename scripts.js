@@ -137,5 +137,48 @@ document.addEventListener('DOMContentLoaded', function() {
     window.addEventListener('scroll', animateOnScroll);
     // Run once on page load to animate elements already in view
     window.addEventListener('load', animateOnScroll);
+
+    // Language switcher functionality
+    let currentLanguage = localStorage.getItem('language') || 'en';
+
+    // Function to update all text elements with translations
+    function updateLanguage(lang) {
+        document.querySelectorAll('[data-i18n]').forEach(element => {
+            const key = element.getAttribute('data-i18n');
+            if (translations[lang][key]) {
+                element.textContent = translations[lang][key];
+            }
+        });
+        
+        // Update input placeholders
+        document.querySelectorAll('input[data-i18n-placeholder], textarea[data-i18n-placeholder]').forEach(element => {
+            const key = element.getAttribute('data-i18n-placeholder');
+            if (translations[lang][key]) {
+                element.placeholder = translations[lang][key];
+            }
+        });
+        
+        // Update the current language indicator
+        document.querySelector('.current-lang').textContent = lang.toUpperCase();
+        
+        // Save language preference
+        localStorage.setItem('language', lang);
+        currentLanguage = lang;
+    }
+
+    // Add event listeners to language options
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initial language setup
+        updateLanguage(currentLanguage);
+        
+        // Language switcher functionality
+        document.querySelectorAll('.lang-option').forEach(option => {
+            option.addEventListener('click', function(e) {
+                e.preventDefault();
+                const lang = this.getAttribute('data-lang');
+                updateLanguage(lang);
+            });
+        });
+    });
 });
 
