@@ -491,14 +491,12 @@ section:nth-child(odd) {
 }
 
 .project-card {
-    background-color: white;
-    border-radius: 5px;
-    overflow: hidden;
-    box-shadow: var(--shadow);
-    transition: all 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    transition: all 0.3s ease;
     border: 2px solid transparent;
     overflow: visible;
     height: 100%;
+    background-color: white;
+    border-radius: var(--border-radius);
 }
 
 .project-card:hover {
@@ -507,17 +505,45 @@ section:nth-child(odd) {
     border: 2px solid var(--primary-color);
 }
 
-.project-card:hover .project-content {
-    padding: 23px;
-}
-
 .project-content {
     padding: 25px;
-    transition: all 0.3s ease;
     height: auto;
-    min-height: 200px;
-    display: flex;
-    flex-direction: column;
+}
+
+/* Completely different approach to show/hide content */
+.project-card p {
+    display: none; /* Hide by default */
+    margin-bottom: 15px;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.project-card:hover p {
+    display: block !important; /* Force display on hover */
+}
+
+.project-card.active p {
+    display: block !important; /* Force display when active (for mobile) */
+}
+
+/* Project indicator text */
+.project-content::after {
+    content: "Hover/tap to view details";
+    display: block;
+    font-size: 0.8rem;
+    color: var(--primary-color);
+    text-align: center;
+    margin-top: 10px;
+}
+
+.project-card:hover .project-content::after,
+.project-card.active .project-content::after {
+    display: none;
+}
+
+/* Adjust project grid spacing */
+.projects-grid {
+    gap: 30px;
 }
 
 .project-image {
