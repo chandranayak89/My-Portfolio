@@ -498,6 +498,7 @@ section:nth-child(odd) {
     transition: all 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
     border: 2px solid transparent;
     overflow: visible;
+    height: 100%;
 }
 
 .project-card:hover {
@@ -510,9 +511,12 @@ section:nth-child(odd) {
     padding: 23px;
 }
 
-.project-card .project-content {
+.project-content {
     padding: 25px;
     transition: padding 0.3s ease;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
 .project-image {
@@ -541,9 +545,13 @@ section:nth-child(odd) {
 }
 
 .project-tech {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
+    margin-top: auto;
+    transition: opacity 0.3s ease;
+    opacity: 0.7;
+}
+
+.project-card:hover .project-tech {
+    opacity: 1;
 }
 
 .project-tech span {
@@ -1369,4 +1377,93 @@ html, body {
     color: var(--error-color);
     background-color: #fee2e2;
     border-radius: var(--border-radius);
+}
+
+/* Project Card Hover Effect - Expansion */
+.project-card {
+    transition: all 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    border: 2px solid transparent;
+    overflow: visible;
+    height: 100%;
+}
+
+.project-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(37, 99, 235, 0.2), 0 6px 10px rgba(37, 99, 235, 0.1);
+    border: 2px solid var(--primary-color);
+}
+
+.project-content {
+    padding: 25px;
+    transition: padding 0.3s ease;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.project-card:hover .project-content {
+    padding: 23px;
+}
+
+/* Hide project description initially and show on hover */
+.project-card p {
+    opacity: 0;
+    height: 0;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    margin-bottom: 0;
+}
+
+.project-card:hover p {
+    opacity: 1;
+    height: auto;
+    margin-bottom: 15px;
+}
+
+/* Adjust the project tech tags to stay at bottom */
+.project-tech {
+    margin-top: auto;
+    transition: opacity 0.3s ease;
+    opacity: 0.7;
+}
+
+.project-card:hover .project-tech {
+    opacity: 1;
+}
+
+/* Add indicator for hover */
+.project-content::after {
+    content: "Hover to view details";
+    display: block;
+    font-size: 0.75rem;
+    color: var(--secondary-color);
+    margin-top: 10px;
+    opacity: 0.8;
+    transition: opacity 0.3s ease;
+    text-align: center;
+}
+
+.project-card:hover .project-content::after {
+    opacity: 0;
+}
+
+/* For touch devices */
+@media (max-width: 768px) {
+    .project-content::after {
+        content: "Tap to view details";
+    }
+    
+    .project-card.active p {
+        opacity: 1;
+        height: auto;
+        margin-bottom: 15px;
+    }
+    
+    .project-card.active .project-content::after {
+        opacity: 0;
+    }
+    
+    .project-card.active .project-tech {
+        opacity: 1;
+    }
 }

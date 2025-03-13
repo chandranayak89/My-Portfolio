@@ -260,6 +260,14 @@ This has been saved to your Google Sheet for review.`
             childList: true, 
             subtree: true 
         });
+
+        // Add click handler to project cards for mobile devices
+        document.querySelectorAll('.project-card').forEach(card => {
+            card.addEventListener('click', function() {
+                // Toggle active class to show/hide project details
+                this.classList.toggle('active');
+            });
+        });
     }
 });
 
