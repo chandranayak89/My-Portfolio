@@ -1286,3 +1286,22 @@ html, body {
         gap: 0;
     }
 }
+
+/* Add these styles for mobile touch support */
+@media (max-width: 768px) {
+    /* Change hover indicator text for mobile */
+    .recommender-info::after {
+        content: "Tap to view recommendation";
+    }
+    
+    /* Style for active state (when tapped) */
+    .recommendation-card.active .recommendation-text {
+        opacity: 1;
+        height: auto;
+        margin-bottom: 20px;
+    }
+    
+    .recommendation-card.active .recommender-info::after {
+        opacity: 0;
+    }
+}

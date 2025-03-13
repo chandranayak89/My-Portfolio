@@ -178,6 +178,40 @@ document.addEventListener('DOMContentLoaded', function() {
             newRecommendationForm.reset();
         });
     }
+
+    // Check if we're on a touch device
+    const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    
+    if (isTouchDevice) {
+        // Add click handler to recommendation cards for mobile devices
+        document.querySelectorAll('.recommendation-card').forEach(card => {
+            card.addEventListener('click', function() {
+                // Toggle active class to show/hide recommendation
+                this.classList.toggle('active');
+            });
+        });
+        
+        // Add event listener to document to handle adding new cards
+        const observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (mutation.addedNodes) {
+                    mutation.addedNodes.forEach(function(node) {
+                        if (node.nodeType === 1 && node.classList && node.classList.contains('recommendation-card')) {
+                            node.addEventListener('click', function() {
+                                this.classList.toggle('active');
+                            });
+                        }
+                    });
+                }
+            });
+        });
+        
+        // Start observing the recommendations list
+        observer.observe(document.querySelector('.recommendations-list'), { 
+            childList: true, 
+            subtree: true 
+        });
+    }
 });
 
 // Function to save recommendation to localStorage
