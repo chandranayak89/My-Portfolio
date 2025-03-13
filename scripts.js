@@ -268,6 +268,14 @@ This has been saved to your Google Sheet for review.`
                 this.classList.toggle('active');
             });
         });
+
+        // Add click handler to timeline items for mobile devices
+        document.querySelectorAll('.timeline-item').forEach(item => {
+            item.addEventListener('click', function() {
+                // Toggle active class to show/hide experience details
+                this.classList.toggle('active');
+            });
+        });
     }
 });
 

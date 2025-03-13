@@ -1467,3 +1467,76 @@ html, body {
         opacity: 1;
     }
 }
+
+/* Experience Card Hover Effect - Timeline Items */
+.timeline-item .timeline-content {
+    transition: all 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    border: 2px solid transparent;
+    border-radius: var(--border-radius);
+    overflow: visible;
+    background-color: white;
+    padding: 25px;
+    position: relative;
+}
+
+.timeline-item:hover .timeline-content {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(37, 99, 235, 0.2), 0 6px 10px rgba(37, 99, 235, 0.1);
+    border: 2px solid var(--primary-color);
+    padding: 23px;
+}
+
+/* Hide experience details initially and show on hover */
+.timeline-item .experience-details {
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: all 0.4s ease;
+    margin-bottom: 0;
+}
+
+.timeline-item:hover .experience-details {
+    opacity: 1;
+    max-height: 300px;
+    margin-top: 15px;
+    margin-bottom: 5px;
+}
+
+/* Add indicator for hover */
+.timeline-content::after {
+    content: "Hover to view details";
+    display: block;
+    font-size: 0.75rem;
+    color: var(--secondary-color);
+    margin-top: 10px;
+    opacity: 0.8;
+    transition: opacity 0.3s ease;
+    text-align: center;
+}
+
+.timeline-item:hover .timeline-content::after {
+    opacity: 0;
+}
+
+/* Adjust timeline-dot position to match new styling */
+.timeline-item .timeline-dot {
+    z-index: 2;
+}
+
+/* For touch devices */
+@media (max-width: 768px) {
+    .timeline-content::after {
+        content: "Tap to view details";
+    }
+    
+    .timeline-item.active .experience-details {
+        opacity: 1;
+        max-height: 300px;
+        margin-top: 15px;
+        margin-bottom: 5px;
+    }
+    
+    .timeline-item.active .timeline-content::after {
+        opacity: 0;
+    }
+}
