@@ -148,8 +148,27 @@ document.addEventListener('DOMContentLoaded', function() {
         newRecommendationForm.addEventListener('submit', function(event) {
             event.preventDefault();
             
-            // In a real application, you would send this data to your backend
-            // For now, we'll just show the success message
+            // Collect form data
+            const firstName = document.getElementById('recommenderFirstName').value;
+            const lastName = document.getElementById('recommenderLastName').value;
+            const company = document.getElementById('recommenderCompany').value;
+            const jobRole = document.getElementById('recommenderJobRole').value;
+            const relation = document.getElementById('recommenderRelation').value;
+            const text = document.getElementById('recommendationText').value;
+            
+            // Create recommendation object
+            const recommendation = {
+                firstName: firstName,
+                lastName: lastName,
+                company: company,
+                jobRole: jobRole,
+                relation: relation,
+                text: text,
+                date: new Date().toISOString()
+            };
+            
+            // Save to localStorage
+            saveRecommendation(recommendation);
             
             // Hide the form and show success message
             newRecommendationForm.style.display = 'none';
@@ -157,12 +176,104 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Reset the form for future use
             newRecommendationForm.reset();
-            
-            // You could also implement storing recommendations in localStorage
-            // or sending them via email using EmailJS
         });
     }
 });
+
+// Function to save recommendation to localStorage
+function saveRecommendation(recommendation) {
+    // Get existing recommendations or initialize empty array
+    let recommendations = JSON.parse(localStorage.getItem('recommendations') || '[]');
+    
+    // Add new recommendation
+    recommendations.push(recommendation);
+    
+    // Save back to localStorage
+    localStorage.setItem('recommendations', JSON.stringify(recommendations));
+}
+
+// Updated function to show existing recommendations
+function showExistingRecommendations() {
+    document.getElementById('existingRecommendations').style.display = 'block';
+    document.getElementById('recommendationForm').style.display = 'none';
+    
+    // Get the container for recommendations
+    const recommendationsList = document.querySelector('.recommendations-list');
+    
+    // Get saved recommendations from localStorage
+    const savedRecommendations = JSON.parse(localStorage.getItem('recommendations') || '[]');
+    
+    // If there are new recommendations, add them to the list
+    if (savedRecommendations.length > 0) {
+        // Create HTML for each new recommendation
+        savedRecommendations.forEach(rec => {
+            // Check if this recommendation is already displayed (to avoid duplicates)
+            const fullName = `${rec.firstName} ${rec.lastName}`;
+            const existingRecs = recommendationsList.querySelectorAll('h4');
+            let isDuplicate = false;
+            
+            existingRecs.forEach(el => {
+                if (el.textContent === fullName) {
+                    isDuplicate = true;
+                }
+            });
+            
+            // Only add if not a duplicate
+            if (!isDuplicate) {
+                const recCard = document.createElement('div');
+                recCard.className = 'recommendation-card';
+                
+                recCard.innerHTML = `
+                    <div class="recommendation-content">
+                        <p class="recommendation-text">"${rec.text}"</p>
+                        <div class="recommender-info">
+                            <h4>${rec.firstName} ${rec.lastName}</h4>
+                            <p>${rec.jobRole}, ${rec.company}</p>
+                            <span class="recommendation-type">${capitalizeFirstLetter(rec.relation)}</span>
+                        </div>
+                    </div>
+                `;
+                
+                // Add to the beginning to show newest first
+                recommendationsList.prepend(recCard);
+            }
+        });
+    }
+    
+    // Scroll to the recommendations list
+    document.getElementById('existingRecommendations').scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+    });
+}
+
+// Helper function to capitalize first letter
+function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+// Function to hide existing recommendations
+function hideExistingRecommendations() {
+    document.getElementById('existingRecommendations').style.display = 'none';
+}
+
+// Function to show the recommendation form
+function showRecommendationForm() {
+    document.getElementById('recommendationForm').style.display = 'block';
+    document.getElementById('existingRecommendations').style.display = 'none';
+    document.getElementById('recommendationSuccessMessage').style.display = 'none';
+    
+    // Scroll to the form
+    document.getElementById('recommendationForm').scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+    });
+}
+
+// Function to hide the recommendation form
+function hideRecommendationForm() {
+    document.getElementById('recommendationForm').style.display = 'none';
+}
 
 // Language switcher functionality - UPDATED WITH DEBUGGING
 let currentLanguage = localStorage.getItem('language') || 'en';
@@ -215,39 +326,4 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('Setting initial language to:', currentLanguage);
     updateLanguage(currentLanguage);
 });
-
-// Function to show the recommendation form
-function showRecommendationForm() {
-    document.getElementById('recommendationForm').style.display = 'block';
-    document.getElementById('existingRecommendations').style.display = 'none';
-    document.getElementById('recommendationSuccessMessage').style.display = 'none';
-    
-    // Scroll to the form
-    document.getElementById('recommendationForm').scrollIntoView({
-        behavior: 'smooth',
-        block: 'start'
-    });
-}
-
-// Function to hide the recommendation form
-function hideRecommendationForm() {
-    document.getElementById('recommendationForm').style.display = 'none';
-}
-
-// Function to show existing recommendations
-function showExistingRecommendations() {
-    document.getElementById('existingRecommendations').style.display = 'block';
-    document.getElementById('recommendationForm').style.display = 'none';
-    
-    // Scroll to the recommendations list
-    document.getElementById('existingRecommendations').scrollIntoView({
-        behavior: 'smooth',
-        block: 'start'
-    });
-}
-
-// Function to hide existing recommendations
-function hideExistingRecommendations() {
-    document.getElementById('existingRecommendations').style.display = 'none';
-}
 
