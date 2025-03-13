@@ -7,6 +7,7 @@ const translations = {
         "nav-skills": "Skills",
         "nav-projects": "Projects",
         "nav-contact": "Contact",
+        "nav-recommendations": "Recommendations",
         
         // Hero section
         "hero-title": "Software Development, Software Testing & IT Security Specialist",
@@ -92,7 +93,29 @@ const translations = {
         
         // Footer
         "footer-title": "Software Testing & IT Security Professional",
-        "footer-copyright": "© 2024 Chandrashekhar Nayak. All Rights Reserved."
+        "footer-copyright": "© 2024 Chandrashekhar Nayak. All Rights Reserved.",
+        
+        // Recommendations section
+        "recommendations-title": "Recommendations",
+        "recommendations-subtitle": "What colleagues and clients say about my work",
+        "recommendations-leave": "Leave a Recommendation",
+        "recommendations-view": "View Recommendations",
+        "recommendations-form-title": "Share Your Experience",
+        "recommendations-form-name": "Your Name",
+        "recommendations-form-title-position": "Your Title/Position",
+        "recommendations-form-relation": "Relationship",
+        "recommendations-form-select": "Select...",
+        "recommendations-form-colleague": "Colleague",
+        "recommendations-form-client": "Client",
+        "recommendations-form-manager": "Manager",
+        "recommendations-form-other": "Other",
+        "recommendations-form-message": "Your Recommendation",
+        "recommendations-form-submit": "Submit Recommendation",
+        "recommendations-form-cancel": "Cancel",
+        "recommendations-success-title": "Thank you for your recommendation!",
+        "recommendations-success-message": "I appreciate you taking the time to share your experience.",
+        "recommendations-list-title": "What People Say",
+        "recommendations-back": "Back"
     },
     de: {
         // Navigation
@@ -102,6 +125,7 @@ const translations = {
         "nav-skills": "Fähigkeiten",
         "nav-projects": "Projekte",
         "nav-contact": "Kontakt",
+        "nav-recommendations": "Empfehlungen",
         
         // Hero section
         "hero-title": "Spezialist für Softwareentwicklung, Softwaretests & IT-Sicherheit",
@@ -187,6 +211,28 @@ const translations = {
         
         // Footer
         "footer-title": "Fachmann für Softwaretests & IT-Sicherheit",
-        "footer-copyright": "© 2024 Chandrashekhar Nayak. Alle Rechte vorbehalten."
+        "footer-copyright": "© 2024 Chandrashekhar Nayak. Alle Rechte vorbehalten.",
+        
+        // Recommendations section
+        "recommendations-title": "Empfehlungen",
+        "recommendations-subtitle": "Was Kollegen und Kunden über meine Arbeit sagen",
+        "recommendations-leave": "Empfehlung hinterlassen",
+        "recommendations-view": "Empfehlungen ansehen",
+        "recommendations-form-title": "Teilen Sie Ihre Erfahrung",
+        "recommendations-form-name": "Ihr Name",
+        "recommendations-form-title-position": "Ihre Berufsbezeichnung/Position",
+        "recommendations-form-relation": "Beziehung",
+        "recommendations-form-select": "Auswählen...",
+        "recommendations-form-colleague": "Kollege",
+        "recommendations-form-client": "Kunde",
+        "recommendations-form-manager": "Manager",
+        "recommendations-form-other": "Andere",
+        "recommendations-form-message": "Ihre Empfehlung",
+        "recommendations-form-submit": "Empfehlung einreichen",
+        "recommendations-form-cancel": "Abbrechen",
+        "recommendations-success-title": "Vielen Dank für Ihre Empfehlung!",
+        "recommendations-success-message": "Ich weiß es zu schätzen, dass Sie sich die Zeit genommen haben, Ihre Erfahrung zu teilen.",
+        "recommendations-list-title": "Was andere sagen",
+        "recommendations-back": "Zurück"
     }
 }; 

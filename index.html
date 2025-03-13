@@ -21,6 +21,7 @@
                     <li><a href="#experience" data-i18n="nav-experience">Experience</a></li>
                     <li><a href="#skills" data-i18n="nav-skills">Skills</a></li>
                     <li><a href="#projects" data-i18n="nav-projects">Projects</a></li>
+                    <li><a href="#recommendations" data-i18n="nav-recommendations">Recommendations</a></li>
                     <li><a href="#contact" data-i18n="nav-contact">Contact</a></li>
                     <li class="nav-item dropdown">
                         <a href="#" class="language-selector" id="languageSelector">
@@ -301,6 +302,95 @@
         </div>
     </section>
 
+    <section id="recommendations" class="recommendations">
+        <div class="container">
+            <h2 class="section-title" data-i18n="recommendations-title">Recommendations</h2>
+            <p class="section-subtitle" data-i18n="recommendations-subtitle">What colleagues and clients say about my work</p>
+            
+            <div class="recommendations-buttons">
+                <button class="btn btn-primary" onclick="showRecommendationForm()" data-i18n="recommendations-leave">Leave a Recommendation</button>
+                <button class="btn btn-secondary" onclick="showExistingRecommendations()" data-i18n="recommendations-view">View Recommendations</button>
+            </div>
+            
+            <!-- Recommendation Form (initially hidden) -->
+            <div id="recommendationForm" class="recommendation-form" style="display: none;">
+                <h3 data-i18n="recommendations-form-title">Share Your Experience</h3>
+                <form id="newRecommendationForm">
+                    <div class="form-group">
+                        <label for="recommenderName" data-i18n="recommendations-form-name">Your Name</label>
+                        <input type="text" id="recommenderName" name="recommenderName" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="recommenderTitle" data-i18n="recommendations-form-title-position">Your Title/Position</label>
+                        <input type="text" id="recommenderTitle" name="recommenderTitle" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="recommenderRelation" data-i18n="recommendations-form-relation">Relationship</label>
+                        <select id="recommenderRelation" name="recommenderRelation" required>
+                            <option value="" data-i18n="recommendations-form-select">Select...</option>
+                            <option value="colleague" data-i18n="recommendations-form-colleague">Colleague</option>
+                            <option value="client" data-i18n="recommendations-form-client">Client</option>
+                            <option value="manager" data-i18n="recommendations-form-manager">Manager</option>
+                            <option value="other" data-i18n="recommendations-form-other">Other</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="recommendationText" data-i18n="recommendations-form-message">Your Recommendation</label>
+                        <textarea id="recommendationText" name="recommendationText" rows="5" required></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary" data-i18n="recommendations-form-submit">Submit Recommendation</button>
+                    <button type="button" class="btn btn-secondary" onclick="hideRecommendationForm()" data-i18n="recommendations-form-cancel">Cancel</button>
+                </form>
+                
+                <!-- Success message (hidden by default) -->
+                <div id="recommendationSuccessMessage" class="success-message" style="display: none;">
+                    <i class="fas fa-check-circle"></i>
+                    <h3 data-i18n="recommendations-success-title">Thank you for your recommendation!</h3>
+                    <p data-i18n="recommendations-success-message">I appreciate you taking the time to share your experience.</p>
+                </div>
+            </div>
+            
+            <!-- Existing Recommendations (initially hidden) -->
+            <div id="existingRecommendations" class="existing-recommendations" style="display: none;">
+                <h3 data-i18n="recommendations-list-title">What People Say</h3>
+                
+                <div class="recommendations-list">
+                    <!-- Recommendation 1 -->
+                    <div class="recommendation-card">
+                        <div class="recommendation-content">
+                            <p class="recommendation-text">"Chandrashekhar demonstrated exceptional software testing skills during our collaboration. His attention to detail and ability to identify critical security vulnerabilities saved our project from potential issues."</p>
+                            <div class="recommender-info">
+                                <h4>Dr. Martin Schmidt</h4>
+                                <p>Senior Researcher, Karlsruhe Institute of Technology</p>
+                                <span class="recommendation-type">Colleague</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Recommendation 2 -->
+                    <div class="recommendation-card">
+                        <div class="recommendation-content">
+                            <p class="recommendation-text">"Working with Chandrashekhar on our security testing projects was a pleasure. His technical knowledge combined with excellent communication skills made complex security concepts accessible to our entire team."</p>
+                            <div class="recommender-info">
+                                <h4>Lisa Wagner</h4>
+                                <p>Project Manager, Atlas Copco</p>
+                                <span class="recommendation-type">Manager</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Add more recommendation cards as needed -->
+                </div>
+                
+                <button class="btn btn-secondary back-button" onclick="hideExistingRecommendations()" data-i18n="recommendations-back">Back</button>
+            </div>
+        </div>
+    </section>
+
     <section id="contact" class="contact">
         <div class="container">
             <h2 class="section-title" data-i18n="contact-title">Get In Touch</h2>
@@ -391,6 +481,7 @@
                     <a href="#experience" data-i18n="nav-experience">Experience</a>
                     <a href="#skills" data-i18n="nav-skills">Skills</a>
                     <a href="#projects" data-i18n="nav-projects">Projects</a>
+                    <a href="#recommendations" data-i18n="nav-recommendations">Recommendations</a>
                     <a href="#contact" data-i18n="nav-contact">Contact</a>
                 </div>
                 

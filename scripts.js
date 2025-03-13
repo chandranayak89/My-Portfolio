@@ -141,6 +141,27 @@ document.addEventListener('DOMContentLoaded', function() {
     window.addEventListener('scroll', animateOnScroll);
     // Run once on page load to animate elements already in view
     window.addEventListener('load', animateOnScroll);
+
+    // Form submission for new recommendations
+    const newRecommendationForm = document.getElementById('newRecommendationForm');
+    if (newRecommendationForm) {
+        newRecommendationForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            // In a real application, you would send this data to your backend
+            // For now, we'll just show the success message
+            
+            // Hide the form and show success message
+            newRecommendationForm.style.display = 'none';
+            document.getElementById('recommendationSuccessMessage').style.display = 'block';
+            
+            // Reset the form for future use
+            newRecommendationForm.reset();
+            
+            // You could also implement storing recommendations in localStorage
+            // or sending them via email using EmailJS
+        });
+    }
 });
 
 // Language switcher functionality - UPDATED WITH DEBUGGING
@@ -194,4 +215,39 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('Setting initial language to:', currentLanguage);
     updateLanguage(currentLanguage);
 });
+
+// Function to show the recommendation form
+function showRecommendationForm() {
+    document.getElementById('recommendationForm').style.display = 'block';
+    document.getElementById('existingRecommendations').style.display = 'none';
+    document.getElementById('recommendationSuccessMessage').style.display = 'none';
+    
+    // Scroll to the form
+    document.getElementById('recommendationForm').scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+    });
+}
+
+// Function to hide the recommendation form
+function hideRecommendationForm() {
+    document.getElementById('recommendationForm').style.display = 'none';
+}
+
+// Function to show existing recommendations
+function showExistingRecommendations() {
+    document.getElementById('existingRecommendations').style.display = 'block';
+    document.getElementById('recommendationForm').style.display = 'none';
+    
+    // Scroll to the recommendations list
+    document.getElementById('existingRecommendations').scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+    });
+}
+
+// Function to hide existing recommendations
+function hideExistingRecommendations() {
+    document.getElementById('existingRecommendations').style.display = 'none';
+}
 
