@@ -493,13 +493,16 @@ section:nth-child(odd) {
 .project-card {
     transition: all 0.3s ease;
     border: 2px solid transparent;
-    overflow: visible;
-    height: 100%;
     background-color: white;
     border-radius: var(--border-radius);
+    overflow: visible;
+    height: auto;
+    min-height: 200px;
+    position: relative;
+    z-index: 5;
 }
 
-.project-card:hover {
+.project-card:hover, .project-card.active {
     transform: translateY(-5px);
     box-shadow: 0 10px 25px rgba(37, 99, 235, 0.2), 0 6px 10px rgba(37, 99, 235, 0.1);
     border: 2px solid var(--primary-color);
@@ -507,26 +510,20 @@ section:nth-child(odd) {
 
 .project-content {
     padding: 25px;
-    height: auto;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    position: relative;
 }
 
-/* Completely different approach to show/hide content */
+/* Project description styling */
 .project-card p {
-    display: none; /* Hide by default */
     margin-bottom: 15px;
     font-size: 0.95rem;
     line-height: 1.5;
 }
 
-.project-card:hover p {
-    display: block !important; /* Force display on hover */
-}
-
-.project-card.active p {
-    display: block !important; /* Force display when active (for mobile) */
-}
-
-/* Project indicator text */
+/* Project indicator */
 .project-content::after {
     content: "Hover/tap to view details";
     display: block;
@@ -534,6 +531,10 @@ section:nth-child(odd) {
     color: var(--primary-color);
     text-align: center;
     margin-top: 10px;
+    position: absolute;
+    bottom: 10px;
+    left: 0;
+    right: 0;
 }
 
 .project-card:hover .project-content::after,
@@ -541,9 +542,14 @@ section:nth-child(odd) {
     display: none;
 }
 
-/* Adjust project grid spacing */
-.projects-grid {
-    gap: 30px;
+.project-tech {
+    margin-top: auto;
+}
+
+@media (max-width: 768px) {
+    .project-content::after {
+        content: "Tap to view details";
+    }
 }
 
 .project-image {
@@ -569,23 +575,6 @@ section:nth-child(odd) {
 
 .project-content p {
     margin-bottom: 15px;
-}
-
-.project-tech {
-    margin-top: auto;
-    transition: opacity 0.3s ease;
-    opacity: 0.7;
-}
-
-.project-card:hover .project-tech {
-    opacity: 1;
-}
-
-.project-tech span {
-    background-color: var(--light-color);
-    padding: 5px 10px;
-    border-radius: 20px;
-    font-size: 0.8rem;
 }
 
 /* Contact Section */

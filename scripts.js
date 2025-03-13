@@ -277,6 +277,57 @@ This has been saved to your Google Sheet for review.`
             });
         });
     }
+
+    // Direct JavaScript solution for project cards hover
+    const projectCards = document.querySelectorAll('.project-card');
+    
+    projectCards.forEach(card => {
+        // Store the original content and description
+        const description = card.querySelector('p');
+        const title = card.querySelector('h3').innerText;
+        const techTags = card.querySelector('.project-tech');
+        
+        // Add event listeners for hover and touch
+        card.addEventListener('mouseenter', function() {
+            showProjectDetails(this, description);
+        });
+        
+        card.addEventListener('mouseleave', function() {
+            hideProjectDetails(this, title, techTags);
+        });
+        
+        // For mobile
+        card.addEventListener('click', function() {
+            if (window.innerWidth <= 768) {
+                if (this.classList.contains('active')) {
+                    hideProjectDetails(this, title, techTags);
+                    this.classList.remove('active');
+                } else {
+                    showProjectDetails(this, description);
+                    this.classList.add('active');
+                }
+            }
+        });
+        
+        // Initially hide descriptions
+        description.style.display = 'none';
+    });
+    
+    function showProjectDetails(card, description) {
+        description.style.display = 'block';
+        card.style.height = 'auto';
+        card.style.minHeight = '450px';
+    }
+    
+    function hideProjectDetails(card, title, techTags) {
+        // Only hide on non-mobile or when not in active state
+        if (window.innerWidth > 768 || !card.classList.contains('active')) {
+            const description = card.querySelector('p');
+            description.style.display = 'none';
+            card.style.height = '';
+            card.style.minHeight = '200px';
+        }
+    }
 });
 
 // Function to save recommendation ID to localStorage
