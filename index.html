@@ -23,12 +23,12 @@
                     <li><a href="#projects" data-i18n="nav-projects">Projects</a></li>
                     <li><a href="#contact" data-i18n="nav-contact">Contact</a></li>
                     <li class="nav-item dropdown">
-                        <a href="#" class="language-selector">
+                        <a href="#" class="language-selector" id="languageSelector">
                             <i class="fas fa-globe"></i> <span class="current-lang">EN</span>
                         </a>
-                        <div class="language-dropdown">
-                            <a href="#" data-lang="en" class="lang-option">English</a>
-                            <a href="#" data-lang="de" class="lang-option">Deutsch</a>
+                        <div class="language-dropdown" id="languageDropdown">
+                            <a href="#" data-lang="en" class="lang-option" onclick="updateLanguage('en'); return false;">English</a>
+                            <a href="#" data-lang="de" class="lang-option" onclick="updateLanguage('de'); return false;">Deutsch</a>
                         </div>
                     </li>
                 </ul>
@@ -412,4 +412,3 @@
     <script src="scripts.js"></script>
 </body>
 </html>
-```

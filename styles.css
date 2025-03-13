@@ -759,15 +759,22 @@ footer {
     box-shadow: var(--shadow);
 }
 
-/* Language Selector */
+/* Language Selector - UPDATED */
+.nav-item.dropdown {
+    position: relative;
+}
+
 .language-selector {
     display: flex;
     align-items: center;
     gap: 5px;
+    cursor: pointer;
 }
 
 .language-dropdown {
     position: absolute;
+    top: 100%;
+    right: 0;
     background-color: white;
     box-shadow: var(--shadow);
     border-radius: 5px;
@@ -777,13 +784,14 @@ footer {
     z-index: 1000;
 }
 
-.dropdown:hover .language-dropdown {
+.nav-item.dropdown:hover .language-dropdown {
     display: flex;
 }
 
 .lang-option {
     padding: 10px 15px;
     border-bottom: 1px solid var(--border-color);
+    cursor: pointer;
 }
 
 .lang-option:last-child {
@@ -792,4 +800,10 @@ footer {
 
 .lang-option:hover {
     background-color: var(--light-color);
+}
+
+/* Add this to make the language options more clickable */
+.language-dropdown a {
+    display: block;
+    width: 100%;
 }

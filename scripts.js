@@ -141,48 +141,57 @@ document.addEventListener('DOMContentLoaded', function() {
     window.addEventListener('scroll', animateOnScroll);
     // Run once on page load to animate elements already in view
     window.addEventListener('load', animateOnScroll);
+});
 
-    // Language switcher functionality - FIXED
-    let currentLanguage = localStorage.getItem('language') || 'en';
+// Language switcher functionality - UPDATED WITH DEBUGGING
+let currentLanguage = localStorage.getItem('language') || 'en';
 
-    // Function to update all text elements with translations
-    function updateLanguage(lang) {
-        document.querySelectorAll('[data-i18n]').forEach(element => {
-            const key = element.getAttribute('data-i18n');
-            if (translations[lang] && translations[lang][key]) {
-                element.textContent = translations[lang][key];
-            }
-        });
-        
-        // Update input placeholders
-        document.querySelectorAll('input[data-i18n-placeholder], textarea[data-i18n-placeholder]').forEach(element => {
-            const key = element.getAttribute('data-i18n-placeholder');
-            if (translations[lang] && translations[lang][key]) {
-                element.placeholder = translations[lang][key];
-            }
-        });
-        
-        // Update the current language indicator
-        document.querySelector('.current-lang').textContent = lang.toUpperCase();
-        
-        // Save language preference
-        localStorage.setItem('language', lang);
-        currentLanguage = lang;
-        
-        console.log('Language updated to:', lang);
-    }
-
-    // Initial language setup
-    updateLanguage(currentLanguage);
+// Function to update all text elements with translations
+function updateLanguage(lang) {
+    console.log('updateLanguage called with:', lang);
+    console.log('Available translations:', Object.keys(translations));
     
-    // Language switcher functionality
-    document.querySelectorAll('.lang-option').forEach(option => {
-        option.addEventListener('click', function(e) {
-            e.preventDefault();
-            const lang = this.getAttribute('data-lang');
-            console.log('Language selected:', lang);
-            updateLanguage(lang);
-        });
+    let translatedCount = 0;
+    let missingCount = 0;
+    
+    document.querySelectorAll('[data-i18n]').forEach(element => {
+        const key = element.getAttribute('data-i18n');
+        console.log(`Translating element with key: ${key}`);
+        
+        if (translations[lang] && translations[lang][key]) {
+            const oldText = element.textContent;
+            element.textContent = translations[lang][key];
+            console.log(`Translated: ${oldText} -> ${translations[lang][key]}`);
+            translatedCount++;
+        } else {
+            console.warn(`Missing translation for key: ${key} in language: ${lang}`);
+            missingCount++;
+        }
     });
+    
+    console.log(`Translation stats: ${translatedCount} translated, ${missingCount} missing`);
+    
+    // Update input placeholders
+    document.querySelectorAll('input[data-i18n-placeholder], textarea[data-i18n-placeholder]').forEach(element => {
+        const key = element.getAttribute('data-i18n-placeholder');
+        if (translations[lang] && translations[lang][key]) {
+            element.placeholder = translations[lang][key];
+        }
+    });
+    
+    // Update the current language indicator
+    document.querySelector('.current-lang').textContent = lang.toUpperCase();
+    
+    // Save language preference
+    localStorage.setItem('language', lang);
+    currentLanguage = lang;
+    
+    console.log('Language update completed');
+}
+
+// Call updateLanguage when the page loads
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Setting initial language to:', currentLanguage);
+    updateLanguage(currentLanguage);
 });
 
