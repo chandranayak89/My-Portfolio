@@ -46,7 +46,7 @@
         <div class="container">
             <div class="hero-content">
                 <h1>Chandrashekhar Nayak</h1>
-                <h2 data-i18n="hero-title">Software Development, Software Testing & IT Security Specialist</h2>
+                <h2 data-i18n="hero-title"> Software Testing & IT Security Specialist</h2>
                 <p data-i18n="hero-description">Merging cybersecurity expertise with advanced testing methodologies for robust, secure software solutions.</p>
                 <div class="hero-buttons">
                     <a href="#contact" class="btn btn-primary" data-i18n="hero-contact">Contact Me</a>
@@ -95,7 +95,7 @@
                     <div class="languages">
                         <h3 data-i18n="about-languages">Languages</h3>
                         <ul>
-                            <li data-i18n="about-lang-1">German: Business Fluent</li>
+                            <li data-i18n="about-lang-1">German: intermediate level</li>
                             <li data-i18n="about-lang-2">English: Business Fluent</li>
                         </ul>
                     </div>
@@ -191,6 +191,7 @@
                         <div class="skill-item">Python</div>
                         <div class="skill-item">C++</div>
                         <div class="skill-item">Shell Scripting</div>
+                        <div class="skill-item">javascript</div>
                         <div class="skill-item">Docker</div>
                         <div class="skill-item">Kubernetes</div>
                     </div>
@@ -199,10 +200,11 @@
                 <div class="skill-category">
                     <h3 data-i18n="skills-cat-4">Web & Data</h3>
                     <div class="skill-items">
+                        <div class="skill-item">React</div>
                         <div class="skill-item">HTML</div>
                         <div class="skill-item">CSS</div>
                         <div class="skill-item">XML</div>
-                        <div class="skill-item">SQL</div>
+                        <div class="skill-item">PostgreSQL</div>
                         <div class="skill-item">Data Analytics</div>
                     </div>
                 </div>
@@ -312,18 +314,32 @@
                 <button class="btn btn-secondary" onclick="showExistingRecommendations()" data-i18n="recommendations-view">View Recommendations</button>
             </div>
             
-            <!-- Recommendation Form (initially hidden) -->
+            <!-- Replace the current recommendation form with this improved version -->
             <div id="recommendationForm" class="recommendation-form" style="display: none;">
                 <h3 data-i18n="recommendations-form-title">Share Your Experience</h3>
                 <form id="newRecommendationForm">
-                    <div class="form-group">
-                        <label for="recommenderName" data-i18n="recommendations-form-name">Your Name</label>
-                        <input type="text" id="recommenderName" name="recommenderName" required>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="recommenderFirstName" data-i18n="recommendations-form-firstname">First Name</label>
+                            <input type="text" id="recommenderFirstName" name="recommenderFirstName" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="recommenderLastName" data-i18n="recommendations-form-lastname">Last Name</label>
+                            <input type="text" id="recommenderLastName" name="recommenderLastName" required>
+                        </div>
                     </div>
                     
-                    <div class="form-group">
-                        <label for="recommenderTitle" data-i18n="recommendations-form-title-position">Your Title/Position</label>
-                        <input type="text" id="recommenderTitle" name="recommenderTitle" required>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="recommenderCompany" data-i18n="recommendations-form-company">Company Name</label>
+                            <input type="text" id="recommenderCompany" name="recommenderCompany" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="recommenderJobRole" data-i18n="recommendations-form-jobrole">Job Role</label>
+                            <input type="text" id="recommenderJobRole" name="recommenderJobRole" required>
+                        </div>
                     </div>
                     
                     <div class="form-group">
@@ -342,8 +358,10 @@
                         <textarea id="recommendationText" name="recommendationText" rows="5" required></textarea>
                     </div>
                     
-                    <button type="submit" class="btn btn-primary" data-i18n="recommendations-form-submit">Submit Recommendation</button>
-                    <button type="button" class="btn btn-secondary" onclick="hideRecommendationForm()" data-i18n="recommendations-form-cancel">Cancel</button>
+                    <div class="form-buttons">
+                        <button type="submit" class="btn btn-primary" data-i18n="recommendations-form-submit">Submit Recommendation</button>
+                        <button type="button" class="btn btn-secondary" onclick="hideRecommendationForm()" data-i18n="recommendations-form-cancel">Cancel</button>
+                    </div>
                 </form>
                 
                 <!-- Success message (hidden by default) -->

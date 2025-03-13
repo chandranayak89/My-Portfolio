@@ -115,7 +115,11 @@ const translations = {
         "recommendations-success-title": "Thank you for your recommendation!",
         "recommendations-success-message": "I appreciate you taking the time to share your experience.",
         "recommendations-list-title": "What People Say",
-        "recommendations-back": "Back"
+        "recommendations-back": "Back",
+        "recommendations-form-firstname": "First Name",
+        "recommendations-form-lastname": "Last Name",
+        "recommendations-form-company": "Company Name",
+        "recommendations-form-jobrole": "Job Role"
     },
     de: {
         // Navigation
@@ -233,6 +237,10 @@ const translations = {
         "recommendations-success-title": "Vielen Dank für Ihre Empfehlung!",
         "recommendations-success-message": "Ich weiß es zu schätzen, dass Sie sich die Zeit genommen haben, Ihre Erfahrung zu teilen.",
         "recommendations-list-title": "Was andere sagen",
-        "recommendations-back": "Zurück"
+        "recommendations-back": "Zurück",
+        "recommendations-form-firstname": "Vorname",
+        "recommendations-form-lastname": "Nachname",
+        "recommendations-form-company": "Firmenname",
+        "recommendations-form-jobrole": "Berufsbezeichnung"
     }
 }; 
