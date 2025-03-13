@@ -1,6 +1,6 @@
 // Add these variables at the top of your scripts.js file
 // Replace with your actual Google Apps Script Web App URL
-const GOOGLE_SHEET_API_URL = "https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec";
+const GOOGLE_SHEET_API_URL = "https://script.google.com/macros/s/AKfycbwnbOnKUsOfXkL7xymSjLkRGP6BIeyot6PqekgSLhDsnY-x4Y0-poRQAhkLrIKyFhSRQQ/exec";
 
 document.addEventListener('DOMContentLoaded', function() {
     // Mobile menu toggle
