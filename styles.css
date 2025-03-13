@@ -1338,3 +1338,27 @@ html, body {
 .pending-recommendations-note li {
     margin-bottom: 5px;
 }
+
+/* Add these styles for the recommendation loading states */
+.loading-recommendations {
+    text-align: center;
+    padding: 30px;
+    color: var(--text-color);
+    font-style: italic;
+}
+
+.no-recommendations {
+    text-align: center;
+    padding: 30px;
+    color: var(--text-color);
+    background-color: var(--primary-light);
+    border-radius: var(--border-radius);
+}
+
+.error-loading {
+    text-align: center;
+    padding: 30px;
+    color: var(--error-color);
+    background-color: #fee2e2;
+    border-radius: var(--border-radius);
+}
