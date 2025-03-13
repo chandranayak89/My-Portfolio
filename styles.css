@@ -1503,17 +1503,39 @@ html, body {
 
 /* Hide project description initially and show on hover */
 .project-card p {
-    opacity: 0;
-    max-height: 0;
-    overflow: hidden;
-    transition: all 0.5s ease;
-    margin-bottom: 0;
+    /* Set fixed starting values */
+    display: none;
+    transition: none; /* Remove transition initially */
 }
 
 .project-card:hover p {
-    opacity: 1;
-    max-height: 2000px;
+    /* Force display on hover */
+    display: block !important; 
+    opacity: 1 !important;
+    max-height: none !important; /* Remove height restriction */
+    visibility: visible !important;
     margin-bottom: 15px;
+}
+
+/* For mobile devices */
+.project-card.active p {
+    /* Same forceful display for tap on mobile */
+    display: block !important;
+    opacity: 1 !important;
+    max-height: none !important;
+    visibility: visible !important;
+    margin-bottom: 15px;
+}
+
+/* Make project cards taller to fit content */
+.project-card:hover {
+    min-height: 450px; /* Ensure there's enough room for content */
+}
+
+/* Ensure content stays in front */
+.project-content {
+    z-index: 10;
+    position: relative;
 }
 
 /* Adjust the project tech tags to stay at bottom */
