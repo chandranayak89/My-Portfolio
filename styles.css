@@ -563,7 +563,18 @@ section:nth-child(odd) {
 
 .projects-cta {
     text-align: center;
-    margin-top: 50px;
+    margin-top: 40px;
+    margin-bottom: 20px;
+    padding: 15px 0;
+    position: relative;
+    z-index: 5;
+}
+
+.projects-cta .btn {
+    display: inline-block;
+    padding: 14px 28px;
+    font-size: 1.1rem;
+    min-width: 200px;
 }
 
 /* Contact Section */
@@ -802,6 +813,25 @@ footer {
 
     .projects-grid {
         grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    }
+
+    .projects-cta {
+        margin-top: 50px;
+        margin-bottom: 30px;
+    }
+    
+    .projects-cta .btn {
+        display: block;
+        width: 80%;
+        max-width: 300px;
+        margin: 0 auto;
+        padding: 16px 20px;
+        font-size: 1.2rem;
+    }
+    
+    .projects-cta .btn:active {
+        transform: scale(0.98);
+        background-color: var(--primary-dark);
     }
 }
 
