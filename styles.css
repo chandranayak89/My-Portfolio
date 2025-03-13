@@ -1314,3 +1314,30 @@ html, body {
         opacity: 0;
     }
 }
+
+/* Add styles for pending recommendations */
+.pending-recommendations-note {
+    background-color: var(--primary-light);
+    padding: 15px;
+    margin-bottom: 25px;
+    border-radius: var(--border-radius);
+    text-align: center;
+}
+
+.pending-recommendation {
+    position: relative;
+    border: 2px dashed var(--primary-color);
+    opacity: 0.8;
+}
+
+.pending-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: var(--warning-color);
+    color: white;
+    font-size: 0.7rem;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-weight: 600;
+}

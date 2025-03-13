@@ -142,7 +142,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Run once on page load to animate elements already in view
     window.addEventListener('load', animateOnScroll);
 
-    // Form submission for new recommendations
+    // Get the recommendation form
     const newRecommendationForm = document.getElementById('newRecommendationForm');
     if (newRecommendationForm) {
         newRecommendationForm.addEventListener('submit', function(event) {
@@ -156,26 +156,43 @@ document.addEventListener('DOMContentLoaded', function() {
             const relation = document.getElementById('recommenderRelation').value;
             const text = document.getElementById('recommendationText').value;
             
-            // Create recommendation object
-            const recommendation = {
+            // Prepare data for submission
+            const formData = {
                 firstName: firstName,
                 lastName: lastName,
                 company: company,
                 jobRole: jobRole,
                 relation: relation,
                 text: text,
-                date: new Date().toISOString()
+                formType: "recommendation" // To identify this is a recommendation submission
             };
             
-            // Save to localStorage
-            saveRecommendation(recommendation);
-            
-            // Hide the form and show success message
-            newRecommendationForm.style.display = 'none';
-            document.getElementById('recommendationSuccessMessage').style.display = 'block';
-            
-            // Reset the form for future use
-            newRecommendationForm.reset();
+            // Send data using EmailJS (you're already using this for contact form)
+            emailjs.send('service_igp5ffv', 'template_q2r65kj', formData)
+                .then(function(response) {
+                    console.log('Recommendation sent!', response.status);
+                    
+                    // Hide the form and show success message
+                    newRecommendationForm.style.display = 'none';
+                    document.getElementById('recommendationSuccessMessage').style.display = 'block';
+                    
+                    // Also save to localStorage so the user can see their own recommendation immediately
+                    saveRecommendation({
+                        firstName: firstName,
+                        lastName: lastName,
+                        company: company,
+                        jobRole: jobRole,
+                        relation: relation,
+                        text: text,
+                        date: new Date().toISOString()
+                    });
+                    
+                    // Reset the form for future use
+                    newRecommendationForm.reset();
+                }, function(error) {
+                    console.log('Failed to send recommendation', error);
+                    alert("There was a problem submitting your recommendation. Please try again.");
+                });
         });
     }
 
@@ -226,7 +243,31 @@ function saveRecommendation(recommendation) {
     localStorage.setItem('recommendations', JSON.stringify(recommendations));
 }
 
-// Updated function to show existing recommendations
+// Create a recommendations.js file that will store approved recommendations
+// Create a function to load these predefined recommendations
+function loadPredefinedRecommendations() {
+    return [
+        {
+            firstName: "Martin",
+            lastName: "Schmidt",
+            company: "Karlsruhe Institute of Technology",
+            jobRole: "Senior Researcher",
+            relation: "colleague",
+            text: "Chandrashekhar demonstrated exceptional software testing skills during our collaboration. His attention to detail and ability to identify critical security vulnerabilities saved our project from potential issues."
+        },
+        {
+            firstName: "Lisa",
+            lastName: "Wagner",
+            company: "Atlas Copco",
+            jobRole: "Project Manager",
+            relation: "manager",
+            text: "Working with Chandrashekhar on our security testing projects was a pleasure. His technical knowledge combined with excellent communication skills made complex security concepts accessible to our entire team."
+        }
+        // You can add more predefined recommendations here
+    ];
+}
+
+// Update the showExistingRecommendations function to show both predefined and local recommendations
 function showExistingRecommendations() {
     document.getElementById('existingRecommendations').style.display = 'block';
     document.getElementById('recommendationForm').style.display = 'none';
@@ -234,43 +275,62 @@ function showExistingRecommendations() {
     // Get the container for recommendations
     const recommendationsList = document.querySelector('.recommendations-list');
     
-    // Get saved recommendations from localStorage
+    // Clear existing recommendations to avoid duplicates
+    recommendationsList.innerHTML = '';
+    
+    // Load predefined recommendations
+    const predefinedRecommendations = loadPredefinedRecommendations();
+    
+    // Add predefined recommendations to the list
+    predefinedRecommendations.forEach(rec => {
+        const recCard = document.createElement('div');
+        recCard.className = 'recommendation-card';
+        
+        recCard.innerHTML = `
+            <div class="recommendation-content">
+                <p class="recommendation-text">"${rec.text}"</p>
+                <div class="recommender-info">
+                    <h4>${rec.firstName} ${rec.lastName}</h4>
+                    <p>${rec.jobRole}, ${rec.company}</p>
+                    <span class="recommendation-type">${capitalizeFirstLetter(rec.relation)}</span>
+                </div>
+            </div>
+        `;
+        
+        recommendationsList.appendChild(recCard);
+    });
+    
+    // Get saved recommendations from localStorage (these are ones the current user submitted)
     const savedRecommendations = JSON.parse(localStorage.getItem('recommendations') || '[]');
     
-    // If there are new recommendations, add them to the list
+    // Add a note if there are pending recommendations
     if (savedRecommendations.length > 0) {
-        // Create HTML for each new recommendation
+        const pendingNote = document.createElement('div');
+        pendingNote.className = 'pending-recommendations-note';
+        pendingNote.innerHTML = `
+            <p>You have submitted ${savedRecommendations.length} recommendation(s). 
+            These are visible to you and will be reviewed before being published publicly.</p>
+        `;
+        document.getElementById('existingRecommendations').insertBefore(pendingNote, document.querySelector('.recommendations-list'));
+        
+        // Add local recommendations (these will only be visible to the person who submitted them)
         savedRecommendations.forEach(rec => {
-            // Check if this recommendation is already displayed (to avoid duplicates)
-            const fullName = `${rec.firstName} ${rec.lastName}`;
-            const existingRecs = recommendationsList.querySelectorAll('h4');
-            let isDuplicate = false;
+            const recCard = document.createElement('div');
+            recCard.className = 'recommendation-card pending-recommendation';
             
-            existingRecs.forEach(el => {
-                if (el.textContent === fullName) {
-                    isDuplicate = true;
-                }
-            });
-            
-            // Only add if not a duplicate
-            if (!isDuplicate) {
-                const recCard = document.createElement('div');
-                recCard.className = 'recommendation-card';
-                
-                recCard.innerHTML = `
-                    <div class="recommendation-content">
-                        <p class="recommendation-text">"${rec.text}"</p>
-                        <div class="recommender-info">
-                            <h4>${rec.firstName} ${rec.lastName}</h4>
-                            <p>${rec.jobRole}, ${rec.company}</p>
-                            <span class="recommendation-type">${capitalizeFirstLetter(rec.relation)}</span>
-                        </div>
+            recCard.innerHTML = `
+                <div class="recommendation-content">
+                    <div class="pending-badge">Pending Review</div>
+                    <p class="recommendation-text">"${rec.text}"</p>
+                    <div class="recommender-info">
+                        <h4>${rec.firstName} ${rec.lastName}</h4>
+                        <p>${rec.jobRole}, ${rec.company}</p>
+                        <span class="recommendation-type">${capitalizeFirstLetter(rec.relation)}</span>
                     </div>
-                `;
-                
-                // Add to the beginning to show newest first
-                recommendationsList.prepend(recCard);
-            }
+                </div>
+            `;
+            
+            recommendationsList.appendChild(recCard);
         });
     }
     
