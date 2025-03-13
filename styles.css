@@ -1149,24 +1149,104 @@ html, body {
 
 /* Recommendation Form */
 .recommendation-form {
-    max-width: 700px;
-    margin: 0 auto;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    border-radius: var(--border-radius);
     background-color: white;
     padding: 30px;
-    border-radius: var(--border-radius);
     box-shadow: var(--shadow);
-    animation: fadeIn 0.3s ease;
+    max-width: 800px;
+    margin: 0 auto;
 }
 
-.recommendation-form h3 {
-    margin-bottom: 25px;
-    text-align: center;
-    color: var(--dark-color);
+.recommendation-form:hover {
+    box-shadow: 0 10px 25px rgba(37, 99, 235, 0.2), 0 6px 10px rgba(37, 99, 235, 0.1);
+    border-color: var(--primary-light);
+    transform: translateY(-3px);
 }
 
-.recommendation-form .btn {
-    margin-top: 10px;
-    margin-right: 10px;
+/* Add animation to form inputs */
+.recommendation-form input,
+.recommendation-form textarea,
+.recommendation-form select {
+    transition: all 0.3s ease;
+    border: 2px solid var(--border-color);
+}
+
+.recommendation-form input:hover,
+.recommendation-form textarea:hover,
+.recommendation-form select:hover {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.recommendation-form input:focus,
+.recommendation-form textarea:focus,
+.recommendation-form select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15);
+    transform: translateY(-2px);
+}
+
+/* Apply similar style to the contact form */
+.contact-form {
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    border-radius: var(--border-radius);
+}
+
+.contact-form:hover {
+    box-shadow: 0 10px 25px rgba(37, 99, 235, 0.2), 0 6px 10px rgba(37, 99, 235, 0.1);
+    border-color: var(--primary-light);
+    transform: translateY(-3px);
+}
+
+.contact-form input,
+.contact-form textarea {
+    transition: all 0.3s ease;
+    border: 2px solid var(--border-color);
+}
+
+.contact-form input:hover,
+.contact-form textarea:hover {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15);
+    transform: translateY(-2px);
+}
+
+/* Enhanced button effects */
+.form-buttons .btn {
+    position: relative;
+    overflow: hidden;
+}
+
+.form-buttons .btn::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background: linear-gradient(120deg, transparent, rgba(255,255,255,0.3), transparent);
+    transform: translateX(-100%);
+}
+
+.form-buttons .btn:hover::after {
+    animation: shine 1.5s ease-in-out;
+}
+
+@keyframes shine {
+    100% {
+        transform: translateX(100%);
+    }
 }
 
 /* Existing Recommendations */
