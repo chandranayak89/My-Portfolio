@@ -1318,26 +1318,23 @@ html, body {
 /* Add styles for pending recommendations */
 .pending-recommendations-note {
     background-color: var(--primary-light);
-    padding: 15px;
-    margin-bottom: 25px;
+    padding: 20px;
+    margin-bottom: 30px;
     border-radius: var(--border-radius);
-    text-align: center;
+    text-align: left;
+    border-left: 4px solid var(--primary-color);
+    line-height: 1.6;
 }
 
-.pending-recommendation {
-    position: relative;
-    border: 2px dashed var(--primary-color);
-    opacity: 0.8;
+.pending-recommendations-note p {
+    margin-bottom: 8px;
 }
 
-.pending-badge {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background-color: var(--warning-color);
-    color: white;
-    font-size: 0.7rem;
-    padding: 3px 8px;
-    border-radius: 12px;
-    font-weight: 600;
+.pending-recommendations-note ul {
+    margin-left: 20px;
+    list-style-type: disc;
+}
+
+.pending-recommendations-note li {
+    margin-bottom: 5px;
 }

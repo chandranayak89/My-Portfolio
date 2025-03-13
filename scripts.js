@@ -156,21 +156,29 @@ document.addEventListener('DOMContentLoaded', function() {
             const relation = document.getElementById('recommenderRelation').value;
             const text = document.getElementById('recommendationText').value;
             
-            // Prepare data for submission
+            // Prepare data for submission - UPDATED for better email formatting
             const formData = {
-                firstName: firstName,
-                lastName: lastName,
-                company: company,
-                jobRole: jobRole,
-                relation: relation,
-                text: text,
-                formType: "recommendation" // To identify this is a recommendation submission
+                to_name: "Chandrashekhar", // Same as in your contact form
+                from_name: firstName + " " + lastName,
+                from_email: "recommendation@portfolio.com", // Placeholder since we don't collect email
+                subject: "New Portfolio Recommendation from " + firstName + " " + lastName,
+                message: `New recommendation submission:
+                
+Full Name: ${firstName} ${lastName}
+Company: ${company}
+Job Role: ${jobRole}
+Relationship: ${relation}
+                
+Recommendation:
+"${text}"
+                
+This recommendation has been saved as pending review on the submitter's device.`,
             };
             
-            // Send data using EmailJS (you're already using this for contact form)
+            // Send data using EmailJS - using the same template as contact form
             emailjs.send('service_igp5ffv', 'template_q2r65kj', formData)
                 .then(function(response) {
-                    console.log('Recommendation sent!', response.status);
+                    console.log('Recommendation sent to your email!', response.status);
                     
                     // Hide the form and show success message
                     newRecommendationForm.style.display = 'none';
@@ -246,6 +254,7 @@ function saveRecommendation(recommendation) {
 // Create a recommendations.js file that will store approved recommendations
 // Create a function to load these predefined recommendations
 function loadPredefinedRecommendations() {
+    // These are recommendations you want to show to everyone
     return [
         {
             firstName: "Martin",
@@ -262,8 +271,17 @@ function loadPredefinedRecommendations() {
             jobRole: "Project Manager",
             relation: "manager",
             text: "Working with Chandrashekhar on our security testing projects was a pleasure. His technical knowledge combined with excellent communication skills made complex security concepts accessible to our entire team."
-        }
-        // You can add more predefined recommendations here
+        },
+        // When you receive a new recommendation by email that you want to approve,
+        // simply add it here following the same format
+        // {
+        //     firstName: "New",
+        //     lastName: "Person",
+        //     company: "Their Company",
+        //     jobRole: "Their Role",
+        //     relation: "colleague",
+        //     text: "Copy their recommendation text here."
+        // },
     ];
 }
 
@@ -308,8 +326,14 @@ function showExistingRecommendations() {
         const pendingNote = document.createElement('div');
         pendingNote.className = 'pending-recommendations-note';
         pendingNote.innerHTML = `
-            <p>You have submitted ${savedRecommendations.length} recommendation(s). 
-            These are visible to you and will be reviewed before being published publicly.</p>
+            <p><strong>You have submitted ${savedRecommendations.length} recommendation(s).</strong></p>
+            <p>Important notes about recommendations:</p>
+            <ul>
+                <li>Your recommendations are only visible on this device</li>
+                <li>I've received your recommendation by email and will review it</li>
+                <li>After approval, your recommendation will be visible to all visitors</li>
+                <li>Thank you for taking the time to share your experience!</li>
+            </ul>
         `;
         document.getElementById('existingRecommendations').insertBefore(pendingNote, document.querySelector('.recommendations-list'));
         
