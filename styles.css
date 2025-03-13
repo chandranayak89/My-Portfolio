@@ -513,8 +513,9 @@ section:nth-child(odd) {
 
 .project-content {
     padding: 25px;
-    transition: padding 0.3s ease;
-    height: 100%;
+    transition: all 0.3s ease;
+    height: auto;
+    min-height: 200px;
     display: flex;
     flex-direction: column;
 }
@@ -1489,8 +1490,9 @@ html, body {
 
 .project-content {
     padding: 25px;
-    transition: padding 0.3s ease;
-    height: 100%;
+    transition: all 0.3s ease;
+    height: auto;
+    min-height: 200px;
     display: flex;
     flex-direction: column;
 }
@@ -1502,15 +1504,15 @@ html, body {
 /* Hide project description initially and show on hover */
 .project-card p {
     opacity: 0;
-    height: 0;
+    max-height: 0;
     overflow: hidden;
-    transition: all 0.3s ease;
+    transition: all 0.5s ease;
     margin-bottom: 0;
 }
 
 .project-card:hover p {
     opacity: 1;
-    height: auto;
+    max-height: 2000px;
     margin-bottom: 15px;
 }
 
@@ -1549,7 +1551,7 @@ html, body {
     
     .project-card.active p {
         opacity: 1;
-        height: auto;
+        max-height: 2000px;
         margin-bottom: 15px;
     }
     
