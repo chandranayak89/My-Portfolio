@@ -1173,6 +1173,7 @@ html, body {
     margin-bottom: 40px;
 }
 
+/* Updated Recommendation Card styles */
 .recommendation-card {
     background-color: white;
     border-radius: var(--border-radius);
@@ -1180,6 +1181,7 @@ html, body {
     box-shadow: var(--shadow);
     transition: var(--transition);
     height: 100%;
+    position: relative;
 }
 
 .recommendation-card:hover {
@@ -1189,13 +1191,26 @@ html, body {
 
 .recommendation-content {
     padding: 25px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
 .recommendation-text {
     font-style: italic;
-    margin-bottom: 20px;
     color: var(--text-color);
     position: relative;
+    opacity: 0;
+    height: 0;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    margin-bottom: 0;
+}
+
+.recommendation-card:hover .recommendation-text {
+    opacity: 1;
+    height: auto;
+    margin-bottom: 20px;
 }
 
 .recommendation-text::before {
@@ -1212,6 +1227,7 @@ html, body {
 .recommender-info {
     border-top: 1px solid var(--border-color);
     padding-top: 15px;
+    margin-top: auto;
 }
 
 .recommender-info h4 {
@@ -1225,19 +1241,19 @@ html, body {
     margin-bottom: 10px;
 }
 
-.recommendation-type {
-    display: inline-block;
-    padding: 5px 10px;
-    background-color: var(--primary-light);
-    color: var(--primary-dark);
-    border-radius: 20px;
-    font-size: 0.8rem;
-    font-weight: 500;
+/* Hover indicator */
+.recommender-info::after {
+    content: "Hover to view recommendation";
+    display: block;
+    font-size: 0.75rem;
+    color: var(--secondary-color);
+    margin-top: 5px;
+    opacity: 0.8;
+    transition: opacity 0.3s ease;
 }
 
-.back-button {
-    display: block;
-    margin: 20px auto;
+.recommendation-card:hover .recommender-info::after {
+    opacity: 0;
 }
 
 /* Responsive styles for recommendations */
