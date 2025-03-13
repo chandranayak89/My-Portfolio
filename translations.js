@@ -44,6 +44,11 @@ const translations = {
         "exp-2-title": "Research Assistant – Software Development & Testing",
         "exp-2-company": "Karlsruher Institut für Technologie (KIT) | Karlsruhe",
         "exp-2-date": "July 2022 – June 2023",
+        "exp-2-detail-1": "Development of machine learning models with Python, PostgreSQL, Linux, and PyTorch",
+        "exp-2-detail-2": "Implementation of automated test processes to optimize software quality",
+        "exp-2-detail-3": "Experience with continuous integration and test automation",
+        "exp-2-detail-4": "Documentation and analysis of test results for traceability",
+        "exp-2-detail-5": "Maintenance of Jenkins pipelines for test automation",
         
         "exp-3-title": "Information Security Analyst, Penetration Testing & Software Testing",
         "exp-3-company": "Prosaic Technologies Pvt Ltd | Bangalore, India",
@@ -134,6 +139,11 @@ const translations = {
         "exp-2-title": "Wissenschaftliche Hilfskraft – Softwareentwicklung & Testing",
         "exp-2-company": "Karlsruher Institut für Technologie (KIT) | Karlsruhe",
         "exp-2-date": "Juli 2022 – Juni 2023",
+        "exp-2-detail-1": "Entwicklung von Machine-Learning-Modellen mit Python, PostgreSQL, Linux und PyTorch",
+        "exp-2-detail-2": "Implementierung automatisierter Testprozesse zur Optimierung der Softwarequalität",
+        "exp-2-detail-3": "Erfahrung mit Continuous Integration und Testautomatisierung",
+        "exp-2-detail-4": "Dokumentation und Analyse von Testergebnissen für die Rückverfolgbarkeit",
+        "exp-2-detail-5": "Wartung von Jenkins-Pipelines für die Testautomatisierung",
         
         "exp-3-title": "Information Security Analyst, Penetration Testing & Softwaretests",
         "exp-3-company": "Prosaic Technologies Pvt Ltd | Bangalore, Indien",
