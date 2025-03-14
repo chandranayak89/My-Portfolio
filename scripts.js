@@ -278,56 +278,50 @@ This has been saved to your Google Sheet for review.`
         });
     }
 
-    // Direct JavaScript solution for project cards hover
+    // Simplified direct solution for project descriptions
     const projectCards = document.querySelectorAll('.project-card');
     
     projectCards.forEach(card => {
-        // Store the original content and description
         const description = card.querySelector('p');
-        const title = card.querySelector('h3').innerText;
-        const techTags = card.querySelector('.project-tech');
         
-        // Add event listeners for hover and touch
+        // Force display none initially
+        if (description) {
+            description.style.display = 'none';
+        }
+        
+        // Add simpler event listeners
         card.addEventListener('mouseenter', function() {
-            showProjectDetails(this, description);
+            console.log('Mouse enter on project card');
+            if (description) {
+                description.style.display = 'block';
+                this.classList.add('expanded');
+            }
         });
         
         card.addEventListener('mouseleave', function() {
-            hideProjectDetails(this, title, techTags);
+            console.log('Mouse leave on project card');
+            if (description && !this.classList.contains('active')) {
+                description.style.display = 'none';
+                this.classList.remove('expanded');
+            }
         });
         
         // For mobile
         card.addEventListener('click', function() {
+            console.log('Click on project card');
             if (window.innerWidth <= 768) {
                 if (this.classList.contains('active')) {
-                    hideProjectDetails(this, title, techTags);
+                    if (description) description.style.display = 'none';
                     this.classList.remove('active');
+                    this.classList.remove('expanded');
                 } else {
-                    showProjectDetails(this, description);
+                    if (description) description.style.display = 'block';
                     this.classList.add('active');
+                    this.classList.add('expanded');
                 }
             }
         });
-        
-        // Initially hide descriptions
-        description.style.display = 'none';
     });
-    
-    function showProjectDetails(card, description) {
-        description.style.display = 'block';
-        card.style.height = 'auto';
-        card.style.minHeight = '450px';
-    }
-    
-    function hideProjectDetails(card, title, techTags) {
-        // Only hide on non-mobile or when not in active state
-        if (window.innerWidth > 768 || !card.classList.contains('active')) {
-            const description = card.querySelector('p');
-            description.style.display = 'none';
-            card.style.height = '';
-            card.style.minHeight = '200px';
-        }
-    }
 });
 
 // Function to save recommendation ID to localStorage
