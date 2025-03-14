@@ -313,6 +313,17 @@ This has been saved to your Google Sheet for review.`
             }
         });
     });
+
+    // New simpler approach for project card interaction
+    if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
+        const projectCards = document.querySelectorAll('.project-card.hoverable');
+        projectCards.forEach(card => {
+            card.addEventListener('click', function() {
+                // Toggle active class only on touch devices
+                this.classList.toggle('active');
+            });
+        });
+    }
 });
 
 // Function to save recommendation ID to localStorage
