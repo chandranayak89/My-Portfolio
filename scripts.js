@@ -324,6 +324,51 @@ This has been saved to your Google Sheet for review.`
             });
         });
     }
+
+    // Handle projects and timeline hover/tap
+    const projectCards = document.querySelectorAll('.project-card');
+    const timelineItems = document.querySelectorAll('.timeline-item');
+    
+    // Function to handle hover/tap for both project cards and timeline items
+    function setupInteraction(elements) {
+        elements.forEach(el => {
+            // Get the details element
+            const details = el.classList.contains('timeline-item') 
+                ? el.querySelector('.timeline-content ul') 
+                : el.querySelector('p');
+                
+            if (details) {
+                // Force hide details initially
+                details.style.display = 'none';
+                
+                // Desktop hover
+                el.addEventListener('mouseenter', function() {
+                    console.log('Mouse entered', el);
+                    details.style.display = 'block';
+                });
+                
+                el.addEventListener('mouseleave', function() {
+                    console.log('Mouse left', el);
+                    if (!el.classList.contains('active')) {
+                        details.style.display = 'none';
+                    }
+                });
+                
+                // Mobile tap
+                el.addEventListener('click', function() {
+                    console.log('Clicked', el);
+                    if (window.innerWidth <= 768) {
+                        el.classList.toggle('active');
+                        details.style.display = details.style.display === 'block' ? 'none' : 'block';
+                    }
+                });
+            }
+        });
+    }
+    
+    // Setup interactions
+    setupInteraction(projectCards);
+    setupInteraction(timelineItems);
 });
 
 // Function to save recommendation ID to localStorage
