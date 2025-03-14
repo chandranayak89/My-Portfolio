@@ -34,95 +34,47 @@ function saveRecommendationId(id, data) {
 }
 
 // =======================================================
-// RECOMMENDATION SYSTEM FIX - ADD THIS AT THE TOP OF YOUR FILE
+// RECOMMENDATION BUTTON FIX - ADD AT THE TOP OF YOUR FILE
 // =======================================================
 
-// Make sure these functions are directly available in the global scope
+// Make recommendation functions available globally
 window.showRecommendationForm = function() {
-    console.log("Opening recommendation form - direct function");
-    var form = document.getElementById('recommendationForm');
-    if (form) {
-        form.style.display = 'block';
-        form.scrollIntoView({behavior: 'smooth', block: 'start'});
-        
-        // Hide other sections
-        var existingRecs = document.getElementById('existingRecommendations');
-        if (existingRecs) existingRecs.style.display = 'none';
-        
-        var successMsg = document.getElementById('recommendationSuccessMessage');
-        if (successMsg) successMsg.style.display = 'none';
-        
-        // Scroll to form
-        //form.scrollIntoView({behavior: 'smooth', block: 'start'});
-        //console.log("Form should be visible now");
-    } else {
-        console.error("Could not find recommendation form element!");
+    console.log("Opening recommendation form");
+    var recommendationForm = document.getElementById('recommendationForm');
+    var existingRecommendations = document.getElementById('existingRecommendations');
+    var successMessage = document.getElementById('recommendationSuccessMessage');
+    
+    if (recommendationForm) recommendationForm.style.display = 'block';
+    if (existingRecommendations) existingRecommendations.style.display = 'none';
+    if (successMessage) successMessage.style.display = 'none';
+    
+    // Scroll to form
+    if (recommendationForm) {
+        recommendationForm.scrollIntoView({behavior: 'smooth', block: 'start'});
     }
 };
 
 window.hideRecommendationForm = function() {
-    console.log("Hiding recommendation form");
     var form = document.getElementById('recommendationForm');
     if (form) form.style.display = 'none';
 };
 
 window.showExistingRecommendations = function() {
-    console.log("Showing existing recommendations - direct function");
-    var recommendations = document.getElementById('existingRecommendations');
-    if (recommendations) {
-        recommendations.style.display = 'block';
-        
-        // Hide form
-        var form = document.getElementById('recommendationForm');
-        if (form) form.style.display = 'none';
-        
-        // Scroll to recommendations
-        recommendations.scrollIntoView({behavior: 'smooth', block: 'start'});
-        console.log("Recommendations should be visible now");
-    } else {
-        console.error("Could not find existing recommendations element!");
+    console.log("Showing recommendations");
+    var recommendationForm = document.getElementById('recommendationForm');
+    var existingRecommendations = document.getElementById('existingRecommendations');
+    
+    if (recommendationForm) recommendationForm.style.display = 'none';
+    if (existingRecommendations) {
+        existingRecommendations.style.display = 'block';
+        existingRecommendations.scrollIntoView({behavior: 'smooth', block: 'start'});
     }
 };
 
 window.hideExistingRecommendations = function() {
-    console.log("Hiding existing recommendations");
     var recommendations = document.getElementById('existingRecommendations');
     if (recommendations) recommendations.style.display = 'none';
 };
-
-// Add button event listeners when the page loads
-document.addEventListener('DOMContentLoaded', function() {
-    console.log("Adding event listeners to recommendation buttons");
-    
-    // Find buttons and add direct event listeners
-    var leaveRecBtn = document.querySelector('.btn-primary[data-i18n="recommendations-leave"]');
-    if (leaveRecBtn) {
-        console.log("Found Leave Recommendation button");
-        leaveRecBtn.addEventListener('click', window.showRecommendationForm);
-    } else {
-        console.error("Could not find Leave Recommendation button!");
-    }
-    
-    var viewRecBtn = document.querySelector('.btn-secondary[data-i18n="recommendations-view"]');
-    if (viewRecBtn) {
-        console.log("Found View Recommendations button");
-        viewRecBtn.addEventListener('click', window.showExistingRecommendations);
-    } else {
-        console.error("Could not find View Recommendations button!");
-    }
-    
-    var cancelBtn = document.querySelector('button[onclick="hideRecommendationForm()"]');
-    if (cancelBtn) {
-        console.log("Found Cancel button");
-        cancelBtn.addEventListener('click', window.hideRecommendationForm);
-    }
-    
-    var backBtn = document.querySelector('button[onclick="hideExistingRecommendations()"]');
-    if (backBtn) {
-        console.log("Found Back button");
-        backBtn.addEventListener('click', window.hideExistingRecommendations);
-    }
-});
 
 // =======================================================
 // KEEP ALL YOUR EXISTING CODE BELOW THIS POINT
