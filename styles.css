@@ -356,87 +356,234 @@ section:nth-child(odd) {
 /* Experience Section */
 .timeline {
     position: relative;
-    max-width: 1000px;
-    margin: 0 auto;
-    padding: 20px 0;
+    margin-top: 50px;
 }
 
-/* Timeline center line */
-.timeline::after {
+.timeline:before {
     content: '';
     position: absolute;
-    width: 4px;
-    background-color: var(--primary-color);
-    top: 0;
-    bottom: 0;
     left: 50%;
-    margin-left: -2px;
-    border-radius: 4px;
+    transform: translateX(-50%);
+    width: 2px;
+    height: 100%;
+    background: linear-gradient(to bottom, var(--primary-color), var(--secondary-color));
 }
 
-/* Timeline items - alternating left/right */
 .timeline-item {
-    padding: 20px 30px;
     position: relative;
-    background-color: white;
-    border-radius: var(--border-radius);
-    box-shadow: var(--shadow);
-    width: calc(50% - 30px);
-    box-sizing: border-box;
-    margin-bottom: 40px;
-    transition: all 0.3s ease;
     border: 2px solid transparent;
+    border-radius: var(--border-radius);
+    background-color: white;
+    transition: all 0.3s ease;
+    padding: 20px;
+    margin-bottom: 20px;
+    overflow: visible;
 }
 
-/* Left side items */
-.timeline-item:nth-child(odd) {
-    left: 0;
-}
-
-/* Right side items */
-.timeline-item:nth-child(even) {
-    left: 50%;
-    margin-left: 30px;
-}
-
-/* Timeline dots */
-.timeline-dot {
-    width: 20px;
-    height: 20px;
-    background-color: var(--primary-color);
-    border-radius: 50%;
-    position: absolute;
-    top: 20px;
-    z-index: 10;
-    box-shadow: 0 0 0 4px var(--primary-light);
-}
-
-/* Left side dots */
-.timeline-item:nth-child(odd) .timeline-dot {
-    right: -40px;
-}
-
-/* Right side dots */
-.timeline-item:nth-child(even) .timeline-dot {
-    left: -40px;
-}
-
-/* Timeline content */
-.timeline-content {
-    position: relative;
-}
-
-/* Hover effects for timeline items */
 .timeline-item:hover {
     transform: translateY(-5px);
     border-color: var(--primary-color);
     box-shadow: 0 10px 25px rgba(37, 99, 235, 0.2);
 }
 
+.timeline-dot {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background-color: var(--primary-color);
+    border: 3px solid white;
+    box-shadow: 0 0 0 3px var(--primary-light);
+}
+
+.timeline-content {
+    position: relative;
+    padding: 15px 0;
+}
+
+.timeline-item:nth-child(odd) .timeline-content {
+    margin-left: auto;
+}
+
+.timeline-item:nth-child(even) .timeline-content {
+    margin-right: auto;
+}
+
+.timeline-content h3 {
+    color: var(--primary-color);
+    margin-bottom: 5px;
+    font-size: 1.3rem;
+}
+
+.timeline-content h4 {
+    color: var(--dark-color);
+    margin-bottom: 5px;
+    font-weight: 500;
+}
+
+.timeline-date {
+    color: var(--accent-color);
+    font-weight: 500;
+    margin-bottom: 15px;
+}
+
+.experience-details {
+    display: none;
+    margin-top: 15px;
+    padding-left: 20px;
+}
+
+.experience-details li {
+    position: relative;
+    margin-bottom: 8px;
+    padding-left: 15px;
+}
+
+.experience-details li:before {
+    content: '•';
+    position: absolute;
+    left: 0;
+    color: var(--primary-color);
+}
+
+/* Skills Section */
+.skills-categories {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 30px;
+    margin-top: 50px;
+}
+
+.skill-category {
+    background-color: white;
+    padding: 25px;
+    border-radius: 5px;
+    box-shadow: var(--shadow);
+}
+
+.skill-category h3 {
+    color: var(--primary-color);
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.skill-items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.skill-item {
+    background-color: var(--primary-light);
+    color: var(--primary-dark);
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: var(--transition);
+}
+
+.skill-item:hover {
+    background-color: var(--primary-color);
+    color: white;
+    transform: translateY(-3px);
+}
+
+/* Projects Section */
+.projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 30px;
+    margin-top: 50px;
+}
+
+.project-card {
+    border: 2px solid transparent;
+    border-radius: var(--border-radius);
+    background-color: white;
+    box-shadow: var(--shadow);
+    transition: all 0.3s ease;
+    overflow: visible;
+    position: relative;
+    min-height: 200px;
+}
+
+.project-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--primary-color);
+    box-shadow: 0 10px 25px rgba(37, 99, 235, 0.2);
+}
+
+.project-content {
+    padding: 25px;
+    position: relative;
+}
+
+/* Hide details initially */
+.project-details, 
+.project-card p:not(.timeline-date),
+.timeline-content ul {
+    display: none;
+    margin: 15px 0;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+/* Show on hover */
+.project-card:hover .project-details,
+.project-card:hover p:not(.timeline-date),
+.timeline-item:hover .timeline-content ul {
+    display: block;
+}
+
+/* "Hover for details" indicator */
+.project-content::after,
+.timeline-content::after {
+    content: "Hover for details";
+    display: block;
+    font-size: 0.8rem;
+    color: var(--primary-color);
+    text-align: center;
+    margin-top: 10px;
+}
+
+.project-card:hover .project-content::after,
+.timeline-item:hover .timeline-content::after {
+    display: none;
+}
+
+/* Timeline Item Hover Effect */
+.timeline-item {
+    position: relative;
+    border: 2px solid transparent;
+    border-radius: var(--border-radius);
+    background-color: white;
+    transition: all 0.3s ease;
+    padding: 20px;
+    margin-bottom: 20px;
+    overflow: visible;
+}
+
+.timeline-item:hover {
+    transform: translateY(-5px);
+    border-color: var(--primary-color);
+    box-shadow: 0 10px 25px rgba(37, 99, 235, 0.2);
+}
+
+/* Timeline content styling */
+.timeline-content {
+    position: relative;
+    padding: 15px 0;
+}
+
 /* Hide experience details by default */
 .experience-details {
     display: none;
     margin-top: 15px;
+    padding-left: 20px;
 }
 
 /* Show experience details on hover */
@@ -444,14 +591,14 @@ section:nth-child(odd) {
     display: block;
 }
 
-/* "Hover for details" indicator */
+/* Add hover indicator */
 .timeline-content::after {
     content: "Hover for details";
     display: block;
     font-size: 0.8rem;
     color: var(--primary-color);
     text-align: center;
-    margin-top: 15px;
+    margin-top: 10px;
 }
 
 .timeline-item:hover .timeline-content::after {
@@ -460,24 +607,6 @@ section:nth-child(odd) {
 
 /* Mobile adaptations */
 @media (max-width: 768px) {
-    /* Make timeline single column on mobile */
-    .timeline::after {
-        left: 31px;
-    }
-    
-    .timeline-item {
-        width: 100%;
-        padding-left: 70px;
-        padding-right: 25px;
-        left: 0 !important;
-        margin-left: 0 !important;
-    }
-    
-    .timeline-item:nth-child(odd) .timeline-dot,
-    .timeline-item:nth-child(even) .timeline-dot {
-        left: 21px;
-    }
-    
     .timeline-content::after {
         content: "Tap for details";
     }
