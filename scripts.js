@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+
     // Close mobile menu when clicking on a link
     const navItems = document.querySelectorAll('.nav-links a');
     navItems.forEach(item => {
@@ -605,6 +606,7 @@ function updateLanguage(lang) {
     });
     
     // Update the current language indicator
+	
     document.querySelector('.current-lang').textContent = lang.toUpperCase();
     
     // Save language preference
@@ -619,4 +621,3 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('Setting initial language to:', currentLanguage);
     updateLanguage(currentLanguage);
 });
-
