@@ -33,84 +33,99 @@ function saveRecommendationId(id, data) {
     localStorage.setItem('submitted_recommendations', JSON.stringify(submissions));
 }
 
-// Function to show recommendation form
-function showRecommendationForm() {
-    console.log("Opening recommendation form");
-    document.getElementById('recommendationForm').style.display = 'block';
-    document.getElementById('existingRecommendations').style.display = 'none';
-    document.getElementById('recommendationSuccessMessage').style.display = 'none';
-    
-    // Scroll to the form
-    document.getElementById('recommendationForm').scrollIntoView({
-        behavior: 'smooth',
-        block: 'start'
-    });
-}
+// =======================================================
+// RECOMMENDATION SYSTEM FIX - ADD THIS AT THE TOP OF YOUR FILE
+// =======================================================
 
-// Function to hide recommendation form
-function hideRecommendationForm() {
-    document.getElementById('recommendationForm').style.display = 'none';
-}
+// Make sure these functions are directly available in the global scope
+window.showRecommendationForm = function() {
+    console.log("Opening recommendation form - direct function");
+    var form = document.getElementById('recommendationForm');
+    if (form) {
+        form.style.display = 'block';
+        
+        // Hide other sections
+        var existingRecs = document.getElementById('existingRecommendations');
+        if (existingRecs) existingRecs.style.display = 'none';
+        
+        var successMsg = document.getElementById('recommendationSuccessMessage');
+        if (successMsg) successMsg.style.display = 'none';
+        
+        // Scroll to form
+        form.scrollIntoView({behavior: 'smooth', block: 'start'});
+        console.log("Form should be visible now");
+    } else {
+        console.error("Could not find recommendation form element!");
+    }
+};
 
-// Function to show existing recommendations
-function showExistingRecommendations() {
-    console.log("Showing recommendations");
-    document.getElementById('existingRecommendations').style.display = 'block';
-    document.getElementById('recommendationForm').style.display = 'none';
-    
-    // Get the container for recommendations
-    const recommendationsList = document.querySelector('.recommendations-list');
-    
-    // Add hover effects to recommendation cards
-    document.querySelectorAll('.recommendation-card').forEach(card => {
-        // Make sure hover effects work properly
-        const text = card.querySelector('.recommendation-text');
-        if (text) {
-            // For desktop - use hover
-            card.addEventListener('mouseenter', function() {
-                text.style.opacity = '1';
-                text.style.height = 'auto';
-                text.style.marginBottom = '20px';
-            });
-            
-            card.addEventListener('mouseleave', function() {
-                if (!card.classList.contains('active')) {
-                    text.style.opacity = '0';
-                    text.style.height = '0';
-                    text.style.marginBottom = '0';
-                }
-            });
-            
-            // For touch devices
-            card.addEventListener('click', function() {
-                if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
-                    card.classList.toggle('active');
-                    
-                    if (card.classList.contains('active')) {
-                        text.style.opacity = '1';
-                        text.style.height = 'auto';
-                        text.style.marginBottom = '20px';
-                    } else {
-                        text.style.opacity = '0';
-                        text.style.height = '0';
-                        text.style.marginBottom = '0';
-                    }
-                }
-            });
-        }
-    });
-    
-    // Scroll to the recommendations list
-    document.getElementById('existingRecommendations').scrollIntoView({
-        behavior: 'smooth',
-        block: 'start'
-    });
-}
+window.hideRecommendationForm = function() {
+    console.log("Hiding recommendation form");
+    var form = document.getElementById('recommendationForm');
+    if (form) form.style.display = 'none';
+};
 
-// Function to hide existing recommendations
-function hideExistingRecommendations() {
-    document.getElementById('existingRecommendations').style.display = 'none';
-}
+window.showExistingRecommendations = function() {
+    console.log("Showing existing recommendations - direct function");
+    var recommendations = document.getElementById('existingRecommendations');
+    if (recommendations) {
+        recommendations.style.display = 'block';
+        
+        // Hide form
+        var form = document.getElementById('recommendationForm');
+        if (form) form.style.display = 'none';
+        
+        // Scroll to recommendations
+        recommendations.scrollIntoView({behavior: 'smooth', block: 'start'});
+        console.log("Recommendations should be visible now");
+    } else {
+        console.error("Could not find existing recommendations element!");
+    }
+};
+
+window.hideExistingRecommendations = function() {
+    console.log("Hiding existing recommendations");
+    var recommendations = document.getElementById('existingRecommendations');
+    if (recommendations) recommendations.style.display = 'none';
+};
+
+// Add button event listeners when the page loads
+document.addEventListener('DOMContentLoaded', function() {
+    console.log("Adding event listeners to recommendation buttons");
+    
+    // Find buttons and add direct event listeners
+    var leaveRecBtn = document.querySelector('.btn-primary[data-i18n="recommendations-leave"]');
+    if (leaveRecBtn) {
+        console.log("Found Leave Recommendation button");
+        leaveRecBtn.addEventListener('click', window.showRecommendationForm);
+    } else {
+        console.error("Could not find Leave Recommendation button!");
+    }
+    
+    var viewRecBtn = document.querySelector('.btn-secondary[data-i18n="recommendations-view"]');
+    if (viewRecBtn) {
+        console.log("Found View Recommendations button");
+        viewRecBtn.addEventListener('click', window.showExistingRecommendations);
+    } else {
+        console.error("Could not find View Recommendations button!");
+    }
+    
+    var cancelBtn = document.querySelector('button[onclick="hideRecommendationForm()"]');
+    if (cancelBtn) {
+        console.log("Found Cancel button");
+        cancelBtn.addEventListener('click', window.hideRecommendationForm);
+    }
+    
+    var backBtn = document.querySelector('button[onclick="hideExistingRecommendations()"]');
+    if (backBtn) {
+        console.log("Found Back button");
+        backBtn.addEventListener('click', window.hideExistingRecommendations);
+    }
+});
+
+// =======================================================
+// KEEP ALL YOUR EXISTING CODE BELOW THIS POINT
+// =======================================================
 
 // Language switcher functionality
 let currentLanguage = localStorage.getItem('language') || 'en';
