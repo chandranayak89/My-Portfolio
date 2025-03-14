@@ -2,6 +2,203 @@
 // Replace with your actual Google Apps Script Web App URL
 const GOOGLE_SHEET_API_URL = "https://script.google.com/macros/s/AKfycbwnbOnKUsOfXkL7xymSjLkRGP6BIeyot6PqekgSLhDsnY-x4Y0-poRQAhkLrIKyFhSRQQ/exec";
 
+// =======================================================
+// DEFINE ALL GLOBAL FUNCTIONS FIRST - BEFORE DOMContentLoaded
+// =======================================================
+
+// Helper function to capitalize first letter
+function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+// Function to save recommendation ID to localStorage
+function saveRecommendationId(id, data) {
+    // Get existing submissions
+    let submissions = JSON.parse(localStorage.getItem('submitted_recommendations') || '[]');
+    
+    // Add this submission
+    submissions.push({
+        id: id,
+        firstName: data.firstName,
+        lastName: data.lastName,
+        company: data.company,
+        jobRole: data.jobRole,
+        relation: data.relation,
+        text: data.text,
+        date: new Date().toISOString(),
+        status: 'Pending'
+    });
+    
+    // Save back to localStorage
+    localStorage.setItem('submitted_recommendations', JSON.stringify(submissions));
+}
+
+// Function to show existing recommendations
+function showExistingRecommendations() {
+    document.getElementById('existingRecommendations').style.display = 'block';
+    document.getElementById('recommendationForm').style.display = 'none';
+    
+    // Get the container for recommendations
+    const recommendationsList = document.querySelector('.recommendations-list');
+    
+    // Show loading indicator
+    recommendationsList.innerHTML = '<div class="loading-recommendations">Loading recommendations...</div>';
+    
+    // Fetch approved recommendations from Google Sheet
+    fetch(GOOGLE_SHEET_API_URL)
+        .then(response => response.json())
+        .then(recommendations => {
+            // Clear the list
+            recommendationsList.innerHTML = '';
+            
+            // Check if there are any approved recommendations
+            if (recommendations.length === 0) {
+                recommendationsList.innerHTML = '<div class="no-recommendations">No recommendations available yet. Be the first to leave one!</div>';
+                return;
+            }
+            
+            // Add each approved recommendation to the list
+            recommendations.forEach(rec => {
+                const recCard = document.createElement('div');
+                recCard.className = 'recommendation-card';
+                
+                recCard.innerHTML = `
+                    <div class="recommendation-content">
+                        <p class="recommendation-text">"${rec.text}"</p>
+                        <div class="recommender-info">
+                            <h4>${rec.firstName} ${rec.lastName}</h4>
+                            <p>${rec.jobRole}, ${rec.company}</p>
+                            <span class="recommendation-type">${capitalizeFirstLetter(rec.relation)}</span>
+                        </div>
+                    </div>
+                `;
+                
+                recommendationsList.appendChild(recCard);
+            });
+            
+            // Also check for any pending recommendations from this user
+            const submittedRecommendations = JSON.parse(localStorage.getItem('submitted_recommendations') || '[]');
+            
+            if (submittedRecommendations.length > 0) {
+                // Add a note about pending recommendations
+                const pendingNote = document.createElement('div');
+                pendingNote.className = 'pending-recommendations-note';
+                pendingNote.innerHTML = `
+                    <p><strong>You have submitted ${submittedRecommendations.length} recommendation(s).</strong></p>
+                    <p>Important notes about recommendations:</p>
+                    <ul>
+                        <li>Your recommendations are under review</li>
+                        <li>Once approved, they will appear publicly on this page</li>
+                        <li>Thank you for taking the time to share your experience!</li>
+                    </ul>
+                `;
+                document.getElementById('existingRecommendations').insertBefore(pendingNote, document.querySelector('.recommendations-list'));
+                
+                // Add pending recommendations at the end
+                submittedRecommendations.forEach(rec => {
+                    // Check if this recommendation is already shown (as approved)
+                    const isAlreadyApproved = recommendations.some(r => r.id === rec.id);
+                    
+                    if (!isAlreadyApproved) {
+                        const recCard = document.createElement('div');
+                        recCard.className = 'recommendation-card pending-recommendation';
+                        
+                        recCard.innerHTML = `
+                            <div class="recommendation-content">
+                                <div class="pending-badge">Pending Review</div>
+                                <p class="recommendation-text">"${rec.text}"</p>
+                                <div class="recommender-info">
+                                    <h4>${rec.firstName} ${rec.lastName}</h4>
+                                    <p>${rec.jobRole}, ${rec.company}</p>
+                                    <span class="recommendation-type">${capitalizeFirstLetter(rec.relation)}</span>
+                                </div>
+                            </div>
+                        `;
+                        
+                        recommendationsList.appendChild(recCard);
+                    }
+                });
+            }
+            
+            // Add click handlers for mobile devices
+            if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
+                document.querySelectorAll('.recommendation-card').forEach(card => {
+                    card.addEventListener('click', function() {
+                        this.classList.toggle('active');
+                    });
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching recommendations:', error);
+            recommendationsList.innerHTML = '<div class="error-loading">Error loading recommendations. Please try again later.</div>';
+        });
+    
+    // Scroll to the recommendations list
+    document.getElementById('existingRecommendations').scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+    });
+}
+
+// Function to hide existing recommendations
+function hideExistingRecommendations() {
+    document.getElementById('existingRecommendations').style.display = 'none';
+}
+
+// Function to show the recommendation form
+function showRecommendationForm() {
+    document.getElementById('recommendationForm').style.display = 'block';
+    document.getElementById('existingRecommendations').style.display = 'none';
+    document.getElementById('recommendationSuccessMessage').style.display = 'none';
+    
+    // Scroll to the form
+    document.getElementById('recommendationForm').scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+    });
+}
+
+// Function to hide the recommendation form
+function hideRecommendationForm() {
+    document.getElementById('recommendationForm').style.display = 'none';
+}
+
+// Language switcher functionality
+let currentLanguage = localStorage.getItem('language') || 'en';
+
+// Function to update all text elements with translations
+function updateLanguage(lang) {
+    console.log('updateLanguage called with:', lang);
+    
+    document.querySelectorAll('[data-i18n]').forEach(element => {
+        const key = element.getAttribute('data-i18n');
+        
+        if (translations[lang] && translations[lang][key]) {
+            element.textContent = translations[lang][key];
+        }
+    });
+    
+    // Update input placeholders
+    document.querySelectorAll('input[data-i18n-placeholder], textarea[data-i18n-placeholder]').forEach(element => {
+        const key = element.getAttribute('data-i18n-placeholder');
+        if (translations[lang] && translations[lang][key]) {
+            element.placeholder = translations[lang][key];
+        }
+    });
+    
+    // Update the current language indicator
+    document.querySelector('.current-lang').textContent = lang.toUpperCase();
+    
+    // Save language preference
+    localStorage.setItem('language', lang);
+    currentLanguage = lang;
+}
+
+// =======================================================
+// NOW THE REGULAR DOCUMENT READY EVENT
+// =======================================================
+
 document.addEventListener('DOMContentLoaded', function() {
     // Mobile menu toggle
     const hamburger = document.querySelector('.hamburger');
@@ -13,7 +210,6 @@ document.addEventListener('DOMContentLoaded', function() {
             hamburger.classList.toggle('active');
         });
     }
-
 
     // Close mobile menu when clicking on a link
     const navItems = document.querySelectorAll('.nav-links a');
@@ -409,215 +605,7 @@ This has been saved to your Google Sheet for review.`
 
     // Call this function when the document is ready
     setupTimelineInteraction();
-});
 
-// Function to save recommendation ID to localStorage
-function saveRecommendationId(id, data) {
-    // Get existing submissions
-    let submissions = JSON.parse(localStorage.getItem('submitted_recommendations') || '[]');
-    
-    // Add this submission
-    submissions.push({
-        id: id,
-        firstName: data.firstName,
-        lastName: data.lastName,
-        company: data.company,
-        jobRole: data.jobRole,
-        relation: data.relation,
-        text: data.text,
-        date: new Date().toISOString(),
-        status: 'Pending'
-    });
-    
-    // Save back to localStorage
-    localStorage.setItem('submitted_recommendations', JSON.stringify(submissions));
-}
-
-// Update the function to show existing recommendations
-function showExistingRecommendations() {
-    document.getElementById('existingRecommendations').style.display = 'block';
-    document.getElementById('recommendationForm').style.display = 'none';
-    
-    // Get the container for recommendations
-    const recommendationsList = document.querySelector('.recommendations-list');
-    
-    // Show loading indicator
-    recommendationsList.innerHTML = '<div class="loading-recommendations">Loading recommendations...</div>';
-    
-    // Fetch approved recommendations from Google Sheet
-    fetch(GOOGLE_SHEET_API_URL)
-        .then(response => response.json())
-        .then(recommendations => {
-            // Clear the list
-            recommendationsList.innerHTML = '';
-            
-            // Check if there are any approved recommendations
-            if (recommendations.length === 0) {
-                recommendationsList.innerHTML = '<div class="no-recommendations">No recommendations available yet. Be the first to leave one!</div>';
-                return;
-            }
-            
-            // Add each approved recommendation to the list
-            recommendations.forEach(rec => {
-                const recCard = document.createElement('div');
-                recCard.className = 'recommendation-card';
-                
-                recCard.innerHTML = `
-                    <div class="recommendation-content">
-                        <p class="recommendation-text">"${rec.text}"</p>
-                        <div class="recommender-info">
-                            <h4>${rec.firstName} ${rec.lastName}</h4>
-                            <p>${rec.jobRole}, ${rec.company}</p>
-                            <span class="recommendation-type">${capitalizeFirstLetter(rec.relation)}</span>
-                        </div>
-                    </div>
-                `;
-                
-                recommendationsList.appendChild(recCard);
-            });
-            
-            // Also check for any pending recommendations from this user
-            const submittedRecommendations = JSON.parse(localStorage.getItem('submitted_recommendations') || '[]');
-            
-            if (submittedRecommendations.length > 0) {
-                // Add a note about pending recommendations
-                const pendingNote = document.createElement('div');
-                pendingNote.className = 'pending-recommendations-note';
-                pendingNote.innerHTML = `
-                    <p><strong>You have submitted ${submittedRecommendations.length} recommendation(s).</strong></p>
-                    <p>Important notes about recommendations:</p>
-                    <ul>
-                        <li>Your recommendations are under review</li>
-                        <li>Once approved, they will appear publicly on this page</li>
-                        <li>Thank you for taking the time to share your experience!</li>
-                    </ul>
-                `;
-                document.getElementById('existingRecommendations').insertBefore(pendingNote, document.querySelector('.recommendations-list'));
-                
-                // Add pending recommendations at the end
-                submittedRecommendations.forEach(rec => {
-                    // Check if this recommendation is already shown (as approved)
-                    const isAlreadyApproved = recommendations.some(r => r.id === rec.id);
-                    
-                    if (!isAlreadyApproved) {
-                        const recCard = document.createElement('div');
-                        recCard.className = 'recommendation-card pending-recommendation';
-                        
-                        recCard.innerHTML = `
-                            <div class="recommendation-content">
-                                <div class="pending-badge">Pending Review</div>
-                                <p class="recommendation-text">"${rec.text}"</p>
-                                <div class="recommender-info">
-                                    <h4>${rec.firstName} ${rec.lastName}</h4>
-                                    <p>${rec.jobRole}, ${rec.company}</p>
-                                    <span class="recommendation-type">${capitalizeFirstLetter(rec.relation)}</span>
-                                </div>
-                            </div>
-                        `;
-                        
-                        recommendationsList.appendChild(recCard);
-                    }
-                });
-            }
-            
-            // Add click handlers for mobile devices
-            if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
-                document.querySelectorAll('.recommendation-card').forEach(card => {
-                    card.addEventListener('click', function() {
-                        this.classList.toggle('active');
-                    });
-                });
-            }
-        })
-        .catch(error => {
-            console.error('Error fetching recommendations:', error);
-            recommendationsList.innerHTML = '<div class="error-loading">Error loading recommendations. Please try again later.</div>';
-        });
-    
-    // Scroll to the recommendations list
-    document.getElementById('existingRecommendations').scrollIntoView({
-        behavior: 'smooth',
-        block: 'start'
-    });
-}
-
-// Helper function to capitalize first letter
-function capitalizeFirstLetter(string) {
-    return string.charAt(0).toUpperCase() + string.slice(1);
-}
-
-// Function to hide existing recommendations
-function hideExistingRecommendations() {
-    document.getElementById('existingRecommendations').style.display = 'none';
-}
-
-// Function to show the recommendation form
-function showRecommendationForm() {
-    document.getElementById('recommendationForm').style.display = 'block';
-    document.getElementById('existingRecommendations').style.display = 'none';
-    document.getElementById('recommendationSuccessMessage').style.display = 'none';
-    
-    // Scroll to the form
-    document.getElementById('recommendationForm').scrollIntoView({
-        behavior: 'smooth',
-        block: 'start'
-    });
-}
-
-// Function to hide the recommendation form
-function hideRecommendationForm() {
-    document.getElementById('recommendationForm').style.display = 'none';
-}
-
-// Language switcher functionality - UPDATED WITH DEBUGGING
-let currentLanguage = localStorage.getItem('language') || 'en';
-
-// Function to update all text elements with translations
-function updateLanguage(lang) {
-    console.log('updateLanguage called with:', lang);
-    console.log('Available translations:', Object.keys(translations));
-    
-    let translatedCount = 0;
-    let missingCount = 0;
-    
-    document.querySelectorAll('[data-i18n]').forEach(element => {
-        const key = element.getAttribute('data-i18n');
-        console.log(`Translating element with key: ${key}`);
-        
-        if (translations[lang] && translations[lang][key]) {
-            const oldText = element.textContent;
-            element.textContent = translations[lang][key];
-            console.log(`Translated: ${oldText} -> ${translations[lang][key]}`);
-            translatedCount++;
-        } else {
-            console.warn(`Missing translation for key: ${key} in language: ${lang}`);
-            missingCount++;
-        }
-    });
-    
-    console.log(`Translation stats: ${translatedCount} translated, ${missingCount} missing`);
-    
-    // Update input placeholders
-    document.querySelectorAll('input[data-i18n-placeholder], textarea[data-i18n-placeholder]').forEach(element => {
-        const key = element.getAttribute('data-i18n-placeholder');
-        if (translations[lang] && translations[lang][key]) {
-            element.placeholder = translations[lang][key];
-        }
-    });
-    
-    // Update the current language indicator
-	
-    document.querySelector('.current-lang').textContent = lang.toUpperCase();
-    
-    // Save language preference
-    localStorage.setItem('language', lang);
-    currentLanguage = lang;
-    
-    console.log('Language update completed');
-}
-
-// Call updateLanguage when the page loads
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('Setting initial language to:', currentLanguage);
+    // Initialize language
     updateLanguage(currentLanguage);
 });
