@@ -43,6 +43,7 @@ window.showRecommendationForm = function() {
     var form = document.getElementById('recommendationForm');
     if (form) {
         form.style.display = 'block';
+        form.scrollIntoView({behavior: 'smooth', block: 'start'});
         
         // Hide other sections
         var existingRecs = document.getElementById('existingRecommendations');
@@ -52,8 +53,8 @@ window.showRecommendationForm = function() {
         if (successMsg) successMsg.style.display = 'none';
         
         // Scroll to form
-        form.scrollIntoView({behavior: 'smooth', block: 'start'});
-        console.log("Form should be visible now");
+        //form.scrollIntoView({behavior: 'smooth', block: 'start'});
+        //console.log("Form should be visible now");
     } else {
         console.error("Could not find recommendation form element!");
     }
