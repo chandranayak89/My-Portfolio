@@ -33,121 +33,9 @@ function saveRecommendationId(id, data) {
     localStorage.setItem('submitted_recommendations', JSON.stringify(submissions));
 }
 
-// Function to show existing recommendations
-function showExistingRecommendations() {
-    document.getElementById('existingRecommendations').style.display = 'block';
-    document.getElementById('recommendationForm').style.display = 'none';
-    
-    // Get the container for recommendations
-    const recommendationsList = document.querySelector('.recommendations-list');
-    
-    // Show loading indicator
-    recommendationsList.innerHTML = '<div class="loading-recommendations">Loading recommendations...</div>';
-    
-    // Fetch approved recommendations from Google Sheet
-    fetch(GOOGLE_SHEET_API_URL)
-        .then(response => response.json())
-        .then(recommendations => {
-            // Clear the list
-            recommendationsList.innerHTML = '';
-            
-            // Check if there are any approved recommendations
-            if (recommendations.length === 0) {
-                recommendationsList.innerHTML = '<div class="no-recommendations">No recommendations available yet. Be the first to leave one!</div>';
-                return;
-            }
-            
-            // Add each approved recommendation to the list
-            recommendations.forEach(rec => {
-                const recCard = document.createElement('div');
-                recCard.className = 'recommendation-card';
-                
-                recCard.innerHTML = `
-                    <div class="recommendation-content">
-                        <p class="recommendation-text">"${rec.text}"</p>
-                        <div class="recommender-info">
-                            <h4>${rec.firstName} ${rec.lastName}</h4>
-                            <p>${rec.jobRole}, ${rec.company}</p>
-                            <span class="recommendation-type">${capitalizeFirstLetter(rec.relation)}</span>
-                        </div>
-                    </div>
-                `;
-                
-                recommendationsList.appendChild(recCard);
-            });
-            
-            // Also check for any pending recommendations from this user
-            const submittedRecommendations = JSON.parse(localStorage.getItem('submitted_recommendations') || '[]');
-            
-            if (submittedRecommendations.length > 0) {
-                // Add a note about pending recommendations
-                const pendingNote = document.createElement('div');
-                pendingNote.className = 'pending-recommendations-note';
-                pendingNote.innerHTML = `
-                    <p><strong>You have submitted ${submittedRecommendations.length} recommendation(s).</strong></p>
-                    <p>Important notes about recommendations:</p>
-                    <ul>
-                        <li>Your recommendations are under review</li>
-                        <li>Once approved, they will appear publicly on this page</li>
-                        <li>Thank you for taking the time to share your experience!</li>
-                    </ul>
-                `;
-                document.getElementById('existingRecommendations').insertBefore(pendingNote, document.querySelector('.recommendations-list'));
-                
-                // Add pending recommendations at the end
-                submittedRecommendations.forEach(rec => {
-                    // Check if this recommendation is already shown (as approved)
-                    const isAlreadyApproved = recommendations.some(r => r.id === rec.id);
-                    
-                    if (!isAlreadyApproved) {
-                        const recCard = document.createElement('div');
-                        recCard.className = 'recommendation-card pending-recommendation';
-                        
-                        recCard.innerHTML = `
-                            <div class="recommendation-content">
-                                <div class="pending-badge">Pending Review</div>
-                                <p class="recommendation-text">"${rec.text}"</p>
-                                <div class="recommender-info">
-                                    <h4>${rec.firstName} ${rec.lastName}</h4>
-                                    <p>${rec.jobRole}, ${rec.company}</p>
-                                    <span class="recommendation-type">${capitalizeFirstLetter(rec.relation)}</span>
-                                </div>
-                            </div>
-                        `;
-                        
-                        recommendationsList.appendChild(recCard);
-                    }
-                });
-            }
-            
-            // Add click handlers for mobile devices
-            if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
-                document.querySelectorAll('.recommendation-card').forEach(card => {
-                    card.addEventListener('click', function() {
-                        this.classList.toggle('active');
-                    });
-                });
-            }
-        })
-        .catch(error => {
-            console.error('Error fetching recommendations:', error);
-            recommendationsList.innerHTML = '<div class="error-loading">Error loading recommendations. Please try again later.</div>';
-        });
-    
-    // Scroll to the recommendations list
-    document.getElementById('existingRecommendations').scrollIntoView({
-        behavior: 'smooth',
-        block: 'start'
-    });
-}
-
-// Function to hide existing recommendations
-function hideExistingRecommendations() {
-    document.getElementById('existingRecommendations').style.display = 'none';
-}
-
-// Function to show the recommendation form
+// Function to show recommendation form
 function showRecommendationForm() {
+    console.log("Opening recommendation form");
     document.getElementById('recommendationForm').style.display = 'block';
     document.getElementById('existingRecommendations').style.display = 'none';
     document.getElementById('recommendationSuccessMessage').style.display = 'none';
@@ -159,9 +47,69 @@ function showRecommendationForm() {
     });
 }
 
-// Function to hide the recommendation form
+// Function to hide recommendation form
 function hideRecommendationForm() {
     document.getElementById('recommendationForm').style.display = 'none';
+}
+
+// Function to show existing recommendations
+function showExistingRecommendations() {
+    console.log("Showing recommendations");
+    document.getElementById('existingRecommendations').style.display = 'block';
+    document.getElementById('recommendationForm').style.display = 'none';
+    
+    // Get the container for recommendations
+    const recommendationsList = document.querySelector('.recommendations-list');
+    
+    // Add hover effects to recommendation cards
+    document.querySelectorAll('.recommendation-card').forEach(card => {
+        // Make sure hover effects work properly
+        const text = card.querySelector('.recommendation-text');
+        if (text) {
+            // For desktop - use hover
+            card.addEventListener('mouseenter', function() {
+                text.style.opacity = '1';
+                text.style.height = 'auto';
+                text.style.marginBottom = '20px';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                if (!card.classList.contains('active')) {
+                    text.style.opacity = '0';
+                    text.style.height = '0';
+                    text.style.marginBottom = '0';
+                }
+            });
+            
+            // For touch devices
+            card.addEventListener('click', function() {
+                if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
+                    card.classList.toggle('active');
+                    
+                    if (card.classList.contains('active')) {
+                        text.style.opacity = '1';
+                        text.style.height = 'auto';
+                        text.style.marginBottom = '20px';
+                    } else {
+                        text.style.opacity = '0';
+                        text.style.height = '0';
+                        text.style.marginBottom = '0';
+                    }
+                }
+            });
+        }
+    });
+    
+    // Scroll to the recommendations list
+    document.getElementById('existingRecommendations').scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+    });
+}
+
+// Function to hide existing recommendations
+function hideExistingRecommendations() {
+    document.getElementById('existingRecommendations').style.display = 'none';
 }
 
 // Language switcher functionality
