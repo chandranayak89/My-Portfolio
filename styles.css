@@ -516,15 +516,29 @@ section:nth-child(odd) {
 }
 
 /* Project description styling */
-.project-card p {
+.project-card p,
+.project-card ul {
     display: none;
-    margin-bottom: 15px;
-    font-size: 0.95rem;
-    line-height: 1.5;
+    transition: none;
 }
 
-.project-card:hover p {
-    display: block;
+.project-card:hover p,
+.project-card:hover ul {
+    display: block !important;
+    opacity: 1 !important;
+    max-height: none !important;
+    visibility: visible !important;
+    margin-bottom: 15px;
+}
+
+/* For mobile devices */
+.project-card.active p,
+.project-card.active ul {
+    display: block !important;
+    opacity: 1 !important;
+    max-height: none !important;
+    visibility: visible !important;
+    margin-bottom: 15px;
 }
 
 /* Tech tags */
@@ -1521,24 +1535,24 @@ html, body {
 }
 
 /* Hide project description initially and show on hover */
-.project-card p {
-    /* Set fixed starting values */
+.project-card p,
+.project-card ul {
     display: none;
-    transition: none; /* Remove transition initially */
+    transition: none;
 }
 
-.project-card:hover p {
-    /* Force display on hover */
-    display: block !important; 
+.project-card:hover p,
+.project-card:hover ul {
+    display: block !important;
     opacity: 1 !important;
-    max-height: none !important; /* Remove height restriction */
+    max-height: none !important;
     visibility: visible !important;
     margin-bottom: 15px;
 }
 
 /* For mobile devices */
-.project-card.active p {
-    /* Same forceful display for tap on mobile */
+.project-card.active p,
+.project-card.active ul {
     display: block !important;
     opacity: 1 !important;
     max-height: none !important;
@@ -1548,7 +1562,7 @@ html, body {
 
 /* Make project cards taller to fit content */
 .project-card:hover {
-    min-height: 450px; /* Ensure there's enough room for content */
+    min-height: 450px;
 }
 
 /* Ensure content stays in front */
@@ -1590,7 +1604,8 @@ html, body {
         content: "Tap to view details";
     }
     
-    .project-card.active p {
+    .project-card.active p,
+    .project-card.active ul {
         opacity: 1;
         max-height: 2000px;
         margin-bottom: 15px;
