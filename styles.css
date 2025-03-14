@@ -370,8 +370,20 @@ section:nth-child(odd) {
 }
 
 .timeline-item {
-    margin-bottom: 50px;
     position: relative;
+    border: 2px solid transparent;
+    border-radius: var(--border-radius);
+    background-color: white;
+    transition: all 0.3s ease;
+    padding: 20px;
+    margin-bottom: 20px;
+    overflow: visible;
+}
+
+.timeline-item:hover {
+    transform: translateY(-5px);
+    border-color: var(--primary-color);
+    box-shadow: 0 10px 25px rgba(37, 99, 235, 0.2);
 }
 
 .timeline-dot {
@@ -387,12 +399,8 @@ section:nth-child(odd) {
 }
 
 .timeline-content {
-    width: 45%;
-    padding: 25px;
-    background-color: white;
-    border-radius: 5px;
-    box-shadow: var(--shadow);
     position: relative;
+    padding: 15px 0;
 }
 
 .timeline-item:nth-child(odd) .timeline-content {
@@ -422,6 +430,8 @@ section:nth-child(odd) {
 }
 
 .experience-details {
+    display: none;
+    margin-top: 15px;
     padding-left: 20px;
 }
 
@@ -554,6 +564,7 @@ section:nth-child(odd) {
     transition: all 0.3s ease;
     padding: 20px;
     margin-bottom: 20px;
+    overflow: visible;
 }
 
 .timeline-item:hover {
@@ -562,31 +573,48 @@ section:nth-child(odd) {
     box-shadow: 0 10px 25px rgba(37, 99, 235, 0.2);
 }
 
-.timeline-dot {
-    position: absolute;
-    left: -10px;
-    top: 30px;
-    width: 20px;
-    height: 20px;
-    background-color: var(--primary-color);
-    border-radius: 50%;
-    z-index: 2;
+/* Timeline content styling */
+.timeline-content {
+    position: relative;
+    padding: 15px 0;
 }
 
-/* Mobile Adaptations */
+/* Hide experience details by default */
+.experience-details {
+    display: none;
+    margin-top: 15px;
+    padding-left: 20px;
+}
+
+/* Show experience details on hover */
+.timeline-item:hover .experience-details {
+    display: block;
+}
+
+/* Add hover indicator */
+.timeline-content::after {
+    content: "Hover for details";
+    display: block;
+    font-size: 0.8rem;
+    color: var(--primary-color);
+    text-align: center;
+    margin-top: 10px;
+}
+
+.timeline-item:hover .timeline-content::after {
+    display: none;
+}
+
+/* Mobile adaptations */
 @media (max-width: 768px) {
-    .project-content::after,
     .timeline-content::after {
         content: "Tap for details";
     }
     
-    .project-card.active .project-details,
-    .project-card.active p:not(.timeline-date),
-    .timeline-item.active .timeline-content ul {
+    .timeline-item.active .experience-details {
         display: block;
     }
     
-    .project-card.active .project-content::after,
     .timeline-item.active .timeline-content::after {
         display: none;
     }

@@ -369,6 +369,45 @@ This has been saved to your Google Sheet for review.`
     // Setup interactions
     setupInteraction(projectCards);
     setupInteraction(timelineItems);
+
+    // Add this function to your scripts.js file
+    function setupTimelineInteraction() {
+        const timelineItems = document.querySelectorAll('.timeline-item');
+        
+        timelineItems.forEach(item => {
+            const details = item.querySelector('.experience-details');
+            
+            if (details) {
+                // Force hide details initially
+                details.style.display = 'none';
+                
+                // Desktop hover
+                item.addEventListener('mouseenter', function() {
+                    console.log('Timeline item entered');
+                    details.style.display = 'block';
+                });
+                
+                item.addEventListener('mouseleave', function() {
+                    console.log('Timeline item left');
+                    if (!this.classList.contains('active')) {
+                        details.style.display = 'none';
+                    }
+                });
+                
+                // Mobile tap
+                item.addEventListener('click', function() {
+                    console.log('Timeline item clicked');
+                    if (window.innerWidth <= 768) {
+                        this.classList.toggle('active');
+                        details.style.display = details.style.display === 'block' ? 'none' : 'block';
+                    }
+                });
+            }
+        });
+    }
+
+    // Call this function when the document is ready
+    setupTimelineInteraction();
 });
 
 // Function to save recommendation ID to localStorage
