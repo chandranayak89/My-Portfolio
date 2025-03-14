@@ -45,7 +45,7 @@ function saveRecommendationId(id, data) {
     document.addEventListener('DOMContentLoaded', function() {
         // 1. Direct button click handlers
         var leaveButton = document.querySelector('button[data-i18n="recommendations-leave"]');
-        var viewButton = document.querySelector('button[data-i18n="recommendations-view"]');
+        var viewButton = document.querySelector('button[data-i8n="recommendations-view"]');
         
         if (leaveButton) {
             console.log("Found leave recommendation button, adding click handler");
@@ -605,4 +605,101 @@ This has been saved to your Google Sheet for review.`
 
     // Initialize language
     updateLanguage(currentLanguage);
+
+    // =======================================================
+    // FIX FOR RECOMMENDATION BUTTONS & PROJECT CARDS
+    // =======================================================
+
+    // 1. Fix for recommendation buttons
+    const leaveRecommendationBtn = document.querySelector('button[data-i18n="recommendations-leave"]');
+    const viewRecommendationsBtn = document.querySelector('button[data-i8n="recommendations-view"]');
+    const cancelBtn = document.querySelector('button[data-i18n="recommendations-form-cancel"]');
+    const backBtn = document.querySelector('button[data-i18n="recommendations-back"]');
+
+    if (leaveRecommendationBtn) {
+        console.log("Found leave recommendation button");
+        // Remove any existing event listeners
+        leaveRecommendationBtn.removeAttribute('onclick');
+        // Add fresh event listener
+        leaveRecommendationBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            console.log("Leave recommendation button clicked");
+            // Direct DOM manipulation instead of calling a function
+            const form = document.getElementById('recommendationForm');
+            const recommendations = document.getElementById('existingRecommendations');
+            const successMsg = document.getElementById('recommendationSuccessMessage');
+            
+            if (form) form.style.display = 'block';
+            if (recommendations) recommendations.style.display = 'none';
+            if (successMsg) successMsg.style.display = 'none';
+            
+            // Scroll to form
+            if (form) form.scrollIntoView({behavior: 'smooth', block: 'start'});
+        });
+    }
+
+    if (viewRecommendationsBtn) {
+        console.log("Found view recommendations button");
+        // Remove any existing onclick attribute
+        viewRecommendationsBtn.removeAttribute('onclick');
+        // Add fresh event listener
+        viewRecommendationsBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            console.log("View recommendations button clicked");
+            // Direct DOM manipulation
+            const form = document.getElementById('recommendationForm');
+            const recommendations = document.getElementById('existingRecommendations');
+            
+            if (form) form.style.display = 'none';
+            if (recommendations) {
+                recommendations.style.display = 'block';
+                recommendations.scrollIntoView({behavior: 'smooth', block: 'start'});
+            }
+        });
+    }
+
+    // 2. Fix for project card hover effect - replace your existing project card code
+    // IMPORTANT: Remove or comment out any other project card initialization code
+    const allProjectCards = document.querySelectorAll('.project-card');
+    console.log("Found", allProjectCards.length, "project cards");
+
+    allProjectCards.forEach(card => {
+        // Get the description
+        const description = card.querySelector('p');
+        if (!description) {
+            console.warn("No description paragraph found in project card");
+            return;
+        }
+        
+        // Initially hide descriptions
+        description.style.display = 'none';
+        
+        // Desktop hover
+        card.addEventListener('mouseenter', function() {
+            console.log("Project card hover enter");
+            description.style.display = 'block';
+        });
+        
+        card.addEventListener('mouseleave', function() {
+            console.log("Project card hover leave");
+            // Only hide if not active (for mobile)
+            if (!this.classList.contains('active')) {
+                description.style.display = 'none';
+            }
+        });
+        
+        // Mobile tap
+        card.addEventListener('click', function() {
+            if (window.innerWidth <= 768) {
+                console.log("Project card clicked (mobile)");
+                this.classList.toggle('active');
+                
+                if (this.classList.contains('active')) {
+                    description.style.display = 'block';
+                } else {
+                    description.style.display = 'none';
+                }
+            }
+        });
+    });
 });
