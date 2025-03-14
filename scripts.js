@@ -1,6 +1,6 @@
 // Add these variables at the top of your scripts.js file
 // Replace with your actual Google Apps Script Web App URL
-const GOOGLE_SHEET_API_URL = "https://script.google.com/macros/s/AKfycbwsibaFp3YgbM_-wb0WOzO3duOwJpmuNsKS9nYR6R8BCvYfuGJRPSHA0qt9JtjwiOFJSA/exec";
+const GOOGLE_SHEET_API_URL = "https://script.google.com/macros/s/AKfycbyyqW-csZ4QPzys5sLnXp_0s4EIH6W59XH4bvuuxXqJxNfQR-a7WIg53q9FUFKF7SDdnw/exec";
 
 // =======================================================
 // DEFINE ALL GLOBAL FUNCTIONS FIRST - BEFORE DOMContentLoaded
@@ -137,6 +137,9 @@ function saveRecommendationId(id, data) {
             console.log("Recommendations element found, displaying it");
             recommendations.style.display = 'block';
             recommendations.scrollIntoView({behavior: 'smooth', block: 'start'});
+            
+            // Fetch the latest approved recommendations when opening this section
+            fetchApprovedRecommendations();
         } else {
             console.error("Recommendations element not found!");
         }
@@ -586,6 +589,8 @@ This has been saved to your Google Sheet for review.`
             if (recommendations) {
                 recommendations.style.display = 'block';
                 recommendations.scrollIntoView({behavior: 'smooth', block: 'start'});
+                // Fetch the latest approved recommendations
+                fetchApprovedRecommendations();
             }
         });
     }
@@ -634,4 +639,63 @@ This has been saved to your Google Sheet for review.`
             }
         });
     });
+
+    // Function to fetch approved recommendations from Google Sheet
+    function fetchApprovedRecommendations() {
+        console.log("Fetching approved recommendations");
+        
+        const recommendationsContainer = document.getElementById('recommendationsList');
+        if (!recommendationsContainer) {
+            console.error("Recommendations container not found");
+            return;
+        }
+        
+        // Show loading indicator
+        recommendationsContainer.innerHTML = '<div class="loading-spinner">Loading recommendations...</div>';
+        
+        // Fetch approved recommendations from Google Sheet API
+        fetch(`${GOOGLE_SHEET_API_URL}?action=getApproved`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success && data.recommendations && data.recommendations.length > 0) {
+                    // Clear loading indicator
+                    recommendationsContainer.innerHTML = '';
+                    
+                    // Display each recommendation
+                    data.recommendations.forEach(recommendation => {
+                        const card = document.createElement('div');
+                        card.className = 'recommendation-card';
+                        
+                        const html = `
+                            <div class="recommendation-header">
+                                <h4>${recommendation.firstName} ${recommendation.lastName}</h4>
+                                <p class="job-title">${recommendation.jobRole} at ${recommendation.company}</p>
+                                <p class="relation">${capitalizeFirstLetter(recommendation.relation)}</p>
+                            </div>
+                            <div class="recommendation-content">
+                                <p>"${recommendation.text}"</p>
+                            </div>
+                        `;
+                        
+                        card.innerHTML = html;
+                        recommendationsContainer.appendChild(card);
+                    });
+                } else {
+                    // No recommendations or error
+                    recommendationsContainer.innerHTML = `
+                        <div class="no-recommendations">
+                            <p>${translations[currentLanguage]['recommendations-none'] || 'No recommendations found.'}</p>
+                        </div>
+                    `;
+                }
+            })
+            .catch(error => {
+                console.error("Error fetching recommendations:", error);
+                recommendationsContainer.innerHTML = `
+                    <div class="error-message">
+                        <p>Error loading recommendations. Please try again later.</p>
+                    </div>
+                `;
+            });
+    }
 });
