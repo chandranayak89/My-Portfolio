@@ -284,40 +284,31 @@ This has been saved to your Google Sheet for review.`
     projectCards.forEach(card => {
         const description = card.querySelector('p');
         
-        // Force display none initially
+        // Ensure description is hidden initially
         if (description) {
             description.style.display = 'none';
         }
         
-        // Add simpler event listeners
+        // Add event listeners for hover
         card.addEventListener('mouseenter', function() {
-            console.log('Mouse enter on project card');
             if (description) {
                 description.style.display = 'block';
-                this.classList.add('expanded');
             }
         });
         
         card.addEventListener('mouseleave', function() {
-            console.log('Mouse leave on project card');
-            if (description && !this.classList.contains('active')) {
+            if (description) {
                 description.style.display = 'none';
-                this.classList.remove('expanded');
             }
         });
         
-        // For mobile
+        // For mobile devices
         card.addEventListener('click', function() {
-            console.log('Click on project card');
             if (window.innerWidth <= 768) {
-                if (this.classList.contains('active')) {
-                    if (description) description.style.display = 'none';
-                    this.classList.remove('active');
-                    this.classList.remove('expanded');
+                if (description.style.display === 'block') {
+                    description.style.display = 'none';
                 } else {
-                    if (description) description.style.display = 'block';
-                    this.classList.add('active');
-                    this.classList.add('expanded');
+                    description.style.display = 'block';
                 }
             }
         });
