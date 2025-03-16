@@ -747,4 +747,94 @@ This has been saved to your Google Sheet for review.`
                 `;
             });
     }
+
+    // Special function just to fix project cards
+    function fixProjectCards() {
+        console.log("Applying special fix for project cards");
+        
+        // Get all project cards
+        const projectCards = document.querySelectorAll('.project-card');
+        console.log(`Found ${projectCards.length} project cards to fix`);
+        
+        projectCards.forEach((card, index) => {
+            // First, log the card structure to diagnose
+            console.log(`Project card ${index} structure:`, card.innerHTML);
+            
+            // Try multiple selectors to find the description
+            // This tries to find paragraphs, divs with description class, or any text container
+            const description = 
+                card.querySelector('p') || 
+                card.querySelector('.project-description') || 
+                card.querySelector('.description') ||
+                card.querySelector('.card-content') ||
+                card.querySelector('.project-card > div:not(:first-child)');
+            
+            if (description) {
+                console.log(`Found description in card ${index}:`, description);
+                
+                // Force initial state - important with !important to override any CSS
+                description.setAttribute('style', 'display: none !important');
+                
+                // Clean up any existing event listeners
+                const newCard = card.cloneNode(true);
+                card.parentNode.replaceChild(newCard, card);
+                
+                // Get fresh reference to the description after cloning
+                const freshDescription = 
+                    newCard.querySelector('p') || 
+                    newCard.querySelector('.project-description') || 
+                    newCard.querySelector('.description') ||
+                    newCard.querySelector('.card-content') ||
+                    newCard.querySelector('.project-card > div:not(:first-child)');
+                
+                if (!freshDescription) {
+                    console.error(`Could not find description after cloning card ${index}`);
+                    return;
+                }
+                
+                // Set up hover events with stronger style enforcement
+                newCard.addEventListener('mouseenter', function() {
+                    console.log(`Project card ${index} hover enter`);
+                    freshDescription.setAttribute('style', 'display: block !important');
+                });
+                
+                newCard.addEventListener('mouseleave', function() {
+                    console.log(`Project card ${index} hover leave`);
+                    if (!this.classList.contains('active')) {
+                        freshDescription.setAttribute('style', 'display: none !important');
+                    }
+                });
+                
+                // Set up click/tap events for mobile
+                newCard.addEventListener('click', function(e) {
+                    console.log(`Project card ${index} clicked/tapped`);
+                    if (isTouchDevice()) {
+                        e.preventDefault();
+                        this.classList.toggle('active');
+                        
+                        if (this.classList.contains('active')) {
+                            freshDescription.setAttribute('style', 'display: block !important');
+                        } else {
+                            freshDescription.setAttribute('style', 'display: none !important');
+                        }
+                    }
+                });
+            } else {
+                console.error(`No description found in project card ${index}`);
+            }
+        });
+    }
+
+    // Call this in the DOMContentLoaded event
+    document.addEventListener('DOMContentLoaded', function() {
+        // ... existing code ...
+        
+        // Call our updated interaction setup function
+        setupUniversalTouchInteraction();
+        
+        // Add the special project card fix
+        fixProjectCards();
+        
+        // ... existing code ...
+    });
 });
