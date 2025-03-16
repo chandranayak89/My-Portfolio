@@ -432,43 +432,60 @@ This has been saved to your Google Sheet for review.`
                 (navigator.msMaxTouchPoints > 0));
     }
 
-    // Add this function to properly handle iOS touch events
+    // Update this function to fix hover/tap functionality for all devices
     function setupUniversalTouchInteraction() {
         console.log("Setting up universal touch interaction for all devices");
         
-        // Project cards interaction
+        // First, remove any existing event listeners that might conflict
         const projectCards = document.querySelectorAll('.project-card');
+        const timelineItems = document.querySelectorAll('.timeline-item');
+        
+        // Clear existing event listeners (by cloning and replacing elements)
         projectCards.forEach(card => {
+            const newCard = card.cloneNode(true);
+            card.parentNode.replaceChild(newCard, card);
+        });
+        
+        timelineItems.forEach(item => {
+            const newItem = item.cloneNode(true);
+            item.parentNode.replaceChild(newItem, item);
+        });
+        
+        // Get fresh references after replacing
+        const freshProjectCards = document.querySelectorAll('.project-card');
+        const freshTimelineItems = document.querySelectorAll('.timeline-item');
+        
+        console.log(`Found ${freshProjectCards.length} project cards and ${freshTimelineItems.length} timeline items`);
+        
+        // Project cards interaction
+        freshProjectCards.forEach(card => {
             const description = card.querySelector('p');
             if (description) {
-                // Force hide details initially
+                console.log("Setting up project card:", card.textContent.substring(0, 20) + "...");
+                
+                // Force descriptions to be initially visible then hidden by JS
+                // This ensures content exists for screen readers even when hidden
                 description.style.display = 'none';
                 
                 // Desktop hover events
                 card.addEventListener('mouseenter', function() {
-                    if (!isTouchDevice()) {
-                        description.style.display = 'block';
-                    }
+                    console.log("Project card hover enter");
+                    description.style.display = 'block';
                 });
                 
                 card.addEventListener('mouseleave', function() {
-                    if (!isTouchDevice() && !this.classList.contains('active')) {
+                    console.log("Project card hover leave");
+                    if (!this.classList.contains('active')) {
                         description.style.display = 'none';
                     }
                 });
                 
-                // Touch events that work on all mobile devices including iOS
-                card.addEventListener('touchstart', function(e) {
-                    // Don't prevent default here to allow scrolling
-                    if (!this.classList.contains('processing-touch')) {
-                        this.classList.add('processing-touch');
-                    }
-                }, {passive: true});
-                
-                card.addEventListener('touchend', function(e) {
-                    if (this.classList.contains('processing-touch')) {
-                        e.preventDefault(); // Prevent ghost click
-                        this.classList.remove('processing-touch');
+                // Universal click/tap for all devices
+                card.addEventListener('click', function(e) {
+                    console.log("Project card clicked/tapped");
+                    // For mobile devices or touch screens
+                    if (isTouchDevice()) {
+                        e.preventDefault();
                         this.classList.toggle('active');
                         
                         if (this.classList.contains('active')) {
@@ -476,48 +493,43 @@ This has been saved to your Google Sheet for review.`
                         } else {
                             description.style.display = 'none';
                         }
-                        
-                        console.log("Touch handled on project card");
                     }
                 });
             }
         });
         
-        // Timeline items interaction - same approach
-        const timelineItems = document.querySelectorAll('.timeline-item');
-        timelineItems.forEach(item => {
+        // Timeline items interaction - similar approach
+        freshTimelineItems.forEach(item => {
             // Try different selectors to find details
             const details = item.querySelector('.experience-details') || 
-                            item.querySelector('.timeline-content ul');
+                            item.querySelector('.timeline-content ul') ||
+                            item.querySelector('.timeline-content p:not(:first-child)');
             
             if (details) {
-                // Force hide details initially
+                console.log("Setting up timeline item:", item.textContent.substring(0, 20) + "...");
+                
+                // Force details to be initially hidden
                 details.style.display = 'none';
                 
                 // Desktop hover
                 item.addEventListener('mouseenter', function() {
-                    if (!isTouchDevice()) {
-                        details.style.display = 'block';
-                    }
+                    console.log("Timeline item hover enter");
+                    details.style.display = 'block';
                 });
                 
                 item.addEventListener('mouseleave', function() {
-                    if (!isTouchDevice() && !this.classList.contains('active')) {
+                    console.log("Timeline item hover leave");
+                    if (!this.classList.contains('active')) {
                         details.style.display = 'none';
                     }
                 });
                 
-                // Touch events for all devices
-                item.addEventListener('touchstart', function(e) {
-                    if (!this.classList.contains('processing-touch')) {
-                        this.classList.add('processing-touch');
-                    }
-                }, {passive: true});
-                
-                item.addEventListener('touchend', function(e) {
-                    if (this.classList.contains('processing-touch')) {
+                // Universal click for all devices
+                item.addEventListener('click', function(e) {
+                    console.log("Timeline item clicked/tapped");
+                    // For mobile devices
+                    if (isTouchDevice()) {
                         e.preventDefault();
-                        this.classList.remove('processing-touch');
                         this.classList.toggle('active');
                         
                         if (this.classList.contains('active')) {
@@ -525,17 +537,17 @@ This has been saved to your Google Sheet for review.`
                         } else {
                             details.style.display = 'none';
                         }
-                        
-                        console.log("Touch handled on timeline item");
                     }
                 });
+            } else {
+                console.warn("No details found in timeline item:", item);
             }
         });
         
-        console.log("Universal touch interaction setup complete");
+        console.log("Universal interaction setup complete");
     }
 
-    // Call our new universal touch setup function
+    // Call our updated interaction setup function
     setupUniversalTouchInteraction();
 
     // Initialize language
