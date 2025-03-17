@@ -1,6 +1,6 @@
 // Add these variables at the top of your scripts.js file
 // Replace with your actual Google Apps Script Web App URL
-const GOOGLE_SHEET_API_URL = "https://script.google.com/macros/s/AKfycbyyqW-csZ4QPzys5sLnXp_0s4EIH6W59XH4bvuuxXqJxNfQR-a7WIg53q9FUFKF7SDdnw/exec";
+const GOOGLE_SHEET_API_URL = "https://script.google.com/macros/s/AKfycbzy7T56oZp2bgLiA3-9XDFP0uZQxyygzUixFHY1tAhSezk10nXAuglC5iD_FLv0qpL0FQ/exec";
 
 // =======================================================
 // DEFINE ALL GLOBAL FUNCTIONS FIRST - BEFORE DOMContentLoaded
@@ -652,46 +652,30 @@ This has been saved to your Google Sheet for review.`
         });
     });
 
-    // Enhanced function to fetch approved recommendations from Google Sheet
+    // Improved fetch function that handles the direct JSON response format from your script
     function fetchApprovedRecommendations() {
         console.log("🔄 FETCHING APPROVED RECOMMENDATIONS - STARTED");
         
-        // First, try to find the correct container
-        const recommendationsContainer = document.getElementById('recommendationsList');
-        if (!recommendationsContainer) {
-            console.error("❌ Recommendations container not found - looking for element with id 'recommendationsList'");
-            // Let's try to find any possible container
-            const existingRecommendations = document.getElementById('existingRecommendations');
-            if (existingRecommendations) {
-                console.log("✅ Found fallback container", existingRecommendations);
-                // Create the list container if it doesn't exist
-                if (!existingRecommendations.querySelector('#recommendationsList')) {
-                    const listDiv = document.createElement('div');
-                    listDiv.id = 'recommendationsList';
-                    existingRecommendations.appendChild(listDiv);
-                    console.log("✅ Created missing recommendationsList container");
-                }
-            } else {
-                console.error("❌ No recommendation containers found at all!");
-                return;
-            }
-        }
+        // Get the container
+        const container = document.getElementById('recommendationsList') || 
+                         document.querySelector('#existingRecommendations > div') ||
+                         document.getElementById('existingRecommendations');
         
-        // Try again after potential creation
-        const container = document.getElementById('recommendationsList');
-        if (!container) return;
+        if (!container) {
+            console.error("❌ No recommendation container found");
+            return;
+        }
         
         // Show loading indicator
         container.innerHTML = '<div class="loading-spinner">Loading recommendations...</div>';
         
         // Generate a unique timestamp to prevent caching
         const timestamp = new Date().getTime();
+        const fetchUrl = `${GOOGLE_SHEET_API_URL}?nocache=${timestamp}`;
         
-        // Log the URL we're fetching from
-        const fetchUrl = `${GOOGLE_SHEET_API_URL}?action=getApproved&nocache=${timestamp}`;
-        console.log("🌐 Fetching from URL:", fetchUrl);
+        console.log("🌐 Fetching recommendations from:", fetchUrl);
         
-        // Fetch approved recommendations from Google Sheet API with no-cache headers
+        // Fetch the recommendations with cache-busting
         fetch(fetchUrl, {
             method: 'GET',
             headers: {
@@ -700,110 +684,103 @@ This has been saved to your Google Sheet for review.`
                 'Expires': '0'
             }
         })
-            .then(response => {
-                console.log("📥 Received response status:", response.status);
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
-                return response.json();
-            })
-            .then(data => {
-                console.log("📊 Received data:", data);
+        .then(response => {
+            console.log("📥 Response status:", response.status);
+            if (!response.ok) {
+                throw new Error(`Network response error: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(recommendations => {
+            console.log("📊 Received recommendations:", recommendations);
+            
+            if (recommendations && recommendations.length > 0) {
+                // Clear the container
+                container.innerHTML = '';
                 
-                if (data.success && data.recommendations && data.recommendations.length > 0) {
-                    // Clear loading indicator
-                    container.innerHTML = '';
+                // Display each recommendation
+                recommendations.forEach((recommendation, index) => {
+                    console.log(`📝 Processing recommendation ${index+1}:`, recommendation);
                     
-                    console.log(`✅ Displaying ${data.recommendations.length} recommendations`);
+                    const card = document.createElement('div');
+                    card.className = 'recommendation-card';
                     
-                    // Display each recommendation
-                    data.recommendations.forEach((recommendation, index) => {
-                        console.log(`📝 Processing recommendation ${index+1}:`, recommendation);
-                        
-                        const card = document.createElement('div');
-                        card.className = 'recommendation-card';
-                        
-                        const html = `
-                            <div class="recommendation-header">
-                                <h4>${recommendation.firstName || ''} ${recommendation.lastName || ''}</h4>
-                                <p class="job-title">${recommendation.jobRole || ''} at ${recommendation.company || ''}</p>
-                                <p class="relation">${capitalizeFirstLetter(recommendation.relation || '')}</p>
-                            </div>
-                            <div class="recommendation-content">
-                                <p>"${recommendation.text || ''}"</p>
-                            </div>
-                        `;
-                        
-                        card.innerHTML = html;
-                        container.appendChild(card);
-                    });
-                } else {
-                    // No recommendations or error
-                    container.innerHTML = `
-                        <div class="no-recommendations">
-                            <p>${translations[currentLanguage]['recommendations-none'] || 'No recommendations found. Be the first to leave a recommendation!'}</p>
+                    // Helper function to safely display text
+                    const safeText = (text) => text || '';
+                    
+                    // Format the relation with first letter capitalized
+                    const formatRelation = (relation) => {
+                        return relation ? relation.charAt(0).toUpperCase() + relation.slice(1) : '';
+                    };
+                    
+                    // Create HTML for the card
+                    const html = `
+                        <div class="recommendation-header">
+                            <h4>${safeText(recommendation.firstName)} ${safeText(recommendation.lastName)}</h4>
+                            <p class="job-title">${safeText(recommendation.jobRole)} at ${safeText(recommendation.company)}</p>
+                            <p class="relation">${formatRelation(recommendation.relation)}</p>
+                        </div>
+                        <div class="recommendation-content">
+                            <p>"${safeText(recommendation.text)}"</p>
                         </div>
                     `;
-                    console.log("ℹ️ No recommendations found or success=false in response");
-                }
-            })
-            .catch(error => {
-                console.error("❌ Error fetching recommendations:", error);
+                    
+                    card.innerHTML = html;
+                    container.appendChild(card);
+                });
+                
+                console.log(`✅ Successfully displayed ${recommendations.length} recommendations`);
+            } else {
+                // No recommendations found
                 container.innerHTML = `
-                    <div class="error-message">
-                        <p>Error loading recommendations. Please try again later.</p>
-                        <p class="error-details">${error.message}</p>
+                    <div class="no-recommendations">
+                        <p>No recommendations found. Be the first to leave a recommendation!</p>
                     </div>
                 `;
-            });
-    }
-
-    // Enhanced view recommendations button handler - add this near your existing button handlers
-    function enhanceRecommendationButtons() {
-        console.log("🔄 Setting up enhanced recommendation button handlers");
-        
-        const viewRecommendationsBtn = document.querySelector('button[data-i18n="recommendations-view"]');
-        if (!viewRecommendationsBtn) {
-            console.error("❌ View recommendations button not found");
-            return;
-        }
-        
-        // Remove any existing event listeners
-        const newViewBtn = viewRecommendationsBtn.cloneNode(true);
-        viewRecommendationsBtn.parentNode.replaceChild(newViewBtn, viewRecommendationsBtn);
-        
-        // Add fresh event listener with forced fetch
-        newViewBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            console.log("👆 View recommendations button clicked - forcing fresh fetch");
-            
-            // Direct DOM manipulation
-            const form = document.getElementById('recommendationForm');
-            const recommendations = document.getElementById('existingRecommendations');
-            const successMsg = document.getElementById('recommendationSuccessMessage');
-            
-            if (form) form.style.display = 'none';
-            if (successMsg) successMsg.style.display = 'none';
-            if (recommendations) {
-                recommendations.style.display = 'block';
-                recommendations.scrollIntoView({behavior: 'smooth', block: 'start'});
-                
-                // Force new fetch with cache-busting
-                fetchApprovedRecommendations();
+                console.log("ℹ️ No recommendations found in the response");
             }
+        })
+        .catch(error => {
+            console.error("❌ Error fetching recommendations:", error);
+            container.innerHTML = `
+                <div class="error-message">
+                    <p>Error loading recommendations: ${error.message}</p>
+                </div>
+            `;
         });
-        
-        console.log("✅ Enhanced recommendation button handlers setup complete");
     }
 
-    // Call this function when the page loads
+    // Set up the view recommendations button
     document.addEventListener('DOMContentLoaded', function() {
-        // ... existing code ...
+        console.log("🔄 Setting up recommendation buttons");
         
-        // Setup enhanced recommendation buttons
-        enhanceRecommendationButtons();
-        
-        // ... existing code ...
+        const viewBtn = document.querySelector('button[data-i18n="recommendations-view"]');
+        if (viewBtn) {
+            // Remove existing listeners
+            const newViewBtn = viewBtn.cloneNode(true);
+            viewBtn.parentNode.replaceChild(newViewBtn, viewBtn);
+            
+            // Add fresh listener
+            newViewBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                console.log("👆 View recommendations button clicked");
+                
+                // Show the recommendations section
+                const form = document.getElementById('recommendationForm');
+                const recommendations = document.getElementById('existingRecommendations');
+                
+                if (form) form.style.display = 'none';
+                if (recommendations) {
+                    recommendations.style.display = 'block';
+                    recommendations.scrollIntoView({behavior: 'smooth'});
+                    
+                    // Fetch fresh recommendations
+                    fetchApprovedRecommendations();
+                }
+            });
+            
+            console.log("✅ View recommendations button setup complete");
+        }
     });
 
     // Final solution for project cards - place at the end of your file
