@@ -748,81 +748,140 @@ This has been saved to your Google Sheet for review.`
             });
     }
 
-    // Special function just to fix project cards
+    // Special function to fix project cards with proper CSS class handling
     function fixProjectCards() {
-        console.log("Applying special fix for project cards");
+        console.log("Applying comprehensive fix for project cards");
         
         // Get all project cards
         const projectCards = document.querySelectorAll('.project-card');
         console.log(`Found ${projectCards.length} project cards to fix`);
         
         projectCards.forEach((card, index) => {
-            // First, log the card structure to diagnose
-            console.log(`Project card ${index} structure:`, card.innerHTML);
-            
-            // Try multiple selectors to find the description
-            // This tries to find paragraphs, divs with description class, or any text container
+            // First find the description using various selectors to be flexible
             const description = 
-                card.querySelector('p') || 
                 card.querySelector('.project-description') || 
+                card.querySelector('p') || 
                 card.querySelector('.description') ||
-                card.querySelector('.card-content') ||
-                card.querySelector('.project-card > div:not(:first-child)');
+                card.querySelector('.card-content');
             
             if (description) {
                 console.log(`Found description in card ${index}:`, description);
                 
-                // Force initial state - important with !important to override any CSS
-                description.setAttribute('style', 'display: none !important');
+                // Add proper description class if missing
+                if (!description.classList.contains('project-description')) {
+                    description.classList.add('project-description');
+                }
                 
-                // Clean up any existing event listeners
+                // Force initial state - hide description
+                description.style.display = 'none';
+                
+                // Remove and re-establish event listeners
                 const newCard = card.cloneNode(true);
                 card.parentNode.replaceChild(newCard, card);
                 
-                // Get fresh reference to the description after cloning
+                // Get fresh description reference
                 const freshDescription = 
-                    newCard.querySelector('p') || 
                     newCard.querySelector('.project-description') || 
-                    newCard.querySelector('.description') ||
-                    newCard.querySelector('.card-content') ||
-                    newCard.querySelector('.project-card > div:not(:first-child)');
-                
+                    newCard.querySelector('p');
+                    
                 if (!freshDescription) {
                     console.error(`Could not find description after cloning card ${index}`);
                     return;
                 }
                 
-                // Set up hover events with stronger style enforcement
+                // Desktop hover events
                 newCard.addEventListener('mouseenter', function() {
-                    console.log(`Project card ${index} hover enter`);
-                    freshDescription.setAttribute('style', 'display: block !important');
+                    console.log(`Project card ${index} hovered`);
+                    freshDescription.style.display = 'block';
                 });
                 
                 newCard.addEventListener('mouseleave', function() {
-                    console.log(`Project card ${index} hover leave`);
+                    console.log(`Project card ${index} hover ended`);
                     if (!this.classList.contains('active')) {
-                        freshDescription.setAttribute('style', 'display: none !important');
+                        freshDescription.style.display = 'none';
                     }
                 });
                 
-                // Set up click/tap events for mobile
+                // Mobile tap events
                 newCard.addEventListener('click', function(e) {
                     console.log(`Project card ${index} clicked/tapped`);
-                    if (isTouchDevice()) {
+                    if (isTouchDevice() || window.innerWidth <= 768) {
                         e.preventDefault();
                         this.classList.toggle('active');
                         
                         if (this.classList.contains('active')) {
-                            freshDescription.setAttribute('style', 'display: block !important');
+                            freshDescription.style.display = 'block';
                         } else {
-                            freshDescription.setAttribute('style', 'display: none !important');
+                            freshDescription.style.display = 'none';
                         }
                     }
                 });
+                
+                // Add hover/tap indicator if not present
+                if (!newCard.querySelector('.hover-indicator')) {
+                    const indicator = document.createElement('div');
+                    indicator.className = 'hover-indicator';
+                    indicator.textContent = isTouchDevice() ? 'Tap for details' : 'Hover for details';
+                    indicator.style.fontSize = '0.8rem';
+                    indicator.style.color = 'var(--primary-color, #0066cc)';
+                    indicator.style.textAlign = 'center';
+                    indicator.style.marginTop = '10px';
+                    
+                    // Find a good place to insert it
+                    const content = newCard.querySelector('.project-content') || newCard;
+                    content.appendChild(indicator);
+                }
             } else {
                 console.error(`No description found in project card ${index}`);
             }
         });
+        
+        // Add CSS for project cards if not already present
+        if (!document.getElementById('project-card-styles')) {
+            const styleEl = document.createElement('style');
+            styleEl.id = 'project-card-styles';
+            styleEl.textContent = `
+                .project-card {
+                    position: relative;
+                    border: 2px solid transparent;
+                    border-radius: var(--border-radius, 8px);
+                    background-color: white;
+                    box-shadow: var(--shadow, 0 4px 6px rgba(0,0,0,0.1));
+                    transition: all 0.3s ease;
+                    overflow: hidden;
+                }
+                
+                .project-card:hover {
+                    transform: translateY(-5px);
+                    border-color: var(--primary-color, #0066cc);
+                    box-shadow: 0 10px 25px rgba(37, 99, 235, 0.2);
+                }
+                
+                .project-description {
+                    display: none;
+                    padding: 10px 0;
+                }
+                
+                .project-card:hover .project-description {
+                    display: block;
+                }
+                
+                .project-card:hover .hover-indicator {
+                    display: none;
+                }
+                
+                .project-card.active .hover-indicator {
+                    display: none;
+                }
+                
+                .project-card.active .project-description {
+                    display: block;
+                }
+            `;
+            document.head.appendChild(styleEl);
+        }
+        
+        console.log("Project card fix applied");
     }
 
     // Call this in the DOMContentLoaded event
