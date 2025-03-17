@@ -915,193 +915,177 @@ This has been saved to your Google Sheet for review.`
         });
     })();
 
-    // Standalone recommendation fetching solution - add to the end of your file
+    // FINAL FIX - Direct DOM access solution for recommendations
     (function() {
-        // Define your API URL
+        console.log("🚀 Starting direct DOM recommendation solution");
+        
+        // Get the correct API URL
         const API_URL = "https://script.google.com/macros/s/AKfycbzy7T56oZp2bgLiA3-9XDFP0uZQxyygzUixFHY1tAhSezk10nXAuglC5iD_FLv0qpL0FQ/exec";
         
-        // Execute when the page is fully loaded
+        // Wait for page to be fully loaded
         window.addEventListener('load', function() {
-            console.log("🔍 RECOMMENDATION DEBUGGER STARTED");
+            console.log("🔄 DOM fully loaded - setting up recommendations");
             
-            // Find all possible recommendation buttons
-            const viewButtons = [
-                document.querySelector('button[data-i18n="recommendations-view"]'),
-                document.querySelector('button:contains("View")'),
-                document.querySelector('button:contains("recommendation")'),
-                ...Array.from(document.querySelectorAll('button')).filter(btn => 
-                    btn.textContent.toLowerCase().includes('recommendation') || 
-                    btn.textContent.toLowerCase().includes('view'))
-            ].filter(Boolean); // Remove null/undefined values
+            // 1. First, find ALL buttons on the page
+            const allButtons = document.querySelectorAll('button');
+            console.log(`Found ${allButtons.length} total buttons on page`);
             
-            console.log(`Found ${viewButtons.length} possible recommendation buttons:`, viewButtons);
-            
-            // Find all possible recommendation containers
-            const containers = [
-                document.getElementById('recommendationsList'),
-                document.getElementById('existingRecommendations'),
-                document.querySelector('.recommendations-container'),
-                document.querySelector('[id*="recommendation"]'),
-                document.querySelector('[class*="recommendation"]')
-            ].filter(Boolean);
-            
-            console.log(`Found ${containers.length} possible recommendation containers:`, containers);
-            
-            // Test direct API access
-            console.log("🌐 Testing direct API access...");
-            
-            // Add visual indicator for debugging
-            const debugElement = document.createElement('div');
-            debugElement.style.cssText = 'position: fixed; bottom: 10px; right: 10px; background: #f8f9fa; border: 1px solid #dee2e6; padding: 10px; max-width: 300px; z-index: 9999; font-family: monospace; font-size: 12px;';
-            debugElement.innerHTML = '<h4>Recommendation Debugger</h4><div id="debug-log"></div>';
-            document.body.appendChild(debugElement);
-            
-            const debugLog = document.getElementById('debug-log');
-            
-            function addLog(message) {
-                console.log(message);
-                const entry = document.createElement('div');
-                entry.textContent = message;
-                debugLog.appendChild(entry);
-                // Keep only latest 10 entries
-                while (debugLog.children.length > 10) {
-                    debugLog.removeChild(debugLog.firstChild);
+            // Find view recommendations button by text content
+            let viewButton = null;
+            for (let i = 0; i < allButtons.length; i++) {
+                const buttonText = allButtons[i].textContent.toLowerCase().trim();
+                if (buttonText.includes('view') && buttonText.includes('recommendation')) {
+                    viewButton = allButtons[i];
+                    console.log(`✅ Found view recommendations button: "${allButtons[i].textContent}"`);
+                    break;
                 }
             }
             
-            // Function to fetch recommendations
-            function fetchRecommendations() {
-                addLog("🔄 Fetching recommendations...");
+            if (!viewButton) {
+                console.error("❌ Could not find view recommendations button");
+                // Try data-i18n attribute as fallback
+                viewButton = document.querySelector('[data-i18n="recommendations-view"]');
+                if (viewButton) {
+                    console.log("✅ Found view button via data-i18n attribute");
+                }
+            }
+            
+            // 2. Find recommendations container
+            const existingRecommendations = document.getElementById('existingRecommendations');
+            if (!existingRecommendations) {
+                console.error("❌ Could not find existingRecommendations container");
+                return;
+            }
+            
+            // Create a dedicated container for the list if it doesn't exist
+            let listContainer = document.getElementById('recommendationsList');
+            if (!listContainer) {
+                listContainer = document.createElement('div');
+                listContainer.id = 'recommendationsList';
+                listContainer.style.padding = '20px';
+                existingRecommendations.appendChild(listContainer);
+                console.log("✅ Created new recommendationsList container");
+            }
+            
+            // 3. Function to fetch and display recommendations
+            function fetchAndDisplayRecommendations() {
+                console.log("🔄 Fetching recommendations from Google Sheets");
                 
-                // Pick the first container we found
-                const container = containers[0];
-                if (!container) {
-                    addLog("❌ No container found!");
+                // Show loading message
+                listContainer.innerHTML = '<div style="text-align:center;padding:20px;">Loading recommendations...</div>';
+                
+                // Generate timestamp for cache busting
+                const timestamp = new Date().getTime();
+                
+                // Make the fetch request
+                fetch(`${API_URL}?t=${timestamp}`)
+                    .then(response => {
+                        console.log(`📥 Server response: ${response.status} ${response.statusText}`);
+                        if (!response.ok) {
+                            throw new Error(`Server returned ${response.status}: ${response.statusText}`);
+                        }
+                        return response.text();
+                    })
+                    .then(text => {
+                        // Log the raw response for debugging
+                        console.log(`📄 Raw server response: ${text.substring(0, 100)}...`);
+                        
+                        // Try to parse the response
+                        try {
+                            const data = JSON.parse(text);
+                            
+                            if (Array.isArray(data)) {
+                                console.log(`✅ Successfully parsed ${data.length} recommendations`);
+                                displayRecommendations(data);
+                            } else {
+                                console.error("❌ Response is not an array:", data);
+                                listContainer.innerHTML = '<div style="color:red;padding:20px;">Invalid data format returned from server</div>';
+                            }
+                        } catch (e) {
+                            console.error("❌ JSON parse error:", e);
+                            listContainer.innerHTML = `<div style="color:red;padding:20px;">Error parsing data from server: ${e.message}</div>`;
+                        }
+                    })
+                    .catch(error => {
+                        console.error("❌ Fetch error:", error);
+                        listContainer.innerHTML = `<div style="color:red;padding:20px;">Error loading recommendations: ${error.message}</div>`;
+                    });
+            }
+            
+            // 4. Function to display recommendations
+            function displayRecommendations(recommendations) {
+                if (!recommendations || recommendations.length === 0) {
+                    listContainer.innerHTML = '<div style="text-align:center;padding:20px;">No recommendations found</div>';
                     return;
                 }
                 
-                // Make container visible
-                container.style.display = 'block';
+                // Clear the container
+                listContainer.innerHTML = '';
                 
-                // Show loading
-                container.innerHTML = '<div style="padding: 20px; text-align: center;">Loading recommendations...</div>';
-                
-                // Generate a timestamp for cache-busting
-                const timestamp = new Date().getTime();
-                
-                // Try fetching directly
-                fetch(`${API_URL}?t=${timestamp}`, {
-                    method: 'GET',
-                    headers: {
-                        'Cache-Control': 'no-cache',
-                        'Pragma': 'no-cache'
-                    }
-                })
-                .then(response => {
-                    addLog(`📥 Response status: ${response.status}`);
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! Status: ${response.status}`);
-                    }
-                    return response.text();  // Get as text first to debug
-                })
-                .then(text => {
-                    addLog(`📄 Raw response: ${text.substring(0, 50)}...`);
-                    try {
-                        // Try to parse as JSON
-                        const data = JSON.parse(text);
-                        addLog(`✅ Parsed JSON data with ${Array.isArray(data) ? data.length : 'unknown'} recommendations`);
-                        
-                        // Display recommendations
-                        displayRecommendations(container, data);
-                    } catch (e) {
-                        addLog(`❌ JSON parse error: ${e.message}`);
-                        container.innerHTML = `<div style="padding: 20px; color: red;">
-                            Error parsing data from server. Raw response: ${text.substring(0, 100)}...
-                        </div>`;
-                    }
-                })
-                .catch(error => {
-                    addLog(`❌ Fetch error: ${error.message}`);
+                // Create each recommendation card
+                recommendations.forEach((rec, index) => {
+                    console.log(`Creating card for ${rec.firstName} ${rec.lastName}`);
                     
-                    // Try with CORS proxy as fallback
-                    addLog("🔄 Trying with CORS proxy...");
-                    fetch(`https://cors-anywhere.herokuapp.com/${API_URL}?t=${timestamp}`)
-                        .then(response => response.json())
-                        .then(data => {
-                            addLog(`✅ CORS proxy successful with ${Array.isArray(data) ? data.length : 'unknown'} recommendations`);
-                            displayRecommendations(container, data);
-                        })
-                        .catch(proxyError => {
-                            addLog(`❌ CORS proxy error: ${proxyError.message}`);
-                            container.innerHTML = `<div style="padding: 20px; color: red;">
-                                Error loading recommendations: ${error.message}<br>
-                                CORS proxy also failed: ${proxyError.message}
-                            </div>`;
-                        });
-                });
-            }
-            
-            // Function to display recommendations
-            function displayRecommendations(container, data) {
-                if (Array.isArray(data) && data.length > 0) {
-                    container.innerHTML = '';
+                    const card = document.createElement('div');
+                    card.className = 'recommendation-card';
+                    card.style.cssText = 'border:1px solid #ddd;border-radius:8px;padding:15px;margin-bottom:15px;background:white;';
                     
-                    data.forEach((rec, index) => {
-                        addLog(`📝 Processing recommendation ${index+1}: ${rec.firstName} ${rec.lastName}`);
-                        
-                        const card = document.createElement('div');
-                        card.className = 'recommendation-card';
-                        card.style.cssText = 'border: 1px solid #dee2e6; border-radius: 8px; padding: 15px; margin-bottom: 15px; background: white;';
-                        
-                        const safeText = text => text || '';
-                        
-                        card.innerHTML = `
-                            <div style="margin-bottom: 10px;">
-                                <h4 style="margin: 0 0 5px 0;">${safeText(rec.firstName)} ${safeText(rec.lastName)}</h4>
-                                <p style="margin: 0 0 5px 0; color: #6c757d;">${safeText(rec.jobRole)} at ${safeText(rec.company)}</p>
-                                <p style="margin: 0; color: #6c757d; font-style: italic;">${safeText(rec.relation)}</p>
-                            </div>
-                            <div>
-                                <p style="margin: 0;">"${safeText(rec.text)}"</p>
-                            </div>
-                        `;
-                        
-                        container.appendChild(card);
-                    });
+                    // Helper for null/undefined values
+                    const safe = text => text || '';
                     
-                    addLog(`✅ Displayed ${data.length} recommendations`);
-                } else {
-                    container.innerHTML = `<div style="padding: 20px; text-align: center;">
-                        No recommendations found.
-                    </div>`;
-                    addLog("⚠️ No recommendations to display");
-                }
-            }
-            
-            // Add click handlers to all possible buttons
-            viewButtons.forEach((btn, index) => {
-                // Replace with new button to clear previous handlers
-                const newBtn = btn.cloneNode(true);
-                btn.parentNode.replaceChild(newBtn, btn);
-                
-                // Add our handler
-                newBtn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    addLog(`👆 Button ${index+1} clicked`);
-                    fetchRecommendations();
+                    card.innerHTML = `
+                        <div style="margin-bottom:10px;">
+                            <h4 style="margin:0 0 5px 0;">${safe(rec.firstName)} ${safe(rec.lastName)}</h4>
+                            <p style="margin:0 0 5px 0;color:#666;">${safe(rec.jobRole)} at ${safe(rec.company)}</p>
+                            <p style="margin:0;font-style:italic;color:#666;">${safe(rec.relation)}</p>
+                        </div>
+                        <div>
+                            <p style="margin:0;">"${safe(rec.text)}"</p>
+                        </div>
+                    `;
+                    
+                    listContainer.appendChild(card);
                 });
                 
-                addLog(`✅ Added handler to button ${index+1}`);
-            });
+                console.log(`✅ Successfully displayed ${recommendations.length} recommendations`);
+            }
             
-            // Direct test button in debug panel
-            const testButton = document.createElement('button');
-            testButton.textContent = 'Test Fetch Now';
-            testButton.style.cssText = 'margin-top: 10px; padding: 5px 10px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;';
-            testButton.addEventListener('click', fetchRecommendations);
-            debugElement.appendChild(testButton);
+            // 5. Set up button click event
+            if (viewButton) {
+                // Remove all existing event listeners
+                const newButton = viewButton.cloneNode(true);
+                viewButton.parentNode.replaceChild(newButton, viewButton);
+                
+                // Add our event handler
+                newButton.addEventListener('click', function(event) {
+                    event.preventDefault();
+                    console.log("👆 View recommendations button clicked");
+                    
+                    // Show recommendations section
+                    existingRecommendations.style.display = 'block';
+                    
+                    // Hide form if it exists
+                    const form = document.getElementById('recommendationForm');
+                    if (form) form.style.display = 'none';
+                    
+                    // Fetch recommendations
+                    fetchAndDisplayRecommendations();
+                    
+                    // Scroll to recommendations
+                    existingRecommendations.scrollIntoView({behavior: 'smooth', block: 'start'});
+                });
+                
+                console.log("✅ Added click handler to view recommendations button");
+            }
             
-            addLog("🚀 Recommendation debugger ready");
+            // 6. Add a direct test button for debugging
+            const debugButton = document.createElement('button');
+            debugButton.textContent = "Test Recommendations";
+            debugButton.style.cssText = 'position:fixed;bottom:10px;right:10px;z-index:9999;padding:8px 16px;background:#007bff;color:white;border:none;border-radius:4px;';
+            debugButton.addEventListener('click', fetchAndDisplayRecommendations);
+            document.body.appendChild(debugButton);
+            
+            console.log("✅ Final recommendation solution setup complete");
         });
     })();
 });
