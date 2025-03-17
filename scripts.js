@@ -897,123 +897,135 @@ This has been saved to your Google Sheet for review.`
         // ... existing code ...
     });
 
-    // Direct fix for project cards - place this at the end of your file
+    // Final solution for project cards - place at the end of your file
     (function() {
-        // Wait for full page load to ensure all elements exist
+        // Execute when DOM is fully loaded
         window.addEventListener('load', function() {
-            console.log("🔍 DIRECT PROJECT CARD FIX - STARTING");
+            console.log("🔄 FINAL PROJECT CARD FIX - EXECUTING");
             
-            // Get all project cards by class name
-            const cards = document.getElementsByClassName('project-card');
-            console.log(`📋 Found ${cards.length} project cards`);
-            
-            // Log the first card's HTML structure to diagnose
-            if (cards.length > 0) {
-                console.log("📄 First card HTML structure:", cards[0].innerHTML);
-            }
-            
-            // Function to fix each card
-            function fixCard(card) {
-                // Remove all existing event listeners by cloning
-                const clone = card.cloneNode(true);
-                card.parentNode.replaceChild(clone, card);
-                
-                // Find ALL paragraphs in the card
-                const paragraphs = clone.getElementsByTagName('p');
-                console.log(`📝 Found ${paragraphs.length} paragraphs in card`);
-                
-                // Process each paragraph - try to find the description
-                let description = null;
-                for (let i = 0; i < paragraphs.length; i++) {
-                    const p = paragraphs[i];
-                    // Skip very short paragraphs (likely not descriptions)
-                    if (p.textContent.trim().length > 20) {
-                        description = p;
-                        console.log(`✅ Found description paragraph: "${p.textContent.substring(0, 30)}..."`);
-                        break;
-                    }
-                }
-                
-                // If no paragraph found, try divs with description class
-                if (!description) {
-                    description = clone.querySelector('.project-description, .description, .card-description');
-                    if (description) console.log("✅ Found description via class selector");
-                }
-                
-                // If still not found, try any div in the card content
-                if (!description) {
-                    const content = clone.querySelector('.project-content, .card-content');
-                    if (content) {
-                        const divs = content.getElementsByTagName('div');
-                        if (divs.length > 0) {
-                            description = divs[0];
-                            console.log("✅ Found description via content div");
-                        }
-                    }
-                }
-                
-                // Apply fix if description found
-                if (description) {
-                    // Force hide initially with !important
-                    description.style.cssText = "display: none !important;";
-                    
-                    // Add hover effect with direct inline styles
-                    clone.onmouseenter = function() {
-                        console.log("🖱️ Mouse entered card");
-                        description.style.cssText = "display: block !important;";
-                    };
-                    
-                    clone.onmouseleave = function() {
-                        console.log("🖱️ Mouse left card");
-                        description.style.cssText = "display: none !important;";
-                    };
-                    
-                    // Add visible indicator
-                    const indicator = document.createElement('div');
-                    indicator.style.cssText = "font-size: 12px; color: blue; text-align: center; margin-top: 5px;";
-                    indicator.textContent = "Hover to see details";
-                    clone.appendChild(indicator);
-                    
-                    clone.onmouseenter = function() {
-                        description.style.cssText = "display: block !important;";
-                        indicator.style.display = "none";
-                    };
-                    
-                    clone.onmouseleave = function() {
-                        description.style.cssText = "display: none !important;";
-                        indicator.style.display = "block";
-                    };
-                    
-                    return true;
-                } else {
-                    console.log("❌ No description found in this card");
-                    return false;
-                }
-            }
-            
-            // Process all cards
-            let successes = 0;
-            for (let i = 0; i < cards.length; i++) {
-                console.log(`🔄 Processing card ${i+1}/${cards.length}`);
-                if (fixCard(cards[i])) {
-                    successes++;
-                }
-            }
-            
-            console.log(`✅ Successfully fixed ${successes}/${cards.length} project cards`);
-            
-            // Add emergency CSS override
+            // 1. Add emergency CSS that addresses height issues and uses !important
             const css = document.createElement("style");
+            css.id = "emergency-project-card-fix";
             css.innerHTML = `
-                .project-card p, .project-card .project-description {
-                    display: none !important;
+                .project-card {
+                    position: relative !important;
+                    min-height: 200px !important;
+                    height: auto !important;
+                    display: flex !important;
+                    flex-direction: column !important;
+                    cursor: pointer !important;
+                    overflow: visible !important;
+                    transition: all 0.3s ease !important;
                 }
-                .project-card:hover p, .project-card:hover .project-description {
+                
+                .project-card:hover {
+                    transform: translateY(-5px) !important;
+                    border-color: var(--primary-color, #0066cc) !important;
+                    box-shadow: 0 10px 25px rgba(37, 99, 235, 0.2) !important;
+                    z-index: 10 !important;
+                }
+                
+                .project-card p, 
+                .project-card .project-description,
+                .project-card div[class*="description"] {
+                    display: none !important;
+                    opacity: 0 !important;
+                    transition: opacity 0.3s ease !important;
+                    max-height: none !important;
+                    overflow: visible !important;
+                }
+                
+                .project-card:hover p, 
+                .project-card:hover .project-description,
+                .project-card:hover div[class*="description"],
+                .project-card.active p,
+                .project-card.active .project-description,
+                .project-card.active div[class*="description"] {
                     display: block !important;
+                    opacity: 1 !important;
+                }
+                
+                @media (max-width: 768px) {
+                    .project-card .hover-indicator:after {
+                        content: "Tap for details" !important;
+                        display: block !important;
+                        font-size: 0.8rem !important;
+                        color: var(--primary-color, #0066cc) !important;
+                        text-align: center !important;
+                        margin-top: 10px !important;
+                    }
+                    
+                    .project-card.active .hover-indicator:after,
+                    .project-card:hover .hover-indicator:after {
+                        display: none !important;
+                    }
                 }
             `;
             document.head.appendChild(css);
-            console.log("🎨 Emergency CSS fix added");
+            console.log("🎨 Emergency CSS override applied");
+            
+            // 2. Process all project cards
+            const projectCards = document.querySelectorAll('.project-card');
+            console.log(`🔍 Found ${projectCards.length} project cards`);
+            
+            projectCards.forEach((card, index) => {
+                // Remove existing event listeners
+                const newCard = card.cloneNode(true);
+                card.parentNode.replaceChild(newCard, card);
+                
+                // Try multiple ways to find the description content
+                const description = 
+                    newCard.querySelector('.project-description') || 
+                    newCard.querySelector('p:not(:empty)') || 
+                    newCard.querySelector('div[class*="description"]') ||
+                    newCard.querySelector('.project-content > div:not(:first-child)');
+                    
+                if (description) {
+                    console.log(`✅ Card ${index+1}: Found description element`);
+                    
+                    // Add hover indicator if not present
+                    if (!newCard.querySelector('.hover-indicator')) {
+                        const indicator = document.createElement('div');
+                        indicator.className = 'hover-indicator';
+                        newCard.appendChild(indicator);
+                    }
+                    
+                    // Setup desktop hover events with direct style manipulation
+                    newCard.addEventListener('mouseenter', function() {
+                        description.style.display = 'block';
+                        description.style.opacity = '1';
+                        console.log(`🖱️ Mouse entered card ${index+1}`);
+                    });
+                    
+                    newCard.addEventListener('mouseleave', function() {
+                        if (!this.classList.contains('active')) {
+                            description.style.display = 'none';
+                            description.style.opacity = '0';
+                        }
+                        console.log(`🖱️ Mouse left card ${index+1}`);
+                    });
+                    
+                    // Setup mobile tap events
+                    newCard.addEventListener('click', function(e) {
+                        if (window.innerWidth <= 768) {
+                            this.classList.toggle('active');
+                            
+                            if (this.classList.contains('active')) {
+                                description.style.display = 'block';
+                                description.style.opacity = '1';
+                            } else {
+                                description.style.display = 'none';
+                                description.style.opacity = '0';
+                            }
+                            console.log(`👆 Card ${index+1} tapped, active: ${this.classList.contains('active')}`);
+                        }
+                    });
+                } else {
+                    console.error(`❌ Card ${index+1}: No description found`);
+                }
+            });
+            
+            console.log("✅ Project cards fix complete - please check hover functionality now");
         });
     })();
 });
