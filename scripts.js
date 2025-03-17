@@ -896,4 +896,124 @@ This has been saved to your Google Sheet for review.`
         
         // ... existing code ...
     });
+
+    // Direct fix for project cards - place this at the end of your file
+    (function() {
+        // Wait for full page load to ensure all elements exist
+        window.addEventListener('load', function() {
+            console.log("🔍 DIRECT PROJECT CARD FIX - STARTING");
+            
+            // Get all project cards by class name
+            const cards = document.getElementsByClassName('project-card');
+            console.log(`📋 Found ${cards.length} project cards`);
+            
+            // Log the first card's HTML structure to diagnose
+            if (cards.length > 0) {
+                console.log("📄 First card HTML structure:", cards[0].innerHTML);
+            }
+            
+            // Function to fix each card
+            function fixCard(card) {
+                // Remove all existing event listeners by cloning
+                const clone = card.cloneNode(true);
+                card.parentNode.replaceChild(clone, card);
+                
+                // Find ALL paragraphs in the card
+                const paragraphs = clone.getElementsByTagName('p');
+                console.log(`📝 Found ${paragraphs.length} paragraphs in card`);
+                
+                // Process each paragraph - try to find the description
+                let description = null;
+                for (let i = 0; i < paragraphs.length; i++) {
+                    const p = paragraphs[i];
+                    // Skip very short paragraphs (likely not descriptions)
+                    if (p.textContent.trim().length > 20) {
+                        description = p;
+                        console.log(`✅ Found description paragraph: "${p.textContent.substring(0, 30)}..."`);
+                        break;
+                    }
+                }
+                
+                // If no paragraph found, try divs with description class
+                if (!description) {
+                    description = clone.querySelector('.project-description, .description, .card-description');
+                    if (description) console.log("✅ Found description via class selector");
+                }
+                
+                // If still not found, try any div in the card content
+                if (!description) {
+                    const content = clone.querySelector('.project-content, .card-content');
+                    if (content) {
+                        const divs = content.getElementsByTagName('div');
+                        if (divs.length > 0) {
+                            description = divs[0];
+                            console.log("✅ Found description via content div");
+                        }
+                    }
+                }
+                
+                // Apply fix if description found
+                if (description) {
+                    // Force hide initially with !important
+                    description.style.cssText = "display: none !important;";
+                    
+                    // Add hover effect with direct inline styles
+                    clone.onmouseenter = function() {
+                        console.log("🖱️ Mouse entered card");
+                        description.style.cssText = "display: block !important;";
+                    };
+                    
+                    clone.onmouseleave = function() {
+                        console.log("🖱️ Mouse left card");
+                        description.style.cssText = "display: none !important;";
+                    };
+                    
+                    // Add visible indicator
+                    const indicator = document.createElement('div');
+                    indicator.style.cssText = "font-size: 12px; color: blue; text-align: center; margin-top: 5px;";
+                    indicator.textContent = "Hover to see details";
+                    clone.appendChild(indicator);
+                    
+                    clone.onmouseenter = function() {
+                        description.style.cssText = "display: block !important;";
+                        indicator.style.display = "none";
+                    };
+                    
+                    clone.onmouseleave = function() {
+                        description.style.cssText = "display: none !important;";
+                        indicator.style.display = "block";
+                    };
+                    
+                    return true;
+                } else {
+                    console.log("❌ No description found in this card");
+                    return false;
+                }
+            }
+            
+            // Process all cards
+            let successes = 0;
+            for (let i = 0; i < cards.length; i++) {
+                console.log(`🔄 Processing card ${i+1}/${cards.length}`);
+                if (fixCard(cards[i])) {
+                    successes++;
+                }
+            }
+            
+            console.log(`✅ Successfully fixed ${successes}/${cards.length} project cards`);
+            
+            // Add emergency CSS override
+            const css = document.createElement("style");
+            css.innerHTML = `
+                .project-card p, .project-card .project-description {
+                    display: none !important;
+                }
+                .project-card:hover p, .project-card:hover .project-description {
+                    display: block !important;
+                }
+            `;
+            document.head.appendChild(css);
+            console.log("🎨 Emergency CSS fix added");
+        });
+    })();
 });
