@@ -652,27 +652,27 @@ This has been saved to your Google Sheet for review.`
         });
     });
 
-    // Function to fetch approved recommendations from Google Sheet
+    // Enhanced function to fetch approved recommendations from Google Sheet
     function fetchApprovedRecommendations() {
-        console.log("Fetching approved recommendations");
+        console.log("🔄 FETCHING APPROVED RECOMMENDATIONS - STARTED");
         
         // First, try to find the correct container
         const recommendationsContainer = document.getElementById('recommendationsList');
         if (!recommendationsContainer) {
-            console.error("Recommendations container not found - looking for element with id 'recommendationsList'");
+            console.error("❌ Recommendations container not found - looking for element with id 'recommendationsList'");
             // Let's try to find any possible container
             const existingRecommendations = document.getElementById('existingRecommendations');
             if (existingRecommendations) {
-                console.log("Found fallback container", existingRecommendations);
+                console.log("✅ Found fallback container", existingRecommendations);
                 // Create the list container if it doesn't exist
                 if (!existingRecommendations.querySelector('#recommendationsList')) {
                     const listDiv = document.createElement('div');
                     listDiv.id = 'recommendationsList';
                     existingRecommendations.appendChild(listDiv);
-                    console.log("Created missing recommendationsList container");
+                    console.log("✅ Created missing recommendationsList container");
                 }
             } else {
-                console.error("No recommendation containers found at all!");
+                console.error("❌ No recommendation containers found at all!");
                 return;
             }
         }
@@ -684,43 +684,53 @@ This has been saved to your Google Sheet for review.`
         // Show loading indicator
         container.innerHTML = '<div class="loading-spinner">Loading recommendations...</div>';
         
-        // Log the URL we're fetching from
-        const fetchUrl = `${GOOGLE_SHEET_API_URL}?action=getApproved`;
-        console.log("Fetching from URL:", fetchUrl);
+        // Generate a unique timestamp to prevent caching
+        const timestamp = new Date().getTime();
         
-        // Fetch approved recommendations from Google Sheet API
-        fetch(fetchUrl)
+        // Log the URL we're fetching from
+        const fetchUrl = `${GOOGLE_SHEET_API_URL}?action=getApproved&nocache=${timestamp}`;
+        console.log("🌐 Fetching from URL:", fetchUrl);
+        
+        // Fetch approved recommendations from Google Sheet API with no-cache headers
+        fetch(fetchUrl, {
+            method: 'GET',
+            headers: {
+                'Cache-Control': 'no-cache, no-store, must-revalidate',
+                'Pragma': 'no-cache',
+                'Expires': '0'
+            }
+        })
             .then(response => {
-                console.log("Received response:", response.status);
+                console.log("📥 Received response status:", response.status);
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
                 }
                 return response.json();
             })
             .then(data => {
-                console.log("Received data:", data);
+                console.log("📊 Received data:", data);
                 
                 if (data.success && data.recommendations && data.recommendations.length > 0) {
                     // Clear loading indicator
                     container.innerHTML = '';
                     
-                    console.log(`Displaying ${data.recommendations.length} recommendations`);
+                    console.log(`✅ Displaying ${data.recommendations.length} recommendations`);
                     
                     // Display each recommendation
                     data.recommendations.forEach((recommendation, index) => {
-                        console.log(`Processing recommendation ${index}:`, recommendation);
+                        console.log(`📝 Processing recommendation ${index+1}:`, recommendation);
                         
                         const card = document.createElement('div');
                         card.className = 'recommendation-card';
                         
                         const html = `
                             <div class="recommendation-header">
-                                <h4>${recommendation.firstName} ${recommendation.lastName}</h4>
-                                <p class="job-title">${recommendation.jobRole} at ${recommendation.company}</p>
-                                <p class="relation">${capitalizeFirstLetter(recommendation.relation)}</p>
+                                <h4>${recommendation.firstName || ''} ${recommendation.lastName || ''}</h4>
+                                <p class="job-title">${recommendation.jobRole || ''} at ${recommendation.company || ''}</p>
+                                <p class="relation">${capitalizeFirstLetter(recommendation.relation || '')}</p>
                             </div>
                             <div class="recommendation-content">
-                                <p>"${recommendation.text}"</p>
+                                <p>"${recommendation.text || ''}"</p>
                             </div>
                         `;
                         
@@ -734,11 +744,11 @@ This has been saved to your Google Sheet for review.`
                             <p>${translations[currentLanguage]['recommendations-none'] || 'No recommendations found. Be the first to leave a recommendation!'}</p>
                         </div>
                     `;
-                    console.log("No recommendations found or success=false in response");
+                    console.log("ℹ️ No recommendations found or success=false in response");
                 }
             })
             .catch(error => {
-                console.error("Error fetching recommendations:", error);
+                console.error("❌ Error fetching recommendations:", error);
                 container.innerHTML = `
                     <div class="error-message">
                         <p>Error loading recommendations. Please try again later.</p>
@@ -748,151 +758,50 @@ This has been saved to your Google Sheet for review.`
             });
     }
 
-    // Special function to fix project cards with proper CSS class handling
-    function fixProjectCards() {
-        console.log("Applying comprehensive fix for project cards");
+    // Enhanced view recommendations button handler - add this near your existing button handlers
+    function enhanceRecommendationButtons() {
+        console.log("🔄 Setting up enhanced recommendation button handlers");
         
-        // Get all project cards
-        const projectCards = document.querySelectorAll('.project-card');
-        console.log(`Found ${projectCards.length} project cards to fix`);
+        const viewRecommendationsBtn = document.querySelector('button[data-i18n="recommendations-view"]');
+        if (!viewRecommendationsBtn) {
+            console.error("❌ View recommendations button not found");
+            return;
+        }
         
-        projectCards.forEach((card, index) => {
-            // First find the description using various selectors to be flexible
-            const description = 
-                card.querySelector('.project-description') || 
-                card.querySelector('p') || 
-                card.querySelector('.description') ||
-                card.querySelector('.card-content');
+        // Remove any existing event listeners
+        const newViewBtn = viewRecommendationsBtn.cloneNode(true);
+        viewRecommendationsBtn.parentNode.replaceChild(newViewBtn, viewRecommendationsBtn);
+        
+        // Add fresh event listener with forced fetch
+        newViewBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            console.log("👆 View recommendations button clicked - forcing fresh fetch");
             
-            if (description) {
-                console.log(`Found description in card ${index}:`, description);
+            // Direct DOM manipulation
+            const form = document.getElementById('recommendationForm');
+            const recommendations = document.getElementById('existingRecommendations');
+            const successMsg = document.getElementById('recommendationSuccessMessage');
+            
+            if (form) form.style.display = 'none';
+            if (successMsg) successMsg.style.display = 'none';
+            if (recommendations) {
+                recommendations.style.display = 'block';
+                recommendations.scrollIntoView({behavior: 'smooth', block: 'start'});
                 
-                // Add proper description class if missing
-                if (!description.classList.contains('project-description')) {
-                    description.classList.add('project-description');
-                }
-                
-                // Force initial state - hide description
-                description.style.display = 'none';
-                
-                // Remove and re-establish event listeners
-                const newCard = card.cloneNode(true);
-                card.parentNode.replaceChild(newCard, card);
-                
-                // Get fresh description reference
-                const freshDescription = 
-                    newCard.querySelector('.project-description') || 
-                    newCard.querySelector('p');
-                    
-                if (!freshDescription) {
-                    console.error(`Could not find description after cloning card ${index}`);
-                    return;
-                }
-                
-                // Desktop hover events
-                newCard.addEventListener('mouseenter', function() {
-                    console.log(`Project card ${index} hovered`);
-                    freshDescription.style.display = 'block';
-                });
-                
-                newCard.addEventListener('mouseleave', function() {
-                    console.log(`Project card ${index} hover ended`);
-                    if (!this.classList.contains('active')) {
-                        freshDescription.style.display = 'none';
-                    }
-                });
-                
-                // Mobile tap events
-                newCard.addEventListener('click', function(e) {
-                    console.log(`Project card ${index} clicked/tapped`);
-                    if (isTouchDevice() || window.innerWidth <= 768) {
-                        e.preventDefault();
-                        this.classList.toggle('active');
-                        
-                        if (this.classList.contains('active')) {
-                            freshDescription.style.display = 'block';
-                        } else {
-                            freshDescription.style.display = 'none';
-                        }
-                    }
-                });
-                
-                // Add hover/tap indicator if not present
-                if (!newCard.querySelector('.hover-indicator')) {
-                    const indicator = document.createElement('div');
-                    indicator.className = 'hover-indicator';
-                    indicator.textContent = isTouchDevice() ? 'Tap for details' : 'Hover for details';
-                    indicator.style.fontSize = '0.8rem';
-                    indicator.style.color = 'var(--primary-color, #0066cc)';
-                    indicator.style.textAlign = 'center';
-                    indicator.style.marginTop = '10px';
-                    
-                    // Find a good place to insert it
-                    const content = newCard.querySelector('.project-content') || newCard;
-                    content.appendChild(indicator);
-                }
-            } else {
-                console.error(`No description found in project card ${index}`);
+                // Force new fetch with cache-busting
+                fetchApprovedRecommendations();
             }
         });
         
-        // Add CSS for project cards if not already present
-        if (!document.getElementById('project-card-styles')) {
-            const styleEl = document.createElement('style');
-            styleEl.id = 'project-card-styles';
-            styleEl.textContent = `
-                .project-card {
-                    position: relative;
-                    border: 2px solid transparent;
-                    border-radius: var(--border-radius, 8px);
-                    background-color: white;
-                    box-shadow: var(--shadow, 0 4px 6px rgba(0,0,0,0.1));
-                    transition: all 0.3s ease;
-                    overflow: hidden;
-                }
-                
-                .project-card:hover {
-                    transform: translateY(-5px);
-                    border-color: var(--primary-color, #0066cc);
-                    box-shadow: 0 10px 25px rgba(37, 99, 235, 0.2);
-                }
-                
-                .project-description {
-                    display: none;
-                    padding: 10px 0;
-                }
-                
-                .project-card:hover .project-description {
-                    display: block;
-                }
-                
-                .project-card:hover .hover-indicator {
-                    display: none;
-                }
-                
-                .project-card.active .hover-indicator {
-                    display: none;
-                }
-                
-                .project-card.active .project-description {
-                    display: block;
-                }
-            `;
-            document.head.appendChild(styleEl);
-        }
-        
-        console.log("Project card fix applied");
+        console.log("✅ Enhanced recommendation button handlers setup complete");
     }
 
-    // Call this in the DOMContentLoaded event
+    // Call this function when the page loads
     document.addEventListener('DOMContentLoaded', function() {
         // ... existing code ...
         
-        // Call our updated interaction setup function
-        setupUniversalTouchInteraction();
-        
-        // Add the special project card fix
-        fixProjectCards();
+        // Setup enhanced recommendation buttons
+        enhanceRecommendationButtons();
         
         // ... existing code ...
     });
