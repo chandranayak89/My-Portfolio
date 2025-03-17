@@ -915,16 +915,16 @@ This has been saved to your Google Sheet for review.`
         });
     })();
 
-    // IMPROVED RECOMMENDATION SOLUTION - Removes hardcoded cards and adds hover effects
+    // HOVER-TO-REVEAL RECOMMENDATION SOLUTION
     (function() {
-        console.log("🚀 Starting enhanced recommendation solution with hover effects");
+        console.log("🚀 Starting hover-to-reveal recommendation solution");
         
         // Get the correct API URL
         const API_URL = "https://script.google.com/macros/s/AKfycbzy7T56oZp2bgLiA3-9XDFP0uZQxyygzUixFHY1tAhSezk10nXAuglC5iD_FLv0qpL0FQ/exec";
         
         // Wait for page to be fully loaded
         window.addEventListener('load', function() {
-            console.log("🔄 DOM fully loaded - setting up enhanced recommendations");
+            console.log("🔄 DOM fully loaded - setting up hover-to-reveal recommendations");
             
             // 1. Find view recommendations button
             let viewButton = null;
@@ -962,7 +962,7 @@ This has been saved to your Google Sheet for review.`
                 console.log("✅ Created new recommendationsList container");
             }
             
-            // 3. Add CSS for hover effects
+            // 3. Add CSS for hover-to-reveal effect
             const style = document.createElement('style');
             style.textContent = `
                 .recommendation-card {
@@ -975,16 +975,19 @@ This has been saved to your Google Sheet for review.`
                     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
                     position: relative;
                     overflow: hidden;
+                    cursor: pointer;
                 }
                 
-                .recommendation-card:hover {
+                .recommendation-card:hover,
+                .recommendation-card:focus-within {
                     transform: translateY(-5px);
                     box-shadow: 0 8px 15px rgba(0,0,0,0.15);
                     border-color: var(--primary-color, #0066cc);
                 }
                 
-                .recommendation-card .recommendation-content {
-                    margin-top: 10px;
+                .recommendation-card .recommendation-header {
+                    position: relative;
+                    z-index: 2;
                 }
                 
                 .recommendation-card .recommendation-header h4 {
@@ -1001,13 +1004,63 @@ This has been saved to your Google Sheet for review.`
                     font-style: italic;
                 }
                 
+                .recommendation-card .recommendation-content {
+                    height: 0;
+                    opacity: 0;
+                    overflow: hidden;
+                    transition: all 0.4s ease;
+                    margin-top: 0;
+                    position: relative;
+                    z-index: 1;
+                }
+                
+                .recommendation-card:hover .recommendation-content,
+                .recommendation-card:focus-within .recommendation-content {
+                    height: auto;
+                    opacity: 1;
+                    margin-top: 15px;
+                }
+                
+                .recommendation-card::after {
+                    content: "Hover to see recommendation";
+                    position: absolute;
+                    bottom: 10px;
+                    right: 10px;
+                    font-size: 12px;
+                    color: #999;
+                    font-style: italic;
+                    transition: opacity 0.3s ease;
+                }
+                
+                .recommendation-card:hover::after,
+                .recommendation-card:focus-within::after {
+                    opacity: 0;
+                }
+                
                 /* Remove any default/template cards */
                 .recommendation-card.template-card {
                     display: none !important;
                 }
+                
+                /* Responsive adjustments for mobile */
+                @media (max-width: 768px) {
+                    .recommendation-card::after {
+                        content: "Tap to see recommendation";
+                    }
+                    
+                    .recommendation-card.active .recommendation-content {
+                        height: auto;
+                        opacity: 1;
+                        margin-top: 15px;
+                    }
+                    
+                    .recommendation-card.active::after {
+                        opacity: 0;
+                    }
+                }
             `;
             document.head.appendChild(style);
-            console.log("✅ Added hover effect styles for recommendation cards");
+            console.log("✅ Added hover-to-reveal styles for recommendation cards");
             
             // 4. Function to fetch and display recommendations
             function fetchAndDisplayRecommendations() {
@@ -1020,7 +1073,6 @@ This has been saved to your Google Sheet for review.`
                 const timestamp = new Date().getTime();
                 
                 // First, find and hide any hardcoded cards 
-                // (this is important to do before fetching to prevent flicker)
                 removeHardcodedCards();
                 
                 // Make the fetch request
@@ -1095,6 +1147,7 @@ This has been saved to your Google Sheet for review.`
                     
                     const card = document.createElement('div');
                     card.className = 'recommendation-card';
+                    card.tabIndex = 0; // Make focusable for keyboard accessibility
                     
                     // Helper for null/undefined values
                     const safe = text => text || '';
@@ -1110,10 +1163,18 @@ This has been saved to your Google Sheet for review.`
                         </div>
                     `;
                     
+                    // For mobile: toggle active class on click
+                    card.addEventListener('click', function() {
+                        if (window.innerWidth <= 768) {
+                            this.classList.toggle('active');
+                        }
+                    });
+                    
+                    // Add to container
                     listContainer.appendChild(card);
                 });
                 
-                console.log(`✅ Successfully displayed ${recommendations.length} recommendations`);
+                console.log(`✅ Successfully displayed ${recommendations.length} recommendations with hover-to-reveal effect`);
             }
             
             // 6. Set up button click event
@@ -1147,7 +1208,7 @@ This has been saved to your Google Sheet for review.`
             debugButton.addEventListener('click', fetchAndDisplayRecommendations);
             document.body.appendChild(debugButton);
             
-            console.log("✅ Enhanced recommendation solution setup complete");
+            console.log("✅ Hover-to-reveal recommendation solution setup complete");
         });
     })();
 });
