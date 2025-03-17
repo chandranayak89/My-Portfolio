@@ -915,39 +915,35 @@ This has been saved to your Google Sheet for review.`
         });
     })();
 
-    // FINAL FIX - Direct DOM access solution for recommendations
+    // IMPROVED RECOMMENDATION SOLUTION - Removes hardcoded cards and adds hover effects
     (function() {
-        console.log("🚀 Starting direct DOM recommendation solution");
+        console.log("🚀 Starting enhanced recommendation solution with hover effects");
         
         // Get the correct API URL
         const API_URL = "https://script.google.com/macros/s/AKfycbzy7T56oZp2bgLiA3-9XDFP0uZQxyygzUixFHY1tAhSezk10nXAuglC5iD_FLv0qpL0FQ/exec";
         
         // Wait for page to be fully loaded
         window.addEventListener('load', function() {
-            console.log("🔄 DOM fully loaded - setting up recommendations");
+            console.log("🔄 DOM fully loaded - setting up enhanced recommendations");
             
-            // 1. First, find ALL buttons on the page
-            const allButtons = document.querySelectorAll('button');
-            console.log(`Found ${allButtons.length} total buttons on page`);
-            
-            // Find view recommendations button by text content
+            // 1. Find view recommendations button
             let viewButton = null;
-            for (let i = 0; i < allButtons.length; i++) {
-                const buttonText = allButtons[i].textContent.toLowerCase().trim();
-                if (buttonText.includes('view') && buttonText.includes('recommendation')) {
-                    viewButton = allButtons[i];
-                    console.log(`✅ Found view recommendations button: "${allButtons[i].textContent}"`);
-                    break;
+            document.querySelectorAll('button').forEach(button => {
+                const text = button.textContent.toLowerCase().trim();
+                if (text.includes('view') && text.includes('recommendation')) {
+                    viewButton = button;
                 }
-            }
+            });
             
             if (!viewButton) {
-                console.error("❌ Could not find view recommendations button");
-                // Try data-i18n attribute as fallback
                 viewButton = document.querySelector('[data-i18n="recommendations-view"]');
-                if (viewButton) {
-                    console.log("✅ Found view button via data-i18n attribute");
-                }
+            }
+            
+            if (viewButton) {
+                console.log("✅ Found view recommendations button");
+            } else {
+                console.error("❌ Could not find view recommendations button");
+                return;
             }
             
             // 2. Find recommendations container
@@ -962,12 +958,58 @@ This has been saved to your Google Sheet for review.`
             if (!listContainer) {
                 listContainer = document.createElement('div');
                 listContainer.id = 'recommendationsList';
-                listContainer.style.padding = '20px';
                 existingRecommendations.appendChild(listContainer);
                 console.log("✅ Created new recommendationsList container");
             }
             
-            // 3. Function to fetch and display recommendations
+            // 3. Add CSS for hover effects
+            const style = document.createElement('style');
+            style.textContent = `
+                .recommendation-card {
+                    border: 1px solid #ddd;
+                    border-radius: 8px;
+                    padding: 15px;
+                    margin-bottom: 15px;
+                    background: white;
+                    transition: all 0.3s ease;
+                    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+                    position: relative;
+                    overflow: hidden;
+                }
+                
+                .recommendation-card:hover {
+                    transform: translateY(-5px);
+                    box-shadow: 0 8px 15px rgba(0,0,0,0.15);
+                    border-color: var(--primary-color, #0066cc);
+                }
+                
+                .recommendation-card .recommendation-content {
+                    margin-top: 10px;
+                }
+                
+                .recommendation-card .recommendation-header h4 {
+                    margin: 0 0 5px 0;
+                    color: var(--primary-color, #0066cc);
+                }
+                
+                .recommendation-card .recommendation-header p {
+                    margin: 0 0 5px 0;
+                    color: #666;
+                }
+                
+                .recommendation-card .recommendation-header .relation {
+                    font-style: italic;
+                }
+                
+                /* Remove any default/template cards */
+                .recommendation-card.template-card {
+                    display: none !important;
+                }
+            `;
+            document.head.appendChild(style);
+            console.log("✅ Added hover effect styles for recommendation cards");
+            
+            // 4. Function to fetch and display recommendations
             function fetchAndDisplayRecommendations() {
                 console.log("🔄 Fetching recommendations from Google Sheets");
                 
@@ -976,6 +1018,10 @@ This has been saved to your Google Sheet for review.`
                 
                 // Generate timestamp for cache busting
                 const timestamp = new Date().getTime();
+                
+                // First, find and hide any hardcoded cards 
+                // (this is important to do before fetching to prevent flicker)
+                removeHardcodedCards();
                 
                 // Make the fetch request
                 fetch(`${API_URL}?t=${timestamp}`)
@@ -1012,7 +1058,28 @@ This has been saved to your Google Sheet for review.`
                     });
             }
             
-            // 4. Function to display recommendations
+            // Function to remove hardcoded Lisa Wagner and Dr. Martin Schmidt cards
+            function removeHardcodedCards() {
+                console.log("🔍 Looking for hardcoded recommendation cards to remove");
+                
+                // Find all existing recommendation cards
+                const existingCards = existingRecommendations.querySelectorAll('.recommendation-card');
+                
+                existingCards.forEach(card => {
+                    // Check if this is one of the hardcoded cards
+                    const cardText = card.textContent.toLowerCase();
+                    if (cardText.includes('lisa wagner') || 
+                        cardText.includes('martin schmidt') || 
+                        cardText.includes('template')) {
+                        
+                        // Mark the card as a template so CSS can hide it
+                        card.classList.add('template-card');
+                        console.log("🗑️ Marked hardcoded card for removal:", cardText.substring(0, 20) + "...");
+                    }
+                });
+            }
+            
+            // 5. Function to display recommendations
             function displayRecommendations(recommendations) {
                 if (!recommendations || recommendations.length === 0) {
                     listContainer.innerHTML = '<div style="text-align:center;padding:20px;">No recommendations found</div>';
@@ -1028,19 +1095,18 @@ This has been saved to your Google Sheet for review.`
                     
                     const card = document.createElement('div');
                     card.className = 'recommendation-card';
-                    card.style.cssText = 'border:1px solid #ddd;border-radius:8px;padding:15px;margin-bottom:15px;background:white;';
                     
                     // Helper for null/undefined values
                     const safe = text => text || '';
                     
                     card.innerHTML = `
-                        <div style="margin-bottom:10px;">
-                            <h4 style="margin:0 0 5px 0;">${safe(rec.firstName)} ${safe(rec.lastName)}</h4>
-                            <p style="margin:0 0 5px 0;color:#666;">${safe(rec.jobRole)} at ${safe(rec.company)}</p>
-                            <p style="margin:0;font-style:italic;color:#666;">${safe(rec.relation)}</p>
+                        <div class="recommendation-header">
+                            <h4>${safe(rec.firstName)} ${safe(rec.lastName)}</h4>
+                            <p class="job-title">${safe(rec.jobRole)} at ${safe(rec.company)}</p>
+                            <p class="relation">${safe(rec.relation)}</p>
                         </div>
-                        <div>
-                            <p style="margin:0;">"${safe(rec.text)}"</p>
+                        <div class="recommendation-content">
+                            <p>"${safe(rec.text)}"</p>
                         </div>
                     `;
                     
@@ -1050,42 +1116,38 @@ This has been saved to your Google Sheet for review.`
                 console.log(`✅ Successfully displayed ${recommendations.length} recommendations`);
             }
             
-            // 5. Set up button click event
-            if (viewButton) {
-                // Remove all existing event listeners
-                const newButton = viewButton.cloneNode(true);
-                viewButton.parentNode.replaceChild(newButton, viewButton);
-                
-                // Add our event handler
-                newButton.addEventListener('click', function(event) {
-                    event.preventDefault();
-                    console.log("👆 View recommendations button clicked");
-                    
-                    // Show recommendations section
-                    existingRecommendations.style.display = 'block';
-                    
-                    // Hide form if it exists
-                    const form = document.getElementById('recommendationForm');
-                    if (form) form.style.display = 'none';
-                    
-                    // Fetch recommendations
-                    fetchAndDisplayRecommendations();
-                    
-                    // Scroll to recommendations
-                    existingRecommendations.scrollIntoView({behavior: 'smooth', block: 'start'});
-                });
-                
-                console.log("✅ Added click handler to view recommendations button");
-            }
+            // 6. Set up button click event
+            const newButton = viewButton.cloneNode(true);
+            viewButton.parentNode.replaceChild(newButton, viewButton);
             
-            // 6. Add a direct test button for debugging
+            newButton.addEventListener('click', function(event) {
+                event.preventDefault();
+                console.log("👆 View recommendations button clicked");
+                
+                // Show recommendations section
+                existingRecommendations.style.display = 'block';
+                
+                // Hide form if it exists
+                const form = document.getElementById('recommendationForm');
+                if (form) form.style.display = 'none';
+                
+                // Remove hardcoded cards and fetch new ones
+                fetchAndDisplayRecommendations();
+                
+                // Scroll to recommendations
+                existingRecommendations.scrollIntoView({behavior: 'smooth', block: 'start'});
+            });
+            
+            console.log("✅ Set up click handler for view recommendations button");
+            
+            // 7. Add a debug button for direct testing
             const debugButton = document.createElement('button');
-            debugButton.textContent = "Test Recommendations";
+            debugButton.textContent = "Refresh Recommendations";
             debugButton.style.cssText = 'position:fixed;bottom:10px;right:10px;z-index:9999;padding:8px 16px;background:#007bff;color:white;border:none;border-radius:4px;';
             debugButton.addEventListener('click', fetchAndDisplayRecommendations);
             document.body.appendChild(debugButton);
             
-            console.log("✅ Final recommendation solution setup complete");
+            console.log("✅ Enhanced recommendation solution setup complete");
         });
     })();
 });
