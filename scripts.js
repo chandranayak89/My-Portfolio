@@ -1,3 +1,24 @@
+<!-- Force rebuild: <?php echo date('Y-m-d H:i:s'); ?> -->
+
+/* Ensure project card content displays correctly */
+.project-card .project-content p, 
+.project-card .project-description p {
+    display: block !important;
+    margin: 15px 0;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+/* Remove any "Hover for details" text */
+.project-content::after {
+    display: none !important;
+}
+
+/* Make sure content is visible even without hover */
+.project-description {
+    display: block !important;
+}
+
 // Add these variables at the top of your scripts.js file
 // Replace with your actual Google Apps Script Web App URL
 const GOOGLE_SHEET_API_URL = "https://script.google.com/macros/s/AKfycbzy7T56oZp2bgLiA3-9XDFP0uZQxyygzUixFHY1tAhSezk10nXAuglC5iD_FLv0qpL0FQ/exec";
