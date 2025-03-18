@@ -28,7 +28,7 @@ const translations = {
         "about-cert-1": "Google Cybersecurity Certificate",
         "about-cert-2": "Google Data Science Certificate",
         "about-languages": "Languages",
-        "about-lang-1": "German: Business Fluent",
+        "about-lang-1": "German: intermediate level",
         "about-lang-2": "English: Business Fluent",
         
         // Experience section
@@ -150,7 +150,7 @@ const translations = {
         "about-cert-1": "Google Cybersecurity Zertifikat",
         "about-cert-2": "Google Data Science Zertifikat",
         "about-languages": "Sprachen",
-        "about-lang-1": "Deutsch: Verhandlungssicher",
+        "about-lang-1": "Deutsch: Mittelstufe",
         "about-lang-2": "Englisch: Verhandlungssicher",
         
         // Experience section
