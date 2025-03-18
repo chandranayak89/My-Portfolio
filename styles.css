@@ -144,19 +144,20 @@ section:nth-child(odd) {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
-/* Resume Download Button */
+/* Resume Download Button - Updated for color consistency */
 .btn-download {
-    background-color: #2a2a2a;
-    color: #ffffff;
-    border: 1px solid #2a2a2a;
+    background-color: var(--primary-color);
+    color: white;
+    border: 1px solid var(--primary-color);
     padding: 10px 20px;
-    border-radius: 5px;
+    border-radius: var(--border-radius);
     text-decoration: none;
     font-weight: 500;
     display: inline-flex;
     align-items: center;
     margin-top: 15px;
-    transition: all 0.3s ease;
+    transition: var(--transition);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .btn-download i {
@@ -164,8 +165,9 @@ section:nth-child(odd) {
 }
 
 .btn-download:hover {
-    background-color: transparent;
-    color: #2a2a2a;
+    background-color: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 /* Make buttons appear in a row on larger screens */
