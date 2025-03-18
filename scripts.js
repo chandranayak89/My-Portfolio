@@ -1221,3 +1221,74 @@ document.addEventListener('DOMContentLoaded', function() {
         backButton.addEventListener('click', hideExistingRecommendations);
     }
 });
+
+// Fix that preserves both recommendation buttons and project card content
+document.addEventListener('DOMContentLoaded', function() {
+    console.log("Running compatibility fix for project cards and recommendation buttons");
+    
+    // 1. First, make sure project card content is visible
+    document.querySelectorAll('.project-card .project-description, .project-card p').forEach(function(element) {
+        element.style.display = 'block';
+        element.style.opacity = '1';
+        element.style.height = 'auto';
+        element.style.visibility = 'visible';
+    });
+    
+    // 2. Fix recommendation buttons without disturbing project cards
+    const leaveRecommendationBtn = document.querySelector('button[data-i18n="recommendations-leave"]');
+    const viewRecommendationsBtn = document.querySelector('button[data-i8n="recommendations-view"]');
+    
+    if (leaveRecommendationBtn) {
+        leaveRecommendationBtn.addEventListener('click', function(e) {
+            console.log("Leave recommendation button clicked");
+            const form = document.getElementById('recommendationForm');
+            const recommendations = document.getElementById('existingRecommendations');
+            const successMsg = document.getElementById('recommendationSuccessMessage');
+            
+            if (form) form.style.display = 'block';
+            if (recommendations) recommendations.style.display = 'none';
+            if (successMsg) successMsg.style.display = 'none';
+            
+            if (form) form.scrollIntoView({behavior: 'smooth'});
+            e.preventDefault(); // Prevent any default action
+        });
+    }
+    
+    if (viewRecommendationsBtn) {
+        viewRecommendationsBtn.addEventListener('click', function(e) {
+            console.log("View recommendations button clicked");
+            const form = document.getElementById('recommendationForm');
+            const recommendations = document.getElementById('existingRecommendations');
+            
+            if (form) form.style.display = 'none';
+            if (recommendations) {
+                recommendations.style.display = 'block';
+                recommendations.scrollIntoView({behavior: 'smooth'});
+            }
+            e.preventDefault(); // Prevent any default action
+        });
+    }
+    
+    // Also fix the back button in recommendations view
+    const backButton = document.querySelector('.back-button');
+    if (backButton) {
+        backButton.addEventListener('click', function() {
+            const recommendations = document.getElementById('existingRecommendations');
+            if (recommendations) recommendations.style.display = 'none';
+        });
+    }
+    
+    // And the cancel button in the recommendation form
+    const cancelButton = document.querySelector('button[onclick="hideRecommendationForm()"]');
+    if (cancelButton) {
+        cancelButton.addEventListener('click', function() {
+            const form = document.getElementById('recommendationForm');
+            if (form) form.style.display = 'none';
+        });
+    }
+    
+    // Remove any hover-dependent indicators from project cards
+    document.querySelectorAll('.project-content::after, .project-card::after').forEach(function(el) {
+        if (el) el.style.display = 'none';
+    });
+});
