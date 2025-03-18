@@ -1,24 +1,3 @@
-<!-- Force rebuild: <?php echo date('Y-m-d H:i:s'); ?> -->
-
-/* Ensure project card content displays correctly */
-.project-card .project-content p, 
-.project-card .project-description p {
-    display: block !important;
-    margin: 15px 0;
-    font-size: 0.95rem;
-    line-height: 1.5;
-}
-
-/* Remove any "Hover for details" text */
-.project-content::after {
-    display: none !important;
-}
-
-/* Make sure content is visible even without hover */
-.project-description {
-    display: block !important;
-}
-
 // Add these variables at the top of your scripts.js file
 // Replace with your actual Google Apps Script Web App URL
 const GOOGLE_SHEET_API_URL = "https://script.google.com/macros/s/AKfycbzy7T56oZp2bgLiA3-9XDFP0uZQxyygzUixFHY1tAhSezk10nXAuglC5iD_FLv0qpL0FQ/exec";
@@ -1177,4 +1156,68 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log("✅ Hover-to-reveal recommendation solution setup complete");
         });
     })();
+
+    // Keep the project card fixes
+    document.querySelectorAll('.project-description').forEach(function(desc) {
+        desc.style.display = 'block';
+        desc.style.opacity = '1';
+        desc.style.height = 'auto';
+    });
+    
+    document.querySelectorAll('.project-details, .project-card p').forEach(function(el) {
+        el.style.display = 'block';
+        el.style.opacity = '1';
+        el.style.height = 'auto';
+    });
+    
+    // Ensure recommendation functions exist and work properly
+    // Define the showRecommendationForm function if it doesn't exist
+    if (typeof showRecommendationForm !== 'function') {
+        window.showRecommendationForm = function() {
+            document.getElementById('recommendationForm').style.display = 'block';
+            document.getElementById('recommendationSuccessMessage').style.display = 'none';
+        };
+    }
+    
+    // Define the hideRecommendationForm function if it doesn't exist
+    if (typeof hideRecommendationForm !== 'function') {
+        window.hideRecommendationForm = function() {
+            document.getElementById('recommendationForm').style.display = 'none';
+        };
+    }
+    
+    // Define the showExistingRecommendations function if it doesn't exist
+    if (typeof showExistingRecommendations !== 'function') {
+        window.showExistingRecommendations = function() {
+            document.getElementById('existingRecommendations').style.display = 'block';
+        };
+    }
+    
+    // Define the hideExistingRecommendations function if it doesn't exist
+    if (typeof hideExistingRecommendations !== 'function') {
+        window.hideExistingRecommendations = function() {
+            document.getElementById('existingRecommendations').style.display = 'none';
+        };
+    }
+    
+    // Attach click handlers directly to the buttons
+    const leaveRecommendationBtn = document.querySelector('[data-i18n="recommendations-leave"]');
+    if (leaveRecommendationBtn) {
+        leaveRecommendationBtn.addEventListener('click', showRecommendationForm);
+    }
+    
+    const viewRecommendationsBtn = document.querySelector('[data-i18n="recommendations-view"]');
+    if (viewRecommendationsBtn) {
+        viewRecommendationsBtn.addEventListener('click', showExistingRecommendations);
+    }
+    
+    const cancelRecommendationBtn = document.querySelector('[onclick="hideRecommendationForm()"]');
+    if (cancelRecommendationBtn) {
+        cancelRecommendationBtn.addEventListener('click', hideRecommendationForm);
+    }
+    
+    const backButton = document.querySelector('.back-button');
+    if (backButton) {
+        backButton.addEventListener('click', hideExistingRecommendations);
+    }
 });
