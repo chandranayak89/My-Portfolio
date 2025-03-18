@@ -144,6 +144,51 @@ section:nth-child(odd) {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
+/* Resume Download Button */
+.btn-download {
+    background-color: #2a2a2a;
+    color: #ffffff;
+    border: 1px solid #2a2a2a;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    margin-top: 15px;
+    transition: all 0.3s ease;
+}
+
+.btn-download i {
+    margin-right: 8px;
+}
+
+.btn-download:hover {
+    background-color: transparent;
+    color: #2a2a2a;
+}
+
+/* Make buttons appear in a row on larger screens */
+@media (min-width: 768px) {
+    .hero-buttons {
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+    }
+    
+    .btn-download {
+        margin-top: 0;
+    }
+}
+
+/* For mobile screens, stack buttons */
+@media (max-width: 767px) {
+    .hero-buttons a {
+        margin-bottom: 10px;
+        display: inline-block;
+    }
+}
+
 /* Navigation */
 #navbar {
     position: sticky;
