@@ -1664,3 +1664,22 @@ html, body {
     display: none;
   }
 }
+
+/* Ensure project card content displays correctly */
+.project-card .project-content p, 
+.project-card .project-description p {
+    display: block !important; /* Override any display:none that might be hiding content */
+    margin: 15px 0;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+/* Remove any "Hover for details" text that might be appearing */
+.project-content::after {
+    display: none !important;
+}
+
+/* Make sure content is visible even without hover */
+.project-description {
+    display: block !important;
+}
