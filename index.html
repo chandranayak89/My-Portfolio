@@ -360,7 +360,7 @@
                 <button class="btn btn-secondary" onclick="showExistingRecommendations()" data-i18n="recommendations-view">View Recommendations</button>
             </div>
             
-            <!-- Replace the current recommendation form with this improved version -->
+            <!-- Find the recommendation form section and update it -->
             <div id="recommendationForm" class="recommendation-form" style="display: none;">
                 <h3 data-i18n="recommendations-form-title">Share Your Experience</h3>
                 <form id="newRecommendationForm">
@@ -410,7 +410,7 @@
                     </div>
                 </form>
                 
-                <!-- Success message (hidden by default) -->
+                <!-- Success message -->
                 <div id="recommendationSuccessMessage" class="success-message" style="display: none;">
                     <i class="fas fa-check-circle"></i>
                     <h3 data-i18n="recommendations-success-title">Thank you for your recommendation!</h3>
@@ -423,31 +423,7 @@
                 <h3 data-i18n="recommendations-list-title">What People Say</h3>
                 
                 <div class="recommendations-list">
-                    <!-- Recommendation 1 -->
-                    <div class="recommendation-card">
-                        <div class="recommendation-content">
-                            <p class="recommendation-text">"Chandrashekhar demonstrated exceptional software testing skills during our collaboration. His attention to detail and ability to identify critical security vulnerabilities saved our project from potential issues."</p>
-                            <div class="recommender-info">
-                                <h4>Dr. Martin Schmidt</h4>
-                                <p>Senior Researcher, Karlsruhe Institute of Technology</p>
-                                <span class="recommendation-type">Colleague</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Recommendation 2 -->
-                    <div class="recommendation-card">
-                        <div class="recommendation-content">
-                            <p class="recommendation-text">"Working with Chandrashekhar on our security testing projects was a pleasure. His technical knowledge combined with excellent communication skills made complex security concepts accessible to our entire team."</p>
-                            <div class="recommender-info">
-                                <h4>Lisa Wagner</h4>
-                                <p>Project Manager, Atlas Copco</p>
-                                <span class="recommendation-type">Manager</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Add more recommendation cards as needed -->
+                    <!-- Recommendations will be dynamically loaded here -->
                 </div>
                 
                 <button class="btn btn-secondary back-button" onclick="hideExistingRecommendations()" data-i18n="recommendations-back">Back</button>
