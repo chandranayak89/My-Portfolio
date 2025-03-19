@@ -747,27 +747,31 @@
         console.log("Project popup system initialized successfully");
     });
 
-    // Fix for duplicate "Click for details" buttons
-    document.addEventListener('DOMContentLoaded', function() {
-        // First, remove ALL click hint elements (both new and old versions)
-        document.querySelectorAll('.click-hint, .click-indicator').forEach(hint => {
-            hint.remove();
+    // Updated script to remove duplicate buttons
+    (function() {
+        // Run after a slight delay to ensure all other scripts have finished
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                console.log("Final cleanup of duplicate buttons");
+                
+                // Remove ALL existing click hint elements
+                document.querySelectorAll('.click-hint, .click-indicator').forEach(hint => {
+                    hint.remove();
+                });
+                
+                // Add exactly ONE button to each project card
+                document.querySelectorAll('.project-card').forEach(card => {
+                    const content = card.querySelector('.project-content');
+                    if (content) {
+                        const hintButton = document.createElement('p');
+                        hintButton.className = 'click-hint';
+                        hintButton.textContent = 'Click for details';
+                        content.appendChild(hintButton);
+                    }
+                });
+            }, 100); // Small delay to ensure everything else has loaded
         });
-        
-        // Now add ONE clean button to each project card
-        document.querySelectorAll('.project-card').forEach(card => {
-            const content = card.querySelector('.project-content');
-            if (content) {
-                // Create a single clean button
-                const hintButton = document.createElement('p');
-                hintButton.className = 'click-hint';
-                hintButton.textContent = 'Click for details';
-                content.appendChild(hintButton);
-            }
-        });
-        
-        console.log("Cleaned up duplicate click buttons");
-    });
+    })();
     </script>
     <!-- Project Popups -->
     <!-- Popup for Project 1 -->
