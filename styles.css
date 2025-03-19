@@ -1683,38 +1683,3 @@ html, body {
 .project-description {
     display: block !important;
 }
-
-/* Force project descriptions to display */
-.project-card .project-content p,
-.project-card .project-description p,
-.project-card p:not(.timeline-date),
-.project-details {
-    display: block !important;
-    opacity: 1 !important;
-    height: auto !important;
-    visibility: visible !important;
-    margin: 15px 0 !important;
-    font-size: 0.95rem !important;
-    line-height: 1.5 !important;
-}
-
-/* Remove all hover indicators */
-.project-content::after,
-.timeline-content::after {
-    display: none !important;
-}
-
-/* Ensure project descriptions are always visible */
-.project-description {
-    display: block !important;
-    opacity: 1 !important;
-    height: auto !important;
-    visibility: visible !important;
-}
-
-/* Remove any hover-dependent display logic */
-.project-card:hover .project-details,
-.project-card:hover p:not(.timeline-date),
-.project-card:hover .project-description {
-    display: block !important;
-}
