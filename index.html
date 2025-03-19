@@ -746,6 +746,28 @@
         
         console.log("Project popup system initialized successfully");
     });
+
+    // Fix for duplicate "Click for details" buttons
+    document.addEventListener('DOMContentLoaded', function() {
+        // First, remove ALL click hint elements (both new and old versions)
+        document.querySelectorAll('.click-hint, .click-indicator').forEach(hint => {
+            hint.remove();
+        });
+        
+        // Now add ONE clean button to each project card
+        document.querySelectorAll('.project-card').forEach(card => {
+            const content = card.querySelector('.project-content');
+            if (content) {
+                // Create a single clean button
+                const hintButton = document.createElement('p');
+                hintButton.className = 'click-hint';
+                hintButton.textContent = 'Click for details';
+                content.appendChild(hintButton);
+            }
+        });
+        
+        console.log("Cleaned up duplicate click buttons");
+    });
     </script>
     <!-- Project Popups -->
     <!-- Popup for Project 1 -->
