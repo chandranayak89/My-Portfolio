@@ -600,92 +600,138 @@
     <script src="translations.js"></script>
     <script src="scripts.js"></script>
     <script>
-      // Fix for project cards to show content from HTML
-      //document.addEventListener('DOMContentLoaded', function() {
-        //console.log("Running project card content display fix");
+    // Standalone Project Modal Implementation
+    (function() {
+      // Add CSS
+      const styleEl = document.createElement('style');
+      styleEl.textContent = `
+        /* Modal Styles */
+        .project-modal {
+          display: none;
+          position: fixed;
+          z-index: 1000;
+          left: 0;
+          top: 0;
+          width: 100%;
+          height: 100%;
+          overflow: auto;
+          background-color: rgba(0, 0, 0, 0.5);
+        }
         
-        // Override any existing styles hiding project content
-        const fixStyle = document.createElement('style');
-        fixStyle.textContent = `
-          /* Ensure project details are visible on hover */
-          .project-card .project-details,
-          .project-card .project-description p {
-            display: none !important;
-          }
-          
-          .project-card:hover .project-details,
-          .project-card:hover .project-description p,
-          .project-card.active .project-details,
-          .project-card.active .project-description p {
-            display: block !important;
-          }
-          
-          /* Add hover indicator */
-          .project-content::after {
-            content: "Hover for details";
-            display: block;
-            font-size: 0.8rem;
-            color: var(--primary-color);
-            text-align: center;
-            margin-top: 10px;
-          }
-          
-          .project-card:hover .project-content::after,
-          .project-card.active .project-content::after {
-            display: none !important;
-          }
-          
-          /* Mobile tap adaptation */
-          @media (max-width: 768px) {
-            .project-content::after {
-              content: "Tap for details";
-            }
-          }
-        `;
-        document.head.appendChild(fixStyle);
+        .modal-content {
+          background-color: white;
+          margin: 10% auto;
+          padding: 30px;
+          border-radius: 8px;
+          box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+          max-width: 800px;
+          width: 90%;
+          position: relative;
+        }
         
-        // Add event handlers for project cards
+        .close-modal {
+          position: absolute;
+          top: 15px;
+          right: 20px;
+          color: #aaa;
+          font-size: 28px;
+          font-weight: bold;
+          cursor: pointer;
+        }
+        
+        .close-modal:hover {
+          color: #2563eb;
+        }
+        
+        /* Project Card Indicator */
+        .project-card {
+          position: relative;
+          cursor: pointer;
+        }
+        
+        .click-indicator {
+          position: absolute;
+          bottom: 10px;
+          right: 10px;
+          background-color: #2563eb;
+          color: white;
+          padding: 5px 10px;
+          border-radius: 4px;
+          font-size: 0.8rem;
+        }
+      `;
+      document.head.appendChild(styleEl);
+      
+      // Wait for DOM to be ready
+      function init() {
+        console.log("Initializing new modal system");
+        
+        // Get the modal elements
+        const modal = document.getElementById('projectModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalContent = document.getElementById('modalContent');
+        const closeBtn = document.querySelector('.close-modal');
+        
+        // Add click indicators to all project cards
         const projectCards = document.querySelectorAll('.project-card');
-        projectCards.forEach(card => {
-          // Find the details element
-          const details = card.querySelector('.project-details') || 
-                          card.querySelector('.project-description') ||
-                          card.querySelector('.project-description p');
+        projectCards.forEach((card, index) => {
+          // Add click indicator
+          const indicator = document.createElement('div');
+          indicator.className = 'click-indicator';
+          indicator.textContent = 'Click for details';
+          card.appendChild(indicator);
           
-          if (!details) return;
-          
-          // Mobile tap functionality
-          card.addEventListener('click', function() {
-            if (window.innerWidth <= 768) {
-              this.classList.toggle('active');
+          // Set up direct click handler
+          card.onclick = function() {
+            const projectId = `project-${index + 1}`;
+            console.log(`Clicked on ${projectId}`);
+            
+            // Get project details from the map
+            const project = projectDetails[projectId];
+            if (project) {
+              modalTitle.textContent = project.title;
+              modalContent.innerHTML = project.content;
+              modal.style.display = 'block';
+              document.body.style.overflow = 'hidden';
             }
-          });
+          };
         });
         
-        console.log("Project card fix applied");
-      });
-    </script>
-
-    <!-- Project Details Modal -->
-    <div id="projectModal" class="project-modal">
-      <div class="modal-content">
-        <span class="close-modal">&times;</span>
-        <h2 id="modalTitle"></h2>
-        <div id="modalContent" class="modal-project-content"></div>
-      </div>
-    </div>
-
-    <script>
-    // Project Modal System
-    document.addEventListener('DOMContentLoaded', function() {
-      // Get the modal element
-      const modal = document.getElementById('projectModal');
-      const modalTitle = document.getElementById('modalTitle');
-      const modalContent = document.getElementById('modalContent');
-      const closeModalBtn = document.querySelector('.close-modal');
+        // Close button handler
+        closeBtn.onclick = function() {
+          modal.style.display = 'none';
+          document.body.style.overflow = 'auto';
+        };
+        
+        // Click outside to close
+        window.onclick = function(event) {
+          if (event.target === modal) {
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+          }
+        };
+        
+        // Escape key to close
+        document.addEventListener('keydown', function(e) {
+          if (e.key === 'Escape' && modal.style.display === 'block') {
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+          }
+        });
+      }
       
       // Project details content
       const projectDetails = {
+        'project-1': {
+          title: "Your Project Title",
+          content: `
+            <p>Detailed description of your project and your role.</p>
+            <div class="project-tech">
+              <span>Technology 1</span>
+              <span>Technology 2</span>
+            </div>
+          `
+        },
         'project-2': {
           title: "ML-Based Test Automation",
           content: `
@@ -742,74 +788,13 @@
         }
       };
       
-      // For project-1, get content from the HTML
-      const project1 = document.querySelector('.project-card:first-child');
-      if (project1) {
-        const title = project1.querySelector('h3').textContent;
-        const description = project1.querySelector('p').textContent;
-        const tech = project1.querySelector('.project-tech').innerHTML;
-        
-        projectDetails['project-1'] = {
-          title: title,
-          content: `<p>${description}</p>${tech}`
-        };
+      // Initialize on DOM loaded
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+      } else {
+        init();
       }
-      
-      // Set up project card click listeners
-      const projectCards = document.querySelectorAll('.project-card');
-      projectCards.forEach((card, index) => {
-        // Update card to show it's clickable
-        card.classList.add('clickable-card');
-        
-        // Create a cloned card to avoid existing event listeners
-        const newCard = card.cloneNode(true);
-        card.parentNode.replaceChild(newCard, card);
-        
-        // Add click handler to the new card
-        newCard.addEventListener('click', function() {
-          // Get project ID
-          const projectId = `project-${index + 1}`;
-          
-          // Get project details
-          const project = projectDetails[projectId];
-          if (project) {
-            // Populate modal
-            modalTitle.textContent = project.title;
-            modalContent.innerHTML = project.content;
-            
-            // Show modal
-            modal.style.display = 'block';
-            
-            // Prevent body scrolling when modal is open
-            document.body.style.overflow = 'hidden';
-          }
-        });
-      });
-      
-      // Close modal when X is clicked
-      closeModalBtn.addEventListener('click', function() {
-        modal.style.display = 'none';
-        document.body.style.overflow = 'auto';
-      });
-      
-      // Close modal when clicking outside
-      window.addEventListener('click', function(event) {
-        if (event.target === modal) {
-          modal.style.display = 'none';
-          document.body.style.overflow = 'auto';
-        }
-      });
-      
-      // Close modal with Escape key
-      document.addEventListener('keydown', function(event) {
-        if (event.key === 'Escape' && modal.style.display === 'block') {
-          modal.style.display = 'none';
-          document.body.style.overflow = 'auto';
-        }
-      });
-      
-      console.log("Project modal system initialized successfully");
-    });
+    })();
     </script>
 </body>
 </html>
