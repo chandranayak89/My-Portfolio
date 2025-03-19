@@ -610,5 +610,71 @@
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <script src="translations.js"></script>
     <script src="scripts.js"></script>
+    <script>
+      // Fix for project cards to show content from HTML
+      document.addEventListener('DOMContentLoaded', function() {
+        console.log("Running project card content display fix");
+        
+        // Override any existing styles hiding project content
+        const fixStyle = document.createElement('style');
+        fixStyle.textContent = `
+          /* Ensure project details are visible on hover */
+          .project-card .project-details,
+          .project-card .project-description p {
+            display: none !important;
+          }
+          
+          .project-card:hover .project-details,
+          .project-card:hover .project-description p,
+          .project-card.active .project-details,
+          .project-card.active .project-description p {
+            display: block !important;
+          }
+          
+          /* Add hover indicator */
+          .project-content::after {
+            content: "Hover for details";
+            display: block;
+            font-size: 0.8rem;
+            color: var(--primary-color);
+            text-align: center;
+            margin-top: 10px;
+          }
+          
+          .project-card:hover .project-content::after,
+          .project-card.active .project-content::after {
+            display: none !important;
+          }
+          
+          /* Mobile tap adaptation */
+          @media (max-width: 768px) {
+            .project-content::after {
+              content: "Tap for details";
+            }
+          }
+        `;
+        document.head.appendChild(fixStyle);
+        
+        // Add event handlers for project cards
+        const projectCards = document.querySelectorAll('.project-card');
+        projectCards.forEach(card => {
+          // Find the details element
+          const details = card.querySelector('.project-details') || 
+                          card.querySelector('.project-description') ||
+                          card.querySelector('.project-description p');
+          
+          if (!details) return;
+          
+          // Mobile tap functionality
+          card.addEventListener('click', function() {
+            if (window.innerWidth <= 768) {
+              this.classList.toggle('active');
+            }
+          });
+        });
+        
+        console.log("Project card fix applied");
+      });
+    </script>
 </body>
 </html>
