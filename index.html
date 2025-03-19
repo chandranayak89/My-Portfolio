@@ -7,6 +7,90 @@
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+      /* Project Popup Styles */
+      .project-popup {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.8);
+        z-index: 1000;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .popup-content {
+        background-color: white;
+        padding: 30px;
+        border-radius: 8px;
+        max-width: 800px;
+        width: 90%;
+        max-height: 80vh;
+        overflow-y: auto;
+        position: relative;
+        animation: popupFadeIn 0.3s ease;
+      }
+
+      @keyframes popupFadeIn {
+        from { opacity: 0; transform: translateY(-20px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+
+      .close-btn {
+        position: absolute;
+        top: 15px;
+        right: 20px;
+        font-size: 28px;
+        font-weight: bold;
+        cursor: pointer;
+        color: #aaa;
+        transition: color 0.2s;
+      }
+
+      .close-btn:hover {
+        color: #2563eb;
+      }
+
+      .project-details {
+        margin-top: 20px;
+        font-size: 1rem;
+        line-height: 1.6;
+      }
+      
+      /* Update project card styles to remove hover effects */
+      .project-card {
+        cursor: pointer;
+        transition: transform 0.3s, box-shadow 0.3s;
+        position: relative;
+      }
+      
+      .project-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+      }
+      
+      /* Hide any existing descriptions or hover-dependent content */
+      .project-card .project-description,
+      .project-card p:not(.click-hint) {
+        display: none !important;
+      }
+      
+      /* Add click hint */
+      .click-hint {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+        background-color: #2563eb;
+        color: white;
+        padding: 5px 10px;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        margin: 0;
+      }
+    </style>
 </head>
 <body>
     <header>
@@ -314,22 +398,22 @@
             
             <div class="projects-grid">
                 <!-- Project 1 -->
-                <div class="project-card">
+                <div class="project-card" onclick="openProjectPopup('project1')">
                     <div class="project-image">
                         <img src="place-holder image" alt="Project Image">
                     </div>
                     <div class="project-content">
                         <h3 data-i18n="project-1-title">Your Project Title</h3>
-                        <p data-i18n="project-1-description">Detailed description of your project and your role.</p>
                         <div class="project-tech">
                             <span>Technology 1</span>
                             <span>Technology 2</span>
                         </div>
+                        <p class="click-hint">Click for details</p>
                     </div>
                 </div>
                 
                 <!-- Project 2 -->
-                <div class="project-card">
+                <div class="project-card" onclick="openProjectPopup('project2')">
                     <div class="project-image">
                         <div class="placeholder-project">
                             <i class="fas fa-robot"></i>
@@ -342,11 +426,12 @@
                             <span>PyTorch</span>
                             <span>Jenkins</span>
                         </div>
+                        <p class="click-hint">Click for details</p>
                     </div>
                 </div>
                 
                 <!-- Project 3 -->
-                <div class="project-card hoverable">
+                <div class="project-card" onclick="openProjectPopup('project3')">
                     <div class="project-image">
                         <div class="placeholder-project">
                             <i class="fas fa-code-branch"></i>
@@ -354,29 +439,17 @@
                     </div>
                     <div class="project-content">
                         <h3 data-i18n="project-3-title">CI/CD Pipeline for Security Testing</h3>
-                        <div class="project-description">
-                            <p data-i18n="project-3-description">
-                                • Automated Security Scanning – Integrated static (SAST) and dynamic (DAST) security testing tools into the CI/CD pipeline to identify vulnerabilities early.<br><br>
-                                
-                                • Container Security Assessment – Implemented container image scanning (e.g., Trivy, Anchore) to detect misconfigurations and vulnerabilities in Docker images.<br><br>
-                                
-                                • Dependency Vulnerability Management – Configured automated dependency checks using tools like OWASP Dependency-Check and Snyk to prevent security flaws in third-party libraries.<br><br>
-                                
-                                • Compliance and Policy Enforcement – Enforced security policies and compliance checks (e.g., OWASP Top 10, CIS benchmarks) as part of the automated workflow.<br><br>
-                                
-                                • Secure Deployment Strategies – Ensured secure software releases by incorporating automated security gates, preventing deployments with critical vulnerabilities.
-                            </p>
-                        </div>
                         <div class="project-tech">
                             <span>Jenkins</span>
                             <span>Docker</span>
                             <span>Kubernetes</span>
                         </div>
+                        <p class="click-hint">Click for details</p>
                     </div>
                 </div>
                 
                 <!-- Project 4 -->
-                <div class="project-card hoverable">
+                <div class="project-card" onclick="openProjectPopup('project4')">
                     <div class="project-image">
                         <div class="placeholder-project">
                             <i class="fas fa-lock"></i>
@@ -384,24 +457,12 @@
                     </div>
                     <div class="project-content">
                         <h3 data-i18n="project-4-title">Intrusion Detection System</h3>
-                        <div class="project-description">
-                            <p data-i18n="project-4-description">
-                                • Real-Time Threat Detection – Designed an IDS capable of detecting cyber threats in railway networks in real-time, ensuring quick response and mitigation.<br><br>
-                                
-                                • Anomaly-Based and Signature-Based Detection – Implemented a hybrid approach combining anomaly detection (ML models) and signature-based methods for comprehensive threat coverage.<br><br>
-                                
-                                • Network Traffic Analysis – Monitored and analyzed railway communication protocols to detect suspicious activities and potential cyberattacks.<br><br>
-                                
-                                • Lightweight and Scalable Architecture – Optimized the IDS to work efficiently on resource-constrained railway systems without compromising performance.<br><br>
-                                
-                                • Integration with Security Information and Event Management (SIEM) – Forwarded detected threats to SIEM platforms for centralized monitoring and incident response.
-                            </p>
-                        </div>
                         <div class="project-tech">
                             <span>Python</span>
                             <span>SIEM</span>
                             <span>Network Security</span>
                         </div>
+                        <p class="click-hint">Click for details</p>
                     </div>
                 </div>
             </div>
@@ -600,281 +661,137 @@
     <script src="translations.js"></script>
     <script src="scripts.js"></script>
     <script>
-    // Single, completely rewritten modal implementation
-    (function() {
-      console.log("Starting clean modal implementation");
-      
-      // Wait for DOM to be fully loaded
-      document.addEventListener('DOMContentLoaded', function() {
-        console.log("DOM loaded - initializing project modal system");
-        
-        // First, remove any existing click indicators to avoid duplicates
+    // Popup functionality for projects
+    function openProjectPopup(projectId) {
+        const popup = document.getElementById(projectId);
+        if (popup) {
+            popup.style.display = 'flex';
+            document.body.style.overflow = 'hidden'; // Prevent scrolling
+        }
+    }
+
+    function closeProjectPopup(projectId) {
+        const popup = document.getElementById(projectId);
+        if (popup) {
+            popup.style.display = 'none';
+            document.body.style.overflow = 'auto'; // Restore scrolling
+        }
+    }
+
+    // Close popup when clicking outside the content
+    document.addEventListener('DOMContentLoaded', function() {
+        // Remove any existing click indicators from older implementation
         document.querySelectorAll('.click-indicator').forEach(indicator => {
-          indicator.remove();
+            indicator.remove();
         });
         
-        // Project details content - the data for each project
-        const projectDetails = {
-          'project-1': {
-            title: "Your Project Title",
-            content: `
-              <p>Detailed description of your project and your role.</p>
-              <div class="project-tech">
+        // Add click events for popups
+        const popups = document.querySelectorAll('.project-popup');
+        popups.forEach(popup => {
+            popup.addEventListener('click', function(event) {
+                if (event.target === popup) {
+                    popup.style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                }
+            });
+        });
+        
+        // Close popups with ESC key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                popups.forEach(popup => {
+                    popup.style.display = 'none';
+                });
+                document.body.style.overflow = 'auto';
+            }
+        });
+        
+        console.log("Project popup system initialized successfully");
+    });
+    </script>
+    <!-- Project Popups -->
+    <!-- Popup for Project 1 -->
+    <div id="project1" class="project-popup">
+        <div class="popup-content">
+            <span class="close-btn" onclick="closeProjectPopup('project1')">&times;</span>
+            <h3>Your Project Title</h3>
+            <div class="project-details">
+                <p>Detailed description of your project and your role.</p>
+            </div>
+            <div class="project-tech">
                 <span>Technology 1</span>
                 <span>Technology 2</span>
-              </div>
-            `
-          },
-          'project-2': {
-            title: "ML-Based Test Automation",
-            content: `
-              <ul>
-                <li>Predictive Test Case Failure Analysis – Developed machine learning models to predict potential test case failures, reducing redundant executions and improving test efficiency.</li>
-                <li>Optimized Test Execution Sequences – Implemented an intelligent scheduling algorithm to prioritize test cases based on failure probability and execution impact.</li>
-                <li>Data-Driven Decision Making – Analyzed historical test results and logs to extract meaningful patterns and improve overall test strategy.</li>
-                <li>Feature Engineering for Test Optimization – Engineered relevant features from test logs, execution times, and code changes to enhance model accuracy.</li>
-                <li>Integration with CI/CD Pipelines – Integrated ML-powered test automation into CI/CD workflows, ensuring faster feedback loops and continuous quality assurance.</li>
-                <li>Automated Root Cause Analysis – Leveraged ML techniques to classify and diagnose test failures, reducing manual debugging efforts.</li>
-                <li>Scalable and Adaptive Framework – Designed a scalable framework that adapts to evolving test environments and dynamically adjusts testing strategies.</li>
-                <li>Performance and Accuracy Metrics – Evaluated model effectiveness using precision, recall, and F1-score to ensure reliable test failure predictions.</li>
-              </ul>
-              <div class="project-tech">
+            </div>
+        </div>
+    </div>
+
+    <!-- Popup for Project 2 -->
+    <div id="project2" class="project-popup">
+        <div class="popup-content">
+            <span class="close-btn" onclick="closeProjectPopup('project2')">&times;</span>
+            <h3>ML-Based Test Automation</h3>
+            <div class="project-details">
+                <ul>
+                    <li>Predictive Test Case Failure Analysis – Developed machine learning models to predict potential test case failures, reducing redundant executions and improving test efficiency.</li>
+                    <li>Optimized Test Execution Sequences – Implemented an intelligent scheduling algorithm to prioritize test cases based on failure probability and execution impact.</li>
+                    <li>Data-Driven Decision Making – Analyzed historical test results and logs to extract meaningful patterns and improve overall test strategy.</li>
+                    <li>Feature Engineering for Test Optimization – Engineered relevant features from test logs, execution times, and code changes to enhance model accuracy.</li>
+                    <li>Integration with CI/CD Pipelines – Integrated ML-powered test automation into CI/CD workflows, ensuring faster feedback loops and continuous quality assurance.</li>
+                    <li>Automated Root Cause Analysis – Leveraged ML techniques to classify and diagnose test failures, reducing manual debugging efforts.</li>
+                    <li>Scalable and Adaptive Framework – Designed a scalable framework that adapts to evolving test environments and dynamically adjusts testing strategies.</li>
+                    <li>Performance and Accuracy Metrics – Evaluated model effectiveness using precision, recall, and F1-score to ensure reliable test failure predictions.</li>
+                </ul>
+            </div>
+            <div class="project-tech">
                 <span>Python</span>
                 <span>PyTorch</span>
                 <span>Jenkins</span>
-              </div>
-            `
-          },
-          'project-3': {
-            title: "CI/CD Pipeline for Security Testing",
-            content: `
-              <ul>
-                <li>Automated Security Scanning – Integrated static (SAST) and dynamic (DAST) security testing tools into the CI/CD pipeline to identify vulnerabilities early.</li>
-                <li>Container Security Assessment – Implemented container image scanning (e.g., Trivy, Anchore) to detect misconfigurations and vulnerabilities in Docker images.</li>
-                <li>Dependency Vulnerability Management – Configured automated dependency checks using tools like OWASP Dependency-Check and Snyk to prevent security flaws in third-party libraries.</li>
-                <li>Compliance and Policy Enforcement – Enforced security policies and compliance checks (e.g., OWASP Top 10, CIS benchmarks) as part of the automated workflow.</li>
-                <li>Secure Deployment Strategies – Ensured secure software releases by incorporating automated security gates, preventing deployments with critical vulnerabilities.</li>
-              </ul>
-              <div class="project-tech">
+            </div>
+        </div>
+    </div>
+
+    <!-- Popup for Project 3 -->
+    <div id="project3" class="project-popup">
+        <div class="popup-content">
+            <span class="close-btn" onclick="closeProjectPopup('project3')">&times;</span>
+            <h3>CI/CD Pipeline for Security Testing</h3>
+            <div class="project-details">
+                <ul>
+                    <li>Automated Security Scanning – Integrated static (SAST) and dynamic (DAST) security testing tools into the CI/CD pipeline to identify vulnerabilities early.</li>
+                    <li>Container Security Assessment – Implemented container image scanning (e.g., Trivy, Anchore) to detect misconfigurations and vulnerabilities in Docker images.</li>
+                    <li>Dependency Vulnerability Management – Configured automated dependency checks using tools like OWASP Dependency-Check and Snyk to prevent security flaws in third-party libraries.</li>
+                    <li>Compliance and Policy Enforcement – Enforced security policies and compliance checks (e.g., OWASP Top 10, CIS benchmarks) as part of the automated workflow.</li>
+                    <li>Secure Deployment Strategies – Ensured secure software releases by incorporating automated security gates, preventing deployments with critical vulnerabilities.</li>
+                </ul>
+            </div>
+            <div class="project-tech">
                 <span>Jenkins</span>
                 <span>Docker</span>
                 <span>Kubernetes</span>
-              </div>
-            `
-          },
-          'project-4': {
-            title: "Intrusion Detection System",
-            content: `
-              <ul>
-                <li>Real-Time Threat Detection – Designed an IDS capable of detecting cyber threats in railway networks in real-time, ensuring quick response and mitigation.</li>
-                <li>Anomaly-Based and Signature-Based Detection – Implemented a hybrid approach combining anomaly detection (ML models) and signature-based methods for comprehensive threat coverage.</li>
-                <li>Network Traffic Analysis – Monitored and analyzed railway communication protocols to detect suspicious activities and potential cyberattacks.</li>
-                <li>Lightweight and Scalable Architecture – Optimized the IDS to work efficiently on resource-constrained railway systems without compromising performance.</li>
-                <li>Integration with Security Information and Event Management (SIEM) – Forwarded detected threats to SIEM platforms for centralized monitoring and incident response.</li>
-              </ul>
-              <div class="project-tech">
+            </div>
+        </div>
+    </div>
+
+    <!-- Popup for Project 4 -->
+    <div id="project4" class="project-popup">
+        <div class="popup-content">
+            <span class="close-btn" onclick="closeProjectPopup('project4')">&times;</span>
+            <h3>Intrusion Detection System</h3>
+            <div class="project-details">
+                <ul>
+                    <li>Real-Time Threat Detection – Designed an IDS capable of detecting cyber threats in railway networks in real-time, ensuring quick response and mitigation.</li>
+                    <li>Anomaly-Based and Signature-Based Detection – Implemented a hybrid approach combining anomaly detection (ML models) and signature-based methods for comprehensive threat coverage.</li>
+                    <li>Network Traffic Analysis – Monitored and analyzed railway communication protocols to detect suspicious activities and potential cyberattacks.</li>
+                    <li>Lightweight and Scalable Architecture – Optimized the IDS to work efficiently on resource-constrained railway systems without compromising performance.</li>
+                    <li>Integration with Security Information and Event Management (SIEM) – Forwarded detected threats to SIEM platforms for centralized monitoring and incident response.</li>
+                </ul>
+            </div>
+            <div class="project-tech">
                 <span>Python</span>
                 <span>SIEM</span>
                 <span>Network Security</span>
-              </div>
-            `
-          }
-        };
-        
-        // Add CSS styles for modal and project cards
-        const style = document.createElement('style');
-        style.textContent = `
-          /* Modal Styles */
-          .project-modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0, 0, 0, 0.7);
-          }
-          
-          .modal-content {
-            background-color: white;
-            margin: 5% auto;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.3);
-            max-width: 800px;
-            width: 90%;
-            position: relative;
-            animation: modalFadeIn 0.3s;
-          }
-          
-          @keyframes modalFadeIn {
-            from {opacity: 0; transform: translateY(-30px);}
-            to {opacity: 1; transform: translateY(0);}
-          }
-          
-          .close-modal {
-            position: absolute;
-            top: 15px;
-            right: 20px;
-            color: #aaa;
-            font-size: 28px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: color 0.2s;
-          }
-          
-          .close-modal:hover {
-            color: #2563eb;
-          }
-          
-          /* Project Card Indicator */
-          .project-card {
-            position: relative;
-            cursor: pointer;
-            transition: transform 0.3s, box-shadow 0.3s;
-            overflow: visible !important;
-          }
-          
-          .project-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-          }
-          
-          .click-indicator {
-            position: absolute;
-            bottom: 10px;
-            right: 10px;
-            background-color: #2563eb;
-            color: white;
-            padding: 5px 10px;
-            border-radius: 4px;
-            font-size: 0.8rem;
-            z-index: 5;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-          }
-          
-          .modal-project-content ul {
-            padding-left: 20px;
-            margin-top: 20px;
-          }
-          
-          .modal-project-content li {
-            margin-bottom: 10px;
-          }
-          
-          .modal-project-content .project-tech {
-            margin-top: 25px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-          }
-          
-          .modal-project-content .project-tech span {
-            background-color: #f3f4f6;
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 0.9rem;
-          }
-        `;
-        document.head.appendChild(style);
-        
-        // Get the modal element - create if it doesn't exist
-        let modal = document.getElementById('projectModal');
-        let modalTitle, modalContent;
-        
-        if (!modal) {
-          console.log("Modal element not found, creating it");
-          
-          // Create modal element
-          modal = document.createElement('div');
-          modal.id = 'projectModal';
-          modal.className = 'project-modal';
-          
-          modal.innerHTML = `
-            <div class="modal-content">
-              <span class="close-modal">&times;</span>
-              <h2 id="modalTitle"></h2>
-              <div id="modalContent" class="modal-project-content"></div>
             </div>
-          `;
-          
-          document.body.appendChild(modal);
-        }
-        
-        // Get modal elements
-        modalTitle = document.getElementById('modalTitle');
-        modalContent = document.getElementById('modalContent');
-        const closeBtn = modal.querySelector('.close-modal');
-        
-        // Process project cards
-        const projectCards = document.querySelectorAll('.project-card');
-        console.log(`Found ${projectCards.length} project cards`);
-        
-        projectCards.forEach((card, index) => {
-          // Create click indicator
-          const indicator = document.createElement('div');
-          indicator.className = 'click-indicator';
-          indicator.textContent = 'Click for details';
-          card.appendChild(indicator);
-          
-          // Clear any existing click handlers
-          const newCard = card.cloneNode(true);
-          card.parentNode.replaceChild(newCard, card);
-          
-          // Set up new click handler
-          newCard.addEventListener('click', function(e) {
-            e.stopPropagation(); // Prevent event bubbling
-            const projectId = `project-${index + 1}`;
-            console.log(`Clicked on ${projectId}`);
-            
-            // Get project details
-            const project = projectDetails[projectId];
-            if (project) {
-              modalTitle.textContent = project.title;
-              modalContent.innerHTML = project.content;
-              modal.style.display = 'block';
-              document.body.style.overflow = 'hidden';
-            } else {
-              console.error(`No details found for ${projectId}`);
-            }
-          });
-        });
-        
-        // Setup close button
-        closeBtn.addEventListener('click', function() {
-          modal.style.display = 'none';
-          document.body.style.overflow = 'auto';
-        });
-        
-        // Close when clicking outside
-        window.addEventListener('click', function(event) {
-          if (event.target === modal) {
-            modal.style.display = 'none';
-            document.body.style.overflow = 'auto';
-          }
-        });
-        
-        // Close with Escape key
-        document.addEventListener('keydown', function(e) {
-          if (e.key === 'Escape' && modal.style.display === 'block') {
-            modal.style.display = 'none';
-            document.body.style.overflow = 'auto';
-          }
-        });
-        
-        console.log("Project modal system initialization complete");
-      });
-    })();
-    </script>
-    <!-- Project Details Modal -->
-    <div id="projectModal" class="project-modal">
-      <div class="modal-content">
-        <span class="close-modal">&times;</span>
-        <h2 id="modalTitle"></h2>
-        <div id="modalContent" class="modal-project-content"></div>
-      </div>
+        </div>
     </div>
 </body>
 </html>
