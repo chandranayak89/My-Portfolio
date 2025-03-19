@@ -1156,4 +1156,35 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log("✅ Hover-to-reveal recommendation solution setup complete");
         });
     })();
+
+    // Set up project card click listeners
+    const projectCards = document.querySelectorAll('.project-card');
+    projectCards.forEach((card, index) => {
+        // Update card to show it's clickable
+        card.classList.add('clickable-card');
+        
+        // Create a cloned card to avoid existing event listeners
+        const newCard = card.cloneNode(true);
+        card.parentNode.replaceChild(newCard, card);
+        
+        // Add click handler to the new card
+        newCard.addEventListener('click', function() {
+            // Get project ID
+            const projectId = `project-${index + 1}`;
+            
+            // Get project details
+            const project = projectDetails[projectId];
+            if (project) {
+                // Populate modal
+                modalTitle.textContent = project.title;
+                modalContent.innerHTML = project.content;
+                
+                // Show modal
+                modal.style.display = 'block';
+                
+                // Prevent body scrolling when modal is open
+                document.body.style.overflow = 'hidden';
+            }
+        });
+    });
 });
