@@ -337,17 +337,6 @@
                     </div>
                     <div class="project-content">
                         <h3 data-i18n="project-2-title">ML-Based Test Automation</h3>
-                        <p class="project-details" data-i18n="project-2-description">
-                            • Predictive Test Case Failure Analysis – Developed machine learning models to predict potential test case failures, reducing redundant executions and improving test efficiency.<br><br>
-                            
-                            • Optimized Test Execution Sequences – Implemented an intelligent scheduling algorithm to prioritize test cases based on failure probability and execution impact.<br><br>
-                            
-                            • Data-Driven Decision Making – Analyzed historical test results and logs to extract meaningful patterns and improve overall test strategy.<br><br>
-                            
-                            • Feature Engineering for Test Optimization – Engineered relevant features from test logs, execution times, and code changes to enhance model accuracy.<br><br>
-                            
-                            • Integration with CI/CD Pipelines – Integrated ML-powered test automation into CI/CD workflows, ensuring faster feedback loops and continuous quality assurance.
-                        </p>
                         <div class="project-tech">
                             <span>Python</span>
                             <span>PyTorch</span>
@@ -675,6 +664,152 @@
         
         console.log("Project card fix applied");
       });
+    </script>
+
+    <!-- Project Details Modal -->
+    <div id="projectModal" class="project-modal">
+      <div class="modal-content">
+        <span class="close-modal">&times;</span>
+        <h2 id="modalTitle"></h2>
+        <div id="modalContent" class="modal-project-content"></div>
+      </div>
+    </div>
+
+    <script>
+    // Project Modal System
+    document.addEventListener('DOMContentLoaded', function() {
+      // Get the modal element
+      const modal = document.getElementById('projectModal');
+      const modalTitle = document.getElementById('modalTitle');
+      const modalContent = document.getElementById('modalContent');
+      const closeModalBtn = document.querySelector('.close-modal');
+      
+      // Project details content
+      const projectDetails = {
+        'project-2': {
+          title: "ML-Based Test Automation",
+          content: `
+            <ul>
+              <li>Predictive Test Case Failure Analysis – Developed machine learning models to predict potential test case failures, reducing redundant executions and improving test efficiency.</li>
+              <li>Optimized Test Execution Sequences – Implemented an intelligent scheduling algorithm to prioritize test cases based on failure probability and execution impact.</li>
+              <li>Data-Driven Decision Making – Analyzed historical test results and logs to extract meaningful patterns and improve overall test strategy.</li>
+              <li>Feature Engineering for Test Optimization – Engineered relevant features from test logs, execution times, and code changes to enhance model accuracy.</li>
+              <li>Integration with CI/CD Pipelines – Integrated ML-powered test automation into CI/CD workflows, ensuring faster feedback loops and continuous quality assurance.</li>
+              <li>Automated Root Cause Analysis – Leveraged ML techniques to classify and diagnose test failures, reducing manual debugging efforts.</li>
+              <li>Scalable and Adaptive Framework – Designed a scalable framework that adapts to evolving test environments and dynamically adjusts testing strategies.</li>
+              <li>Performance and Accuracy Metrics – Evaluated model effectiveness using precision, recall, and F1-score to ensure reliable test failure predictions.</li>
+            </ul>
+            <div class="project-tech">
+              <span>Python</span>
+              <span>PyTorch</span>
+              <span>Jenkins</span>
+            </div>
+          `
+        },
+        'project-3': {
+          title: "CI/CD Pipeline for Security Testing",
+          content: `
+            <ul>
+              <li>Automated Security Scanning – Integrated static (SAST) and dynamic (DAST) security testing tools into the CI/CD pipeline to identify vulnerabilities early.</li>
+              <li>Container Security Assessment – Implemented container image scanning (e.g., Trivy, Anchore) to detect misconfigurations and vulnerabilities in Docker images.</li>
+              <li>Dependency Vulnerability Management – Configured automated dependency checks using tools like OWASP Dependency-Check and Snyk to prevent security flaws in third-party libraries.</li>
+              <li>Compliance and Policy Enforcement – Enforced security policies and compliance checks (e.g., OWASP Top 10, CIS benchmarks) as part of the automated workflow.</li>
+              <li>Secure Deployment Strategies – Ensured secure software releases by incorporating automated security gates, preventing deployments with critical vulnerabilities.</li>
+            </ul>
+            <div class="project-tech">
+              <span>Jenkins</span>
+              <span>Docker</span>
+              <span>Kubernetes</span>
+            </div>
+          `
+        },
+        'project-4': {
+          title: "Intrusion Detection System",
+          content: `
+            <ul>
+              <li>Real-Time Threat Detection – Designed an IDS capable of detecting cyber threats in railway networks in real-time, ensuring quick response and mitigation.</li>
+              <li>Anomaly-Based and Signature-Based Detection – Implemented a hybrid approach combining anomaly detection (ML models) and signature-based methods for comprehensive threat coverage.</li>
+              <li>Network Traffic Analysis – Monitored and analyzed railway communication protocols to detect suspicious activities and potential cyberattacks.</li>
+              <li>Lightweight and Scalable Architecture – Optimized the IDS to work efficiently on resource-constrained railway systems without compromising performance.</li>
+              <li>Integration with Security Information and Event Management (SIEM) – Forwarded detected threats to SIEM platforms for centralized monitoring and incident response.</li>
+            </ul>
+            <div class="project-tech">
+              <span>Python</span>
+              <span>SIEM</span>
+              <span>Network Security</span>
+            </div>
+          `
+        }
+      };
+      
+      // For project-1, get content from the HTML
+      const project1 = document.querySelector('.project-card:first-child');
+      if (project1) {
+        const title = project1.querySelector('h3').textContent;
+        const description = project1.querySelector('p').textContent;
+        const tech = project1.querySelector('.project-tech').innerHTML;
+        
+        projectDetails['project-1'] = {
+          title: title,
+          content: `<p>${description}</p>${tech}`
+        };
+      }
+      
+      // Set up project card click listeners
+      const projectCards = document.querySelectorAll('.project-card');
+      projectCards.forEach((card, index) => {
+        // Update card to show it's clickable
+        card.classList.add('clickable-card');
+        
+        // Create a cloned card to avoid existing event listeners
+        const newCard = card.cloneNode(true);
+        card.parentNode.replaceChild(newCard, card);
+        
+        // Add click handler to the new card
+        newCard.addEventListener('click', function() {
+          // Get project ID
+          const projectId = `project-${index + 1}`;
+          
+          // Get project details
+          const project = projectDetails[projectId];
+          if (project) {
+            // Populate modal
+            modalTitle.textContent = project.title;
+            modalContent.innerHTML = project.content;
+            
+            // Show modal
+            modal.style.display = 'block';
+            
+            // Prevent body scrolling when modal is open
+            document.body.style.overflow = 'hidden';
+          }
+        });
+      });
+      
+      // Close modal when X is clicked
+      closeModalBtn.addEventListener('click', function() {
+        modal.style.display = 'none';
+        document.body.style.overflow = 'auto';
+      });
+      
+      // Close modal when clicking outside
+      window.addEventListener('click', function(event) {
+        if (event.target === modal) {
+          modal.style.display = 'none';
+          document.body.style.overflow = 'auto';
+        }
+      });
+      
+      // Close modal with Escape key
+      document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape' && modal.style.display === 'block') {
+          modal.style.display = 'none';
+          document.body.style.overflow = 'auto';
+        }
+      });
+      
+      console.log("Project modal system initialized successfully");
+    });
     </script>
 </body>
 </html>
