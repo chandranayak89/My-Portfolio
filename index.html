@@ -749,30 +749,40 @@
         console.log("Project popup system initialized successfully");
     });
 
-    // Updated script to remove duplicate buttons
+    // Modified script to more effectively remove duplicate buttons
     (function() {
-        // Run after a slight delay to ensure all other scripts have finished
+        // Run at window load AND after a longer delay
         window.addEventListener('load', function() {
-            setTimeout(function() {
-                console.log("Final cleanup of duplicate buttons");
-                
-                // Remove ALL existing click hint elements
-                document.querySelectorAll('.click-hint, .click-indicator').forEach(hint => {
-                    hint.remove();
-                });
-                
-                // Add exactly ONE button to each project card
-                document.querySelectorAll('.project-card').forEach(card => {
-                    const content = card.querySelector('.project-content');
-                    if (content) {
-                        const hintButton = document.createElement('p');
-                        hintButton.className = 'click-hint';
-                        hintButton.textContent = 'Click for details';
-                        content.appendChild(hintButton);
-                    }
-                });
-            }, 100); // Small delay to ensure everything else has loaded
+            // Initial cleanup
+            cleanupButtons();
+            
+            // Second cleanup after a longer delay to catch any late additions
+            setTimeout(cleanupButtons, 300);
+            
+            // Third cleanup after an even longer delay (for any slow-loading components)
+            setTimeout(cleanupButtons, 800);
         });
+        
+        // Function to clean up buttons
+        function cleanupButtons() {
+            console.log("Cleaning up duplicate 'Click for details' buttons");
+            
+            // First remove ALL existing hint elements
+            document.querySelectorAll('.click-hint, .click-indicator').forEach(hint => {
+                hint.remove();
+            });
+            
+            // Then add exactly ONE button to each project card
+            document.querySelectorAll('.project-card').forEach(card => {
+                const content = card.querySelector('.project-content');
+                if (content && !content.querySelector('.click-hint')) {
+                    const hintButton = document.createElement('p');
+                    hintButton.className = 'click-hint';
+                    hintButton.textContent = 'Click for details';
+                    content.appendChild(hintButton);
+                }
+            });
+        }
     })();
     </script>
     <!-- Project Popups -->
