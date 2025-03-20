@@ -33,14 +33,14 @@ const translations = {
         
         // Experience section
         "exp-title": "Professional Experience",
-        "exp-1-title": "Werkstudent – Software Testing & IT-Security",
+        "exp-1-title": "Werkstudent – Software Developer",
         "exp-1-company": "Atlas Copco | Bretten",
-        "exp-1-date": "April 2024 – March 2025",
+        "exp-1-date": "April 2024 – März 2025",
         "exp-1-detail-1": "Development of test automation solutions to ensure software quality",
-        "exp-1-detail-2": "Implementation of CI/CD processes with Jenkins, Docker, and Kubernetes",
+        "exp-1-detail-2": "Implementation of CI/CD processes with Jenkins, Docker",
         "exp-1-detail-3": "Security analysis and implementation of protection measures according to IT security standards",
-        "exp-1-detail-4": "Conducting software and integration tests for safety-critical railway applications",
-        "exp-1-detail-5": "Cyber Security function testing (e.g., Central Logging)",
+        "exp-1-detail-4": "Conducting adaptive and integration tests for robtic applications",
+        "exp-1-detail-5": "crash test or fuzz tesing for reverse engineering",
         
         "exp-2-title": "Research Assistant – Software Development & Testing",
         "exp-2-company": "Karlsruher Institut für Technologie (KIT) | Karlsruhe",
@@ -159,7 +159,7 @@ const translations = {
         "exp-1-company": "Atlas Copco | Bretten",
         "exp-1-date": "April 2024 – März 2025",
         "exp-1-detail-1": "Entwicklung von Testautomatisierungslösungen zur Sicherstellung der Softwarequalität",
-        "exp-1-detail-2": "Implementierung von CI/CD-Prozessen mit Jenkins, Docker und Kubernetes",
+        "exp-1-detail-2": "Implementierung von CI/CD-Prozessen mit Jenkins, Docker, und Kubernetes",
         "exp-1-detail-3": "Sicherheitsanalyse und Implementierung von Schutzmaßnahmen gemäß IT-Sicherheitsstandards",
         "exp-1-detail-4": "Durchführung von Software- und Integrationstests für sicherheitskritische Bahnanwendungen",
         "exp-1-detail-5": "Cyber Security-Funktionstests (z.B. Central Logging)",
