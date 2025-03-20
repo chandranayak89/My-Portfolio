@@ -54,6 +54,11 @@ const translations = {
         "exp-3-title": "Information Security Analyst, Penetration Testing & Software Testing",
         "exp-3-company": "Prosaic Technologies Pvt Ltd | Bangalore, India",
         "exp-3-date": "July 2017 – March 2020",
+        "exp-3-detail-1": "Security analysis and risk assessments according to IEC 62443",
+        "exp-3-detail-2": "Development and implementation of protection measures such as authentication, encryption, and intrusion detection systems",
+        "exp-3-detail-3": "Automation of security processes with Python and shell scripts",
+        "exp-3-detail-4": "Implementation of threat models and penetration testing",
+        "exp-3-detail-5": "Development of secure software architectures",
         
         // Skills section
         "skills-title": "Technical Skills",
