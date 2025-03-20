@@ -155,14 +155,14 @@ const translations = {
         
         // Experience section
         "exp-title": "Berufserfahrung",
-        "exp-1-title": "Werkstudent – Software Testing & IT-Security",
+        "exp-1-title": "Werkstudent – Softwareentwickler",
         "exp-1-company": "Atlas Copco | Bretten",
         "exp-1-date": "April 2024 – März 2025",
         "exp-1-detail-1": "Entwicklung von Testautomatisierungslösungen zur Sicherstellung der Softwarequalität",
         "exp-1-detail-2": "Implementierung von CI/CD-Prozessen mit Jenkins, Docker, und Kubernetes",
         "exp-1-detail-3": "Sicherheitsanalyse und Implementierung von Schutzmaßnahmen gemäß IT-Sicherheitsstandards",
-        "exp-1-detail-4": "Durchführung von Software- und Integrationstests für sicherheitskritische Bahnanwendungen",
-        "exp-1-detail-5": "Cyber Security-Funktionstests (z.B. Central Logging)",
+        "exp-1-detail-4": "Durchführung von Software- und Integrationstests für für Robtic-Anwendungen",
+        "exp-1-detail-5": "Crash test oder Fuzz Testing für Reverse Engineering",
         
         "exp-2-title": "Wissenschaftliche Hilfskraft – Softwareentwicklung & Testing",
         "exp-2-company": "Karlsruher Institut für Technologie (KIT) | Karlsruhe",
